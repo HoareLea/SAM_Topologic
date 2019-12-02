@@ -48,4 +48,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>Copy /Y "$(SolutionDir)libs\TopologicCore.dll" "$(SolutionDir)Build\TopologicCore.dll"
+Copy /Y "$(SolutionDir)libs\TK*.dll" "$(SolutionDir)Build\TK*.dll"</PostBuildEvent>
+  </PropertyGroup>
 </Project>
