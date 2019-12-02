@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="SAM.Geometry">
+      <HintPath>..\..\SAM\build\SAM.Geometry.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -44,12 +47,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ToSAM\Edge.cs" />
+    <Compile Include="ToSAM\Vertex.cs" />
+    <Compile Include="ToSAM\Wire.cs" />
+    <Compile Include="ToTopologic\IGeometry3D.cs" />
+    <Compile Include="ToTopologic\Polygon3D.cs" />
+    <Compile Include="ToTopologic\Segment3D.cs" />
+    <Compile Include="ToTopologic\Point3D.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>Copy /Y "$(SolutionDir)libs\TopologicCore.dll" "$(SolutionDir)Build\TopologicCore.dll"
-Copy /Y "$(SolutionDir)libs\TK*.dll" "$(SolutionDir)Build\TK*.dll"</PostBuildEvent>
+    <PostBuildEvent>Copy /Y "$(SolutionDir)references\TopologicCore.dll" "$(SolutionDir)build\TopologicCore.dll"
+Copy /Y "$(SolutionDir)references\TK*.dll" "$(SolutionDir)build\TK*.dll"</PostBuildEvent>
   </PropertyGroup>
 </Project>

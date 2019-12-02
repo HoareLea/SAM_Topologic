@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29519.87
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAM.Geometry.Topologic", "SAM_Topologic\SAM.Geometry.Topologic.csproj", "{F50BD61E-ABE4-4867-B815-E9F701968031}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAM.Geometry.Topologic", "SAM.Geometry.Topologic\SAM.Geometry.Topologic.csproj", "{F50BD61E-ABE4-4867-B815-E9F701968031}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
