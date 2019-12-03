@@ -11,7 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dynamo", "Dynamo", "{6C3238
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Grasshopper", "Grasshopper", "{D8A60381-7F5F-483A-AF23-F77F76BC1419}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAM_Topology.Geometry.Dynamo", "Dynamo\SAM_Topology.Geometry.Dynamo\SAM_Topology.Geometry.Dynamo.csproj", "{31847A71-1B4C-4E40-A202-391922B39876}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAM_TopologicGeometryDynamo", "Dynamo\SAM_TopologyGeometryDynamo\SAM_TopologicGeometryDynamo.csproj", "{31847A71-1B4C-4E40-A202-391922B39876}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

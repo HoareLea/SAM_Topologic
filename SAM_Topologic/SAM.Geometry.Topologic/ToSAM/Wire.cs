@@ -1,7 +1,7 @@
 ﻿using SAM.Geometry.Spatial;
 using Topologic;
 
-namespace SAM.Geometry.Topologic.ToSAM
+namespace SAM.Geometry.Topologic
 {
     public static partial class Convert
     {
