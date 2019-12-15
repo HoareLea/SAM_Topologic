@@ -15,6 +15,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAM_TopologicGeometryDynamo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAM_Topologic.Geometry.Grasshopper", "Grasshopper\SAM_Topologic.Geometry.Grasshopper\SAM_Topologic.Geometry.Grasshopper.csproj", "{B8F0EE34-A776-4518-ADA2-E047E468B47B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAM_Topologic.Analytical.Grasshopper", "Grasshopper\SAM_Topologic.Analytical.Grasshopper\SAM_Topologic.Analytical.Grasshopper.csproj", "{E31E5F4E-EAC1-4E48-A5F9-E4560896C2B3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAM.Analytical.Topologic", "SAM_Topologic\SAM.Analytical.Topologic\SAM.Analytical.Topologic.csproj", "{577724CA-7F73-473A-8C32-8EF0250F247E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{B8F0EE34-A776-4518-ADA2-E047E468B47B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B8F0EE34-A776-4518-ADA2-E047E468B47B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B8F0EE34-A776-4518-ADA2-E047E468B47B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E31E5F4E-EAC1-4E48-A5F9-E4560896C2B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E31E5F4E-EAC1-4E48-A5F9-E4560896C2B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E31E5F4E-EAC1-4E48-A5F9-E4560896C2B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E31E5F4E-EAC1-4E48-A5F9-E4560896C2B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{577724CA-7F73-473A-8C32-8EF0250F247E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{577724CA-7F73-473A-8C32-8EF0250F247E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{577724CA-7F73-473A-8C32-8EF0250F247E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{577724CA-7F73-473A-8C32-8EF0250F247E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -41,6 +53,8 @@ Global
 		{F50BD61E-ABE4-4867-B815-E9F701968031} = {BADE2121-2C37-49A8-87AA-731543A8E39B}
 		{31847A71-1B4C-4E40-A202-391922B39876} = {6C323826-91AF-47F7-AE3D-051EECF342DE}
 		{B8F0EE34-A776-4518-ADA2-E047E468B47B} = {D8A60381-7F5F-483A-AF23-F77F76BC1419}
+		{E31E5F4E-EAC1-4E48-A5F9-E4560896C2B3} = {D8A60381-7F5F-483A-AF23-F77F76BC1419}
+		{577724CA-7F73-473A-8C32-8EF0250F247E} = {BADE2121-2C37-49A8-87AA-731543A8E39B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {140E1AD9-51B3-4B79-BF00-575FBD3161FA}
