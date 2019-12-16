@@ -26,8 +26,8 @@ namespace SAM.Analytical.Grasshopper
         /// </summary>
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
-            inputParamManager.AddGenericParameter("Faces", "SAMgeo", "SAM Geometry", GH_ParamAccess.list);
-            inputParamManager.AddNumberParameter("Tolerance", "SAMgeo", "SAM Geometry", GH_ParamAccess.item, Geometry.Tolerance.MacroDistance);
+            inputParamManager.AddGenericParameter("_Faces", "SAMgeo", "SAM Geometry", GH_ParamAccess.list);
+            inputParamManager.AddNumberParameter("Tolerance_", "SAMgeo", "SAM Geometry", GH_ParamAccess.item, Geometry.Tolerance.MacroDistance);
         }
 
         /// <summary>
