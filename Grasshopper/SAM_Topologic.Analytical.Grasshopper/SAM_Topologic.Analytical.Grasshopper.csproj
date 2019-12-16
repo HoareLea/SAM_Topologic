@@ -73,6 +73,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Component\UpdatePanels.cs" />
     <Compile Include="Component\Faces.cs" />
     <Compile Include="Component\CellComplexByFaces.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
