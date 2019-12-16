@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 
-using SAM_Topologic.Analytical.Grasshopper.Properties;
+using SAM.Analytical.Grasshopper.Topologic.Properties;
 using Topologic;
 
-namespace SAM.Analytical.Grasshopper
+namespace SAM.Analytical.Grasshopper.Topologic
 {
     public class UpdatePanels : GH_Component
     {
@@ -26,9 +26,8 @@ namespace SAM.Analytical.Grasshopper
         /// </summary>
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
-            inputParamManager.AddGenericParameter("Panels", "SAMgeo", "SAM Geometry", GH_ParamAccess.list);
-            inputParamManager.AddGenericParameter("Points", "SAMgeo", "SAM Geometry", GH_ParamAccess.list);
-            inputParamManager.AddGenericParameter("Dictionary", "SAMgeo", "SAM Geometry", GH_ParamAccess.list);
+            inputParamManager.AddGenericParameter("Panels", "SAMgeo", "SAM Analytical Panels", GH_ParamAccess.list);
+            inputParamManager.AddGenericParameter("Spaces", "SAMgeo", "SAM Analytical Spaces", GH_ParamAccess.list);
             inputParamManager.AddGenericParameter("Tolerance", "SAMgeo", "SAM Geometry", GH_ParamAccess.item);
         }
 
@@ -37,7 +36,8 @@ namespace SAM.Analytical.Grasshopper
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
         {
-            outputParamManager.AddGenericParameter("Panels", "TopoGeo", "Topologic Geometry", GH_ParamAccess.list);
+            outputParamManager.AddGenericParameter("Names", "TopoGeo", "Topologic Geometry", GH_ParamAccess.list);
+            outputParamManager.AddGenericParameter("Geometry", "TopoGeo", "Topologic Geometry", GH_ParamAccess.list);
         }
 
         /// <summary>
@@ -46,14 +46,15 @@ namespace SAM.Analytical.Grasshopper
         /// <param name="dataAccess">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
-            List<GH_ObjectWrapper> objectWrapperList = new List<GH_ObjectWrapper>();
+            List<GH_ObjectWrapper> objectWrapperList = null;
+
+            objectWrapperList = new List<GH_ObjectWrapper>();
 
             if (!dataAccess.GetDataList(0, objectWrapperList) || objectWrapperList == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
-
 
             List<Face> faceList = new List<Face>();
             foreach(GH_ObjectWrapper gHObjectWraper in objectWrapperList)
@@ -62,15 +63,39 @@ namespace SAM.Analytical.Grasshopper
                 if (panel == null)
                     continue;
 
-                Face face = Topologic.Convert.ToTopologic(panel);
+                Face face = Analytical.Topologic.Convert.ToTopologic(panel);
                 if (face == null)
                     continue;
 
                 faceList.Add(face);
             }
 
+            objectWrapperList = new List<GH_ObjectWrapper>();
+
+            if (!dataAccess.GetDataList(1, objectWrapperList) || objectWrapperList == null)
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
+                return;
+            }
+
+            
+            List<Topology> topologyList = new List<Topology>();
+            foreach (GH_ObjectWrapper gHObjectWraper in objectWrapperList)
+            {
+                Space space = gHObjectWraper.Value as Space;
+                if (space == null)
+                    continue;
+
+                Dictionary<string, object> dictionary = new Dictionary<string, object>();
+                dictionary["Name"] = space.Name;
+
+                Vertex vertex = Geometry.Topologic.Convert.ToTopologic(space.Location);
+                vertex.SetDictionary(dictionary);
+                topologyList.Add(vertex);
+            }
+
             GH_ObjectWrapper objectWrapper = null;
-            if (!dataAccess.GetData(0, ref objectWrapper) || objectWrapper.Value == null)
+            if (!dataAccess.GetData(2, ref objectWrapper) || objectWrapper.Value == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
@@ -90,9 +115,31 @@ namespace SAM.Analytical.Grasshopper
                 return;
             }
 
+            cellComplex = (CellComplex)cellComplex.AddContents(topologyList, 32);
 
+            List<List<string>> nameList = new List<List<string>>();
+            List<Geometry.Spatial.IGeometry3D> geometryList = new List<Geometry.Spatial.IGeometry3D>();
+            foreach (Face face in cellComplex.Faces)
+            {
+                geometryList.Add(SAM.Geometry.Topologic.Convert.ToSAM(face));
 
-            dataAccess.SetDataList(0, cellComplex.Faces);
+                List<string> stringList = new List<string>();
+                foreach (Cell cell in face.Cells)
+                {
+                    foreach(Topology topology in cell.Contents)
+                    {
+                        Vertex vertex = topology as Vertex;
+                        if (vertex == null)
+                            continue;
+
+                        stringList.Add(vertex.Dictionary["Name"] as string);
+                    }
+                }
+                nameList.Add(stringList);
+            }
+
+            dataAccess.SetDataList(0, nameList);
+            dataAccess.SetDataList(1, geometryList);
             return;
 
         }

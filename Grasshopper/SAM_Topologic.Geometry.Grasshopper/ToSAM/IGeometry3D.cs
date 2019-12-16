@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Grasshopper.Kernel.Types;
 using Topologic;
 
-namespace SAM.Geometry.Grasshopper
+namespace SAM.Geometry.Grasshopper.Topologic
 {
     public static partial class Convert
     {

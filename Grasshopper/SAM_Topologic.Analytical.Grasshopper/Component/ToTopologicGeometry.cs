@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 
-using SAM_Topologic.Analytical.Grasshopper.Properties;
+using SAM.Analytical.Grasshopper.Topologic.Properties;
 
-namespace SAM.Analytical.Grasshopper
+namespace SAM.Analytical.Grasshopper.Topologic
 {
     public class ToTopologicGeometry : GH_Component
     {
@@ -55,7 +55,7 @@ namespace SAM.Analytical.Grasshopper
             Panel panel = obj as Panel;
             if(panel != null)
             {
-                dataAccess.SetData(0, Topologic.Convert.ToTopologic((Panel)obj));
+                dataAccess.SetData(0, Analytical.Topologic.Convert.ToTopologic((Panel)obj));
                 return;
             }
 

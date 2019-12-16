@@ -8,8 +8,8 @@
     <ProjectGuid>{B8F0EE34-A776-4518-ADA2-E047E468B47B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SAM_Topologic.Geometry.Grasshopper</RootNamespace>
-    <AssemblyName>SAM_Topologic.Geometry.Grasshopper</AssemblyName>
+    <RootNamespace>SAM.Geometry.Grasshopper.Topologic</RootNamespace>
+    <AssemblyName>SAM.Geometry.Grasshopper.Topologic</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>false</IsWebBootstrapper>

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
-using SAM_Topologic.Geometry.Grasshopper.Properties;
+using SAM.Geometry.Grasshopper.Topologic.Properties;
 using SAM.Geometry.Spatial;
 
-namespace SAM.Geometry.Grasshopper
+namespace SAM.Geometry.Grasshopper.Topologic
 {
     public class ToTopologicGeometry : GH_Component
     {
@@ -55,21 +55,21 @@ namespace SAM.Geometry.Grasshopper
             Point3D point3D = obj as Point3D;
             if (point3D != null)
             {
-                dataAccess.SetData(0, Topologic.Convert.ToTopologic(point3D));
+                dataAccess.SetData(0, Geometry.Topologic.Convert.ToTopologic(point3D));
                 return;
             }
 
             Segment3D segment3D = obj as Segment3D;
             if (segment3D != null)
             {
-                dataAccess.SetData(0, Topologic.Convert.ToTopologic(segment3D));
+                dataAccess.SetData(0, Geometry.Topologic.Convert.ToTopologic(segment3D));
                 return;
             }
 
             Polygon3D polygon3D = obj as Polygon3D;
             if (polygon3D != null)
             {
-                dataAccess.SetData(0, Topologic.Convert.ToTopologic(polygon3D));
+                dataAccess.SetData(0, Geometry.Topologic.Convert.ToTopologic(polygon3D));
                 return;
             }
 

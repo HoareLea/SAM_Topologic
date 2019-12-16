@@ -2,10 +2,10 @@
 
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
-using SAM_Topologic.Geometry.Grasshopper.Properties;
+using SAM.Geometry.Grasshopper.Topologic.Properties;
 using Topologic;
 
-namespace SAM.Geometry.Grasshopper
+namespace SAM.Geometry.Grasshopper.Topologic
 {
     public class ToSAMGeometry : GH_Component
     {

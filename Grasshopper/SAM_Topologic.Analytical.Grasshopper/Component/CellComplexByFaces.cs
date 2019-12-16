@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 
-using SAM_Topologic.Analytical.Grasshopper.Properties;
+using SAM.Analytical.Grasshopper.Topologic.Properties;
 using Topologic;
 
-namespace SAM.Analytical.Grasshopper
+namespace SAM.Analytical.Grasshopper.Topologic
 {
     public class CellComplexByFaces : GH_Component
     {

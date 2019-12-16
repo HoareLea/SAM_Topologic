@@ -8,8 +8,8 @@
     <ProjectGuid>{E31E5F4E-EAC1-4E48-A5F9-E4560896C2B3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SAM_Topologic.Analytical.Grasshopper</RootNamespace>
-    <AssemblyName>SAM_Topologic.Analytical.Grasshopper</AssemblyName>
+    <RootNamespace>SAM.Analytical.Grasshopper.Topologic</RootNamespace>
+    <AssemblyName>SAM.Analytical.Grasshopper.Topologic</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>false</IsWebBootstrapper>
@@ -97,6 +97,10 @@
     <ProjectReference Include="..\..\SAM_Topologic\SAM.Analytical.Topologic\SAM.Analytical.Topologic.csproj">
       <Project>{577724ca-7f73-473a-8c32-8ef0250f247e}</Project>
       <Name>SAM.Analytical.Topologic</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SAM_Topologic\SAM.Geometry.Topologic\SAM.Geometry.Topologic.csproj">
+      <Project>{f50bd61e-abe4-4867-b815-e9f701968031}</Project>
+      <Name>SAM.Geometry.Topologic</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
