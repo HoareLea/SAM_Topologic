@@ -45,7 +45,7 @@ namespace SAM.Analytical.Grasshopper
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
             List<GH_ObjectWrapper> objectWrapperList = new List<GH_ObjectWrapper>();
-            if (!dataAccess.GetData(0, ref objectWrapperList) || objectWrapperList == null)
+            if (!dataAccess.GetDataList(0, objectWrapperList) || objectWrapperList == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
