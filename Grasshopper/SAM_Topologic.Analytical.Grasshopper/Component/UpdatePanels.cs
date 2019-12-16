@@ -34,7 +34,7 @@ namespace SAM.Analytical.Grasshopper
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
         {
-            outputParamManager.AddGenericParameter("Faces", "TopoGeo", "Topologic Geometry", GH_ParamAccess.list);
+            outputParamManager.AddGenericParameter("Panels", "TopoGeo", "Topologic Geometry", GH_ParamAccess.list);
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace SAM.Analytical.Grasshopper
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("61bae85d-4947-4f8a-90df-64d2a008c2cc"); }
+            get { return new Guid("8df2e1bf-81fd-4d9e-b02b-4b6389769fa2"); }
         }
     }
 }
