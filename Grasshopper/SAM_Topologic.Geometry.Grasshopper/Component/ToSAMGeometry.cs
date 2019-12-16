@@ -50,31 +50,21 @@ namespace SAM.Geometry.Grasshopper
                 return;
             }
 
-            object obj = objectWrapper.Value;
-
-            Vertex vertex = obj as Vertex;
-            if (vertex != null)
-            { 
-                dataAccess.SetData(0, Topologic.Convert.ToSAM(vertex));
-                return;
-            }
-
-            Edge edge = obj as Edge;
-            if (edge != null)
+            Topology topology = objectWrapper.Value as Topology;
+            if(topology == null)
             {
-                dataAccess.SetData(0, Topologic.Convert.ToSAM(edge));
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
-            Wire wire = obj as Wire;
-            if (wire != null)
+            Spatial.IGeometry3D geometry3D = Convert.ToSAM(topology);
+            if(geometry3D == null)
             {
-                dataAccess.SetData(0, Topologic.Convert.ToSAM(wire));
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Cannot convert geometry");
                 return;
             }
 
-
-            AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Cannot convert geometry");
+            dataAccess.SetData(0, geometry3D);
         }
 
         /// <summary>

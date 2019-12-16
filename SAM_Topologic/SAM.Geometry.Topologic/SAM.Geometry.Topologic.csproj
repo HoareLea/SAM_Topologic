@@ -49,13 +49,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ToSAM\Edge.cs" />
-    <Compile Include="ToSAM\Vertex.cs" />
-    <Compile Include="ToSAM\Wire.cs" />
-    <Compile Include="ToTopologic\IGeometry3D.cs" />
-    <Compile Include="ToTopologic\Polygon3D.cs" />
-    <Compile Include="ToTopologic\Segment3D.cs" />
-    <Compile Include="ToTopologic\Point3D.cs" />
+    <Compile Include="ToSAM\Segment3D.cs" />
+    <Compile Include="ToSAM\Point3D.cs" />
+    <Compile Include="ToSAM\Polygon3D.cs" />
+    <Compile Include="ToTopologic\Topology.cs" />
+    <Compile Include="ToTopologic\Wire.cs" />
+    <Compile Include="ToTopologic\Edge.cs" />
+    <Compile Include="ToTopologic\Vertex.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
