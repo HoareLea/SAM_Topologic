@@ -28,7 +28,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         {
             inputParamManager.AddGenericParameter("Panels", "SAMgeo", "SAM Analytical Panels", GH_ParamAccess.list);
             inputParamManager.AddGenericParameter("Spaces", "SAMgeo", "SAM Analytical Spaces", GH_ParamAccess.list);
-            inputParamManager.AddGenericParameter("Tolerance", "SAMgeo", "SAM Geometry", GH_ParamAccess.item);
+            inputParamManager.AddNumberParameter("Tolerance", "SAMgeo", "SAM Geometry", GH_ParamAccess.item, SAM.Geometry.Tolerance.MicroDistance);
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
                 dictionary["Name"] = space.Name;
 
                 Vertex vertex = Geometry.Topologic.Convert.ToTopologic(space.Location);
-                vertex.SetDictionary(dictionary);
+                vertex = (Vertex)vertex.SetDictionary(dictionary);
                 topologyList.Add(vertex);
             }
 
