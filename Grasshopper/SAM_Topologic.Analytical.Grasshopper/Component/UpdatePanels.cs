@@ -27,6 +27,9 @@ namespace SAM.Analytical.Grasshopper
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
             inputParamManager.AddGenericParameter("Panels", "SAMgeo", "SAM Geometry", GH_ParamAccess.list);
+            inputParamManager.AddGenericParameter("Points", "SAMgeo", "SAM Geometry", GH_ParamAccess.list);
+            inputParamManager.AddGenericParameter("Dictionary", "SAMgeo", "SAM Geometry", GH_ParamAccess.list);
+            inputParamManager.AddGenericParameter("Tolerance", "SAMgeo", "SAM Geometry", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -43,20 +46,51 @@ namespace SAM.Analytical.Grasshopper
         /// <param name="dataAccess">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
-            GH_ObjectWrapper objectWrapper = null;
+            List<GH_ObjectWrapper> objectWrapperList = new List<GH_ObjectWrapper>();
 
+            if (!dataAccess.GetDataList(0, objectWrapperList) || objectWrapperList == null)
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
+                return;
+            }
+
+
+            List<Face> faceList = new List<Face>();
+            foreach(GH_ObjectWrapper gHObjectWraper in objectWrapperList)
+            {
+                Panel panel = gHObjectWraper.Value as Panel;
+                if (panel == null)
+                    continue;
+
+                Face face = Topologic.Convert.ToTopologic(panel);
+                if (face == null)
+                    continue;
+
+                faceList.Add(face);
+            }
+
+            GH_ObjectWrapper objectWrapper = null;
             if (!dataAccess.GetData(0, ref objectWrapper) || objectWrapper.Value == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
-            CellComplex cellComplex = objectWrapper.Value as CellComplex;
+            GH_Number gHNumber = objectWrapper.Value as GH_Number;
+            if(gHNumber == null)
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
+                return;
+            }
+
+            CellComplex cellComplex = CellComplex.ByFaces(faceList, gHNumber.Value);
             if(cellComplex == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
+
+
 
             dataAccess.SetDataList(0, cellComplex.Faces);
             return;
