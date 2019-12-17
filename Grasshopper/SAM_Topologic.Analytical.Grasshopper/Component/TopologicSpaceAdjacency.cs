@@ -19,7 +19,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// </summary>
         public TopologicSpaceAdjacency()
           : base("TopologicSpaceAdjacency", "TopoGeo",
-              "Convert SAM Geometry To Topologic Geometry",
+              "Convert SAM Analytical Panel To Topologic Cellcomplex and then rerun for each Face list of Adjacent Space Names",
               "SAM", "Topologic")
         {
         }
@@ -29,9 +29,9 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
-            inputParamManager.AddGenericParameter("Panels", "SAMgeo", "SAM Analytical Panels", GH_ParamAccess.list);
-            inputParamManager.AddGenericParameter("Spaces", "SAMgeo", "SAM Analytical Spaces", GH_ParamAccess.list);
-            inputParamManager.AddNumberParameter("Tolerance", "SAMgeo", "SAM Geometry", GH_ParamAccess.item, SAM.Geometry.Tolerance.MicroDistance);
+            inputParamManager.AddGenericParameter("_panels", "_panels", "SAM Analytical Panels", GH_ParamAccess.list);
+            inputParamManager.AddGenericParameter("_spaces", "_spaces", "SAM Analytical Spaces", GH_ParamAccess.list);
+            inputParamManager.AddNumberParameter("_tolerance_", "_tolerance_", "Topologic CellComplex default 0.001", GH_ParamAccess.item, SAM.Geometry.Tolerance.MacroDistance);
         }
 
         /// <summary>
@@ -39,8 +39,9 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
         {
-            outputParamManager.AddGenericParameter("Names", "TopoGeo", "Topologic Geometry", GH_ParamAccess.list);
-            outputParamManager.AddGenericParameter("Geometry", "TopoGeo", "Topologic Geometry", GH_ParamAccess.list);
+            outputParamManager.AddGenericParameter("geometry", "geometry", "Face Geometry", GH_ParamAccess.list);
+            outputParamManager.AddGenericParameter("faceAdjSpaceNames", "TopoGeo", "List of Adj Space Names for each face", GH_ParamAccess.list);
+
         }
 
         /// <summary>
@@ -127,7 +128,6 @@ namespace SAM.Analytical.Grasshopper.Topologic
             foreach (Face face in cellComplex.Faces)
             {
                 geometryList.Add(Geometry.Topologic.Convert.ToSAM(face));
-                int index_2 = 0;
                 foreach (Cell cell in face.Cells)
                 {
                     foreach(Topology topology in cell.Contents)
@@ -136,17 +136,17 @@ namespace SAM.Analytical.Grasshopper.Topologic
                         if (vertex == null)
                             continue;
 
-                        GH_Path path = new GH_Path(index_1, index_2);
+                        GH_Path path = new GH_Path(index_1);
                         nameDataTree.Add(vertex.Dictionary["Name"] as string, path);
-                        index_2++;
                     }
                 }
 
                 index_1++;
             }
 
-            dataAccess.SetDataTree(0, nameDataTree);
-            dataAccess.SetDataList(1, geometryList);
+            dataAccess.SetDataList(0, geometryList);
+            dataAccess.SetDataTree(1, nameDataTree);
+
             return;
 
         }

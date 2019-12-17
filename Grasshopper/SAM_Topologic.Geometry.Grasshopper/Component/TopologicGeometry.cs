@@ -25,7 +25,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
-            inputParamManager.AddGenericParameter("SAMGeometry", "SAMgeo", "SAM Geometry", GH_ParamAccess.item);
+            inputParamManager.AddGenericParameter("_SAMGeometry", "_SAMGeometry", "SAM Geometry: Polygon3D, Segment3D, Point3D", GH_ParamAccess.item);
         }
 
         /// <summary>

@@ -15,8 +15,8 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
         public TopologicFaces()
-          : base("TopologicFaces", "TopoGeo",
-              "Convert SAM Geometry To Topologic Geometry",
+          : base("TopologicFaces", "ToTopoFaces",
+              "Convert Topologic CellComplex To Topologic Faces",
               "SAM", "Topologic")
         {
         }
@@ -26,7 +26,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
-            inputParamManager.AddGenericParameter("CellComplex", "SAMgeo", "SAM Geometry", GH_ParamAccess.item);
+            inputParamManager.AddGenericParameter("_cellComplex", "_cellComplex", "Topologic CellComplex", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
         {
-            outputParamManager.AddGenericParameter("Faces", "TopoGeo", "Topologic Geometry", GH_ParamAccess.list);
+            outputParamManager.AddGenericParameter("faces", "faces", "Topologic Faces", GH_ParamAccess.list);
         }
 
         /// <summary>

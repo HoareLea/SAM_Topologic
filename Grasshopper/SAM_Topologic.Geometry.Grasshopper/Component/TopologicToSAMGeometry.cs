@@ -7,14 +7,14 @@ using Topologic;
 
 namespace SAM.Geometry.Grasshopper.Topologic
 {
-    public class TopologicSAMGeometry : GH_Component
+    public class TopologicToSAMGeometry : GH_Component
     {
         /// <summary>
         /// Initializes a new instance of the SAMGeometryByGHGeometry class.
         /// </summary>
-        public TopologicSAMGeometry()
-          : base("TopologicSAMGeometry", "SAMgeo",
-              "Description Convert SAM Geometry to Topologic Geometry",
+        public TopologicToSAMGeometry()
+          : base("TopologicToSAMGeometry", "SAMgeo",
+              "Convert Topologic Geometry to SAM Geometry",
               "SAM", "Topologic")
         {
         }
@@ -24,7 +24,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
-            inputParamManager.AddGenericParameter("TopologicGeometry", "TopoGeo", "Topologic Geometry", GH_ParamAccess.item);
+            inputParamManager.AddGenericParameter("_topologicGeometry", "_topologicGeometry", "Topologic Geometry", GH_ParamAccess.item);
         }
 
 
@@ -33,7 +33,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
         {
-            outputParamManager.AddGenericParameter("SAMGeometry", "SAMgeo", "SAM Geometry", GH_ParamAccess.item);
+            outputParamManager.AddGenericParameter("SAMGeometry", "SAMGeometry", "SAM Geometry", GH_ParamAccess.item);
         }
 
         /// <summary>

@@ -15,7 +15,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// </summary>
         public TopologicAnalyticalGeometry()
           : base("TopologicAnalyticalGeometry", "TopoGeo",
-              "Convert SAM Geometry To Topologic Geometry",
+              "Convert SAM Analytical To Topologic Geometry",
               "SAM", "Topologic")
         {
         }
@@ -25,7 +25,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
-            inputParamManager.AddGenericParameter("SAMGeometry", "SAMgeo", "SAM Geometry", GH_ParamAccess.item);
+            inputParamManager.AddGenericParameter("_analyticalObject", "_analyticalObject", "SAM Analytical Object: Panel", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
         {
-            outputParamManager.AddGenericParameter("TopologicGeometry", "TopoGeo", "Topologic Geometry", GH_ParamAccess.item);
+            outputParamManager.AddGenericParameter("topologicGeometry", "TopoGeo", "Topologic Geometry", GH_ParamAccess.item);
         }
 
         /// <summary>
