@@ -1,21 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using Topologic;
+
+using Grasshopper;
 using Grasshopper.Kernel;
+using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Types;
 
 using SAM.Analytical.Grasshopper.Topologic.Properties;
-using Topologic;
 
 namespace SAM.Analytical.Grasshopper.Topologic
 {
-    public class TopologicUpdatePanels : GH_Component
+    public class TopologicSpaceAdjacency : GH_Component
     {
         /// <summary>
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
-        public TopologicUpdatePanels()
-          : base("TopologicUpdatePanels", "TopoGeo",
+        public TopologicSpaceAdjacency()
+          : base("TopologicSpaceAdjacency", "TopoGeo",
               "Convert SAM Geometry To Topologic Geometry",
               "SAM", "Topologic")
         {
@@ -117,13 +120,14 @@ namespace SAM.Analytical.Grasshopper.Topologic
 
             cellComplex = (CellComplex)cellComplex.AddContents(topologyList, 32);
 
-            List<List<string>> nameList = new List<List<string>>();
+            int index_1 = 0;
+
+            DataTree<string> nameDataTree = new DataTree<string>();
             List<Geometry.Spatial.IGeometry3D> geometryList = new List<Geometry.Spatial.IGeometry3D>();
             foreach (Face face in cellComplex.Faces)
             {
-                geometryList.Add(SAM.Geometry.Topologic.Convert.ToSAM(face));
-
-                List<string> stringList = new List<string>();
+                geometryList.Add(Geometry.Topologic.Convert.ToSAM(face));
+                int index_2 = 0;
                 foreach (Cell cell in face.Cells)
                 {
                     foreach(Topology topology in cell.Contents)
@@ -132,13 +136,16 @@ namespace SAM.Analytical.Grasshopper.Topologic
                         if (vertex == null)
                             continue;
 
-                        stringList.Add(vertex.Dictionary["Name"] as string);
+                        GH_Path path = new GH_Path(index_1, index_2);
+                        nameDataTree.Add(vertex.Dictionary["Name"] as string, path);
+                        index_2++;
                     }
                 }
-                nameList.Add(stringList);
+
+                index_1++;
             }
 
-            dataAccess.SetDataList(0, nameList);
+            dataAccess.SetDataTree(0, nameDataTree);
             dataAccess.SetDataList(1, geometryList);
             return;
 

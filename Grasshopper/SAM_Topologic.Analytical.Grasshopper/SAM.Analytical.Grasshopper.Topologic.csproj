@@ -73,7 +73,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Component\TopologicUpdatePanels.cs" />
+    <Compile Include="Component\TopologicSpaceAdjacency.cs" />
     <Compile Include="Component\TopologicFaces.cs" />
     <Compile Include="Component\TopologicCellComplexByFaces.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
