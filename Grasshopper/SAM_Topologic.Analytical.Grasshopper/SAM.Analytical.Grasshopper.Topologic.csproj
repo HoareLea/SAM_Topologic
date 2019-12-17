@@ -73,16 +73,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Component\UpdatePanels.cs" />
-    <Compile Include="Component\Faces.cs" />
-    <Compile Include="Component\CellComplexByFaces.cs" />
+    <Compile Include="Component\TopologicUpdatePanels.cs" />
+    <Compile Include="Component\TopologicFaces.cs" />
+    <Compile Include="Component\TopologicCellComplexByFaces.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Component\ToTopologicGeometry.cs" />
+    <Compile Include="Component\TopologicAnalyticalGeometry.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

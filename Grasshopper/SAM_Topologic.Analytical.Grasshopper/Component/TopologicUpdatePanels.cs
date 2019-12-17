@@ -9,13 +9,13 @@ using Topologic;
 
 namespace SAM.Analytical.Grasshopper.Topologic
 {
-    public class UpdatePanels : GH_Component
+    public class TopologicUpdatePanels : GH_Component
     {
         /// <summary>
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
-        public UpdatePanels()
-          : base("UpdatePanels", "TopoGeo",
+        public TopologicUpdatePanels()
+          : base("TopologicUpdatePanels", "TopoGeo",
               "Convert SAM Geometry To Topologic Geometry",
               "SAM", "Topologic")
         {

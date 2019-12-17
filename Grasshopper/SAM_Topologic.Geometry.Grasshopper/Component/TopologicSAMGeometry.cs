@@ -1,21 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
 
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using SAM.Geometry.Grasshopper.Topologic.Properties;
-using SAM.Geometry.Spatial;
+using Topologic;
 
 namespace SAM.Geometry.Grasshopper.Topologic
 {
-    public class ToTopologicGeometry : GH_Component
+    public class TopologicSAMGeometry : GH_Component
     {
         /// <summary>
-        /// Initializes a new instance of the SAM_point3D class.
+        /// Initializes a new instance of the SAMGeometryByGHGeometry class.
         /// </summary>
-        public ToTopologicGeometry()
-          : base("ToTopologicGeometryBySAMGeometry", "TopoGeo",
-              "Convert SAM Geometry To Topologic Geometry",
+        public TopologicSAMGeometry()
+          : base("TopologicSAMGeometry", "SAMgeo",
+              "Description Convert SAM Geometry to Topologic Geometry",
               "SAM", "Topologic")
         {
         }
@@ -25,15 +24,16 @@ namespace SAM.Geometry.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
-            inputParamManager.AddGenericParameter("SAMGeometry", "SAMgeo", "SAM Geometry", GH_ParamAccess.item);
+            inputParamManager.AddGenericParameter("TopologicGeometry", "TopoGeo", "Topologic Geometry", GH_ParamAccess.item);
         }
+
 
         /// <summary>
         /// Registers all the output parameters for this component.
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
         {
-            outputParamManager.AddGenericParameter("TopologicGeometry", "TopoGeo", "Topologic Geometry", GH_ParamAccess.item);
+            outputParamManager.AddGenericParameter("SAMGeometry", "SAMgeo", "SAM Geometry", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -50,31 +50,21 @@ namespace SAM.Geometry.Grasshopper.Topologic
                 return;
             }
 
-            object obj = objectWrapper.Value;
-
-            Point3D point3D = obj as Point3D;
-            if (point3D != null)
+            Topology topology = objectWrapper.Value as Topology;
+            if(topology == null)
             {
-                dataAccess.SetData(0, Geometry.Topologic.Convert.ToTopologic(point3D));
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
-            Segment3D segment3D = obj as Segment3D;
-            if (segment3D != null)
+            Spatial.IGeometry3D geometry3D = Convert.ToSAM(topology);
+            if(geometry3D == null)
             {
-                dataAccess.SetData(0, Geometry.Topologic.Convert.ToTopologic(segment3D));
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Cannot convert geometry");
                 return;
             }
 
-            Polygon3D polygon3D = obj as Polygon3D;
-            if (polygon3D != null)
-            {
-                dataAccess.SetData(0, Geometry.Topologic.Convert.ToTopologic(polygon3D));
-                return;
-            }
-
-            AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Cannot convert geometry");
-
+            dataAccess.SetData(0, geometry3D);
         }
 
         /// <summary>
@@ -95,7 +85,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("8904de02-93b6-4d21-8d04-2ee1acb1e53c"); }
+            get { return new Guid("0fca6d19-95ee-4461-9be1-ab784aa800db"); }
         }
     }
 }

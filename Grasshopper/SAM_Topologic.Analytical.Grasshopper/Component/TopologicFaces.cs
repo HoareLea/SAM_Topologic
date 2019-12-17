@@ -9,13 +9,13 @@ using Topologic;
 
 namespace SAM.Analytical.Grasshopper.Topologic
 {
-    public class CellComplexByFaces : GH_Component
+    public class TopologicFaces : GH_Component
     {
         /// <summary>
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
-        public CellComplexByFaces()
-          : base("CellComplexByFaces", "TopoGeo",
+        public TopologicFaces()
+          : base("TopologicFaces", "TopoGeo",
               "Convert SAM Geometry To Topologic Geometry",
               "SAM", "Topologic")
         {
@@ -26,8 +26,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
-            inputParamManager.AddGenericParameter("_Faces", "SAMgeo", "SAM Geometry", GH_ParamAccess.list);
-            inputParamManager.AddNumberParameter("Tolerance_", "SAMgeo", "SAM Geometry", GH_ParamAccess.item, Geometry.Tolerance.MacroDistance);
+            inputParamManager.AddGenericParameter("CellComplex", "SAMgeo", "SAM Geometry", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -35,7 +34,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
         {
-            outputParamManager.AddGenericParameter("CellComplex", "TopoGeo", "Topologic Geometry", GH_ParamAccess.item);
+            outputParamManager.AddGenericParameter("Faces", "TopoGeo", "Topologic Geometry", GH_ParamAccess.list);
         }
 
         /// <summary>
@@ -44,29 +43,22 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// <param name="dataAccess">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
-            List<GH_ObjectWrapper> objectWrapperList = new List<GH_ObjectWrapper>();
-            if (!dataAccess.GetDataList(0, objectWrapperList) || objectWrapperList == null)
-            {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
-                return;
-            }
-
             GH_ObjectWrapper objectWrapper = null;
 
-            if (!dataAccess.GetData(1, ref objectWrapper) || objectWrapper.Value == null)
+            if (!dataAccess.GetData(0, ref objectWrapper) || objectWrapper.Value == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
-            GH_Number gHNumber = objectWrapper.Value as GH_Number;
-            if(gHNumber == null)
+            CellComplex cellComplex = objectWrapper.Value as CellComplex;
+            if(cellComplex == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
-            dataAccess.SetData(0, CellComplex.ByFaces(objectWrapperList.ConvertAll(x => x.Value as Face), gHNumber.Value));
+            dataAccess.SetDataList(0, cellComplex.Faces);
             return;
 
         }
@@ -89,7 +81,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("6ce7b31d-ba55-4e37-9ef8-967f2040e11a"); }
+            get { return new Guid("61bae85d-4947-4f8a-90df-64d2a008c2cc"); }
         }
     }
 }
