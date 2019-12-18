@@ -13,9 +13,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Grasshopper", "Grasshopper"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAM_TopologicGeometryDynamo", "Dynamo\SAM_TopologyGeometryDynamo\SAM_TopologicGeometryDynamo.csproj", "{31847A71-1B4C-4E40-A202-391922B39876}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAM.Geometry.Grasshopper.Topologic", "Grasshopper\SAM_Topologic.Geometry.Grasshopper\SAM.Geometry.Grasshopper.Topologic.csproj", "{B8F0EE34-A776-4518-ADA2-E047E468B47B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAM.Geometry.Grasshopper.Topologic", "Grasshopper\SAM.Geometry.Grasshopper.Topologic\SAM.Geometry.Grasshopper.Topologic.csproj", "{B8F0EE34-A776-4518-ADA2-E047E468B47B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAM.Analytical.Grasshopper.Topologic", "Grasshopper\SAM_Topologic.Analytical.Grasshopper\SAM.Analytical.Grasshopper.Topologic.csproj", "{E31E5F4E-EAC1-4E48-A5F9-E4560896C2B3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAM.Analytical.Grasshopper.Topologic", "Grasshopper\SAM.Analytical.Grasshopper.Topologic\SAM.Analytical.Grasshopper.Topologic.csproj", "{E31E5F4E-EAC1-4E48-A5F9-E4560896C2B3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAM.Analytical.Topologic", "SAM_Topologic\SAM.Analytical.Topologic\SAM.Analytical.Topologic.csproj", "{577724CA-7F73-473A-8C32-8EF0250F247E}"
 EndProject

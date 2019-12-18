@@ -6,7 +6,7 @@ namespace SAM.Analytical.Topologic
     {
         public static Face ToTopologic(this Panel panel)
         {
-            return Face.ByWire(Geometry.Topologic.Convert.ToTopologic(panel.Polygon));
+            return Face.ByWire(Geometry.Topologic.Convert.ToTopologic(panel.ToPolygon()));
 
         }
     }
