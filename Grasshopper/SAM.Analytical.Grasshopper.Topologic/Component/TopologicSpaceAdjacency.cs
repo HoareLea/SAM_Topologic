@@ -112,43 +112,21 @@ namespace SAM.Analytical.Grasshopper.Topologic
                 return;
             }
 
-            CellComplex cellComplex = CellComplex.ByFaces(faceList, gHNumber.Value);
-            if(cellComplex == null)
-            {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
-                return;
-            }
-
-            cellComplex = (CellComplex)cellComplex.AddContents(topologyList, 32);
-
-            int index_1 = 0;
-
-            DataTree<string> nameDataTree = new DataTree<string>();
             List<Geometry.Spatial.IGeometry3D> geometryList = new List<Geometry.Spatial.IGeometry3D>();
-            foreach (Face face in cellComplex.Faces)
-            {
-                geometryList.Add(Geometry.Topologic.Convert.ToSAM(face));
-                foreach (Cell cell in face.Cells)
-                {
-                    foreach(Topology topology in cell.Contents)
-                    {
-                        Vertex vertex = topology as Vertex;
-                        if (vertex == null)
-                            continue;
+            List<Tuple<string, int>> tupleList = new List<Tuple< string, int>>();
 
-                        GH_Path path = new GH_Path(index_1);
-                        nameDataTree.Add(vertex.Dictionary["Name"] as string, path);
-                    }
+            if (Analytical.Topologic.Query.TryGetSpaceAdjacency(faceList, topologyList, gHNumber.Value, out geometryList, out tupleList))
+            {
+                DataTree<string> nameDataTree = new DataTree<string>();
+                foreach (Tuple<string, int> tuple in tupleList)
+                {
+                    GH_Path path = new GH_Path(tuple.Item2);
+                    nameDataTree.Add(tuple.Item1, path);
                 }
 
-                index_1++;
+                dataAccess.SetDataList(0, geometryList);
+                dataAccess.SetDataTree(1, nameDataTree);
             }
-
-            dataAccess.SetDataList(0, geometryList);
-            dataAccess.SetDataTree(1, nameDataTree);
-
-            return;
-
         }
 
         /// <summary>
