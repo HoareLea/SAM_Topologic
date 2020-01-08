@@ -60,18 +60,14 @@ namespace SAM.Analytical.Grasshopper.Topologic
                 return;
             }
 
-            List<Face> faceList = new List<Face>();
+            List<Panel> panelList = new List<Panel>();
             foreach(GH_ObjectWrapper gHObjectWraper in objectWrapperList)
             {
                 Panel panel = gHObjectWraper.Value as Panel;
                 if (panel == null)
                     continue;
 
-                Face face = Analytical.Topologic.Convert.ToTopologic(panel);
-                if (face == null)
-                    continue;
-
-                faceList.Add(face);
+                panelList.Add(panel);
             }
 
             objectWrapperList = new List<GH_ObjectWrapper>();
@@ -83,19 +79,14 @@ namespace SAM.Analytical.Grasshopper.Topologic
             }
 
             
-            List<Topology> topologyList = new List<Topology>();
+            List<Space> spaceList = new List<Space>();
             foreach (GH_ObjectWrapper gHObjectWraper in objectWrapperList)
             {
                 Space space = gHObjectWraper.Value as Space;
                 if (space == null)
                     continue;
 
-                Dictionary<string, object> dictionary = new Dictionary<string, object>();
-                dictionary["Name"] = space.Name;
-
-                Vertex vertex = Geometry.Topologic.Convert.ToTopologic(space.Location);
-                vertex = (Vertex)vertex.SetDictionary(dictionary);
-                topologyList.Add(vertex);
+                spaceList.Add(space);
             }
 
             GH_ObjectWrapper objectWrapper = null;
@@ -115,7 +106,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
             List<Geometry.Spatial.IGeometry3D> geometryList = new List<Geometry.Spatial.IGeometry3D>();
             List<Tuple<string, int>> tupleList = new List<Tuple< string, int>>();
 
-            if (Analytical.Topologic.Query.TryGetSpaceAdjacency(faceList, topologyList, gHNumber.Value, out geometryList, out tupleList))
+            if (Analytical.Topologic.Query.TryGetSpaceAdjacency(panelList, spaceList, gHNumber.Value, out geometryList, out tupleList))
             {
                 DataTree<string> nameDataTree = new DataTree<string>();
                 foreach (Tuple<string, int> tuple in tupleList)

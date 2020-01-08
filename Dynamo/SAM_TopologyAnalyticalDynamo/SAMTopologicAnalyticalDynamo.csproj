@@ -45,6 +45,14 @@
       <HintPath>..\..\packages\DynamoVisualProgramming.ZeroTouchLibrary.2.4.0.6186\lib\net47\ProtoGeometry.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="SAM.Analytical, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\SAM\build\SAM.Analytical.dll</HintPath>
+    </Reference>
+    <Reference Include="SAM.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\SAM\build\SAM.Core.dll</HintPath>
+    </Reference>
     <Reference Include="SAM.Geometry">
       <HintPath>..\..\..\SAM\build\SAM.Geometry.dll</HintPath>
     </Reference>
@@ -65,7 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Face.cs" />
+    <Compile Include="Panel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
