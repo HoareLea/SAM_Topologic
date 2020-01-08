@@ -8,7 +8,7 @@ namespace SAM.Analytical.Topologic
 {
     public static partial class Query
     {
-        public static bool TryGetSpaceAdjacency(IEnumerable<Face> faces, IEnumerable<Topology> topologies, double tolerance, out List<Geometry.Spatial.IGeometry3D> geometryList, out List<Tuple<string, int>> tupleList)
+        public static bool TryGetSpaceAdjacency(this IEnumerable<Face> faces, IEnumerable<Topology> topologies, double tolerance, out List<Geometry.Spatial.IGeometry3D> geometryList, out List<Tuple<string, int>> tupleList)
         {
             CellComplex cellComplex = CellComplex.ByFaces(faces, tolerance);
             if (cellComplex == null)
@@ -17,7 +17,6 @@ namespace SAM.Analytical.Topologic
                 tupleList = null;
                 return false;
             }
-                
 
             if (topologies != null)
                 cellComplex = (CellComplex)cellComplex.AddContents(topologies.ToList(), 32);

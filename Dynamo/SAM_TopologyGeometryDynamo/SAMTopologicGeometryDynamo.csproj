@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6F33E132-C6AC-4953-95D6-AFDCA3254969}</ProjectGuid>
+    <ProjectGuid>{31847A71-1B4C-4E40-A202-391922B39876}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SAM_TopologicAnalyticalDynamo</RootNamespace>
-    <AssemblyName>SAM_TopologicAnalyticalDynamo</AssemblyName>
+    <RootNamespace>SAMTopologicGeometryDynamo</RootNamespace>
+    <AssemblyName>SAMTopologicGeometryDynamo</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -21,7 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\build\SAM_TopologicAnalyticalDynamo.xml</DocumentationFile>
+    <DocumentationFile>..\..\build\SAMTopologicGeometryDynamo.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,7 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\build\SAM_TopologicAnalyticalDynamo.xml</DocumentationFile>
+    <DocumentationFile>..\build\SAMTopologicGeometryDynamo.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DynamoServices, Version=2.4.0.6186, Culture=neutral, processorArchitecture=MSIL">
@@ -64,13 +64,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Convert\ToSAMGeometry.cs" />
+    <Compile Include="Convert\ToTopologicGeometry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="SAM_TopologicAnalyticalDynamo_DynamoCustomization.xml">
+    <Content Include="SAM_TopologicGeometryDynamo_DynamoCustomization.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -79,9 +81,6 @@
       <Project>{f50bd61e-abe4-4867-b815-e9f701968031}</Project>
       <Name>SAM.Geometry.Topologic</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Convert\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

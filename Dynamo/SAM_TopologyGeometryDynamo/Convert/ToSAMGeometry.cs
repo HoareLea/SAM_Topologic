@@ -12,10 +12,5 @@ namespace SAM_TopologicGeometryDynamo
         {
             return SAM.Geometry.Topologic.Convert.ToSAM(topology as dynamic);
         }
-
-        //public static string AAA(string ddd)
-        //{
-        //    return "aaa";
-        //}
     }
 }
