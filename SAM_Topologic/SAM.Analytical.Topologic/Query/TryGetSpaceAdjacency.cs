@@ -2,19 +2,19 @@
 using System.Collections.Generic;
 
 using Topologic;
-
+using System;
 
 namespace SAM.Analytical.Topologic
 {
     public static partial class Query
     {
-        public static bool TryGetSpaceAdjacency(IEnumerable<Face> faces, IEnumerable<Topology> topologies, double tolerance, out List<Geometry.Spatial.IGeometry3D> geometryList, out Dictionary<string, int> dictionary)
+        public static bool TryGetSpaceAdjacency(IEnumerable<Face> faces, IEnumerable<Topology> topologies, double tolerance, out List<Geometry.Spatial.IGeometry3D> geometryList, out List<Tuple<string, int>> tupleList)
         {
             CellComplex cellComplex = CellComplex.ByFaces(faces, tolerance);
             if (cellComplex == null)
             {
                 geometryList = null;
-                dictionary = null;
+                tupleList = null;
                 return false;
             }
                 
@@ -24,7 +24,7 @@ namespace SAM.Analytical.Topologic
 
             int index = 0;
 
-            dictionary = new Dictionary<string, int>();
+            tupleList = new List<Tuple<string, int>>();
             geometryList = new List<Geometry.Spatial.IGeometry3D>();
             foreach (Face face in cellComplex.Faces)
             {
@@ -37,7 +37,7 @@ namespace SAM.Analytical.Topologic
                         if (vertex == null)
                             continue;
 
-                        dictionary[vertex.Dictionary["Name"] as string] = index;
+                        tupleList.Add(new Tuple<string, int>(vertex.Dictionary["Name"] as string, index));
                     }
                 }
 
