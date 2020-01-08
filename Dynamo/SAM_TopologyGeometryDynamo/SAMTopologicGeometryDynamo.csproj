@@ -72,7 +72,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="SAM_TopologicGeometryDynamo_DynamoCustomization.xml">
+    <Content Include="SAMTopologicGeometryDynamo_DynamoCustomization.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
