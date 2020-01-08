@@ -10,20 +10,9 @@ namespace SAM.Analytical.Topologic
     {
         public static bool TryGetSpaceAdjacency(this IEnumerable<Panel> panels, IEnumerable<Space> spaces, double tolerance, out List<Geometry.Spatial.IGeometry3D> geometryList, out List<Tuple<string, int>> tupleList)
         {
-            List<Topology> topologyList = new List<Topology>();
-            foreach (Space space in spaces)
-            {
-                if (space == null)
-                    continue;
 
-                Dictionary<string, object> dictionary = new Dictionary<string, object>();
-                dictionary["Name"] = space.Name;
-
-                Vertex vertex = Geometry.Topologic.Convert.ToTopologic(space.Location);
-                vertex = (Vertex)vertex.SetDictionary(dictionary);
-                topologyList.Add(vertex);
-            }
-
+            Geometry.Spatial.BoundingBox3D boundingBox3D = null;
+            
             List<Face> faceList = new List<Face>();
             foreach (Panel panel in panels)
             {
@@ -34,7 +23,40 @@ namespace SAM.Analytical.Topologic
                 if (face == null)
                     continue;
 
+                if (boundingBox3D == null)
+                {
+                    boundingBox3D = panel.GetBoundingBox();
+                }               
+                else
+                {
+                    Geometry.Spatial.BoundingBox3D boundingBox3D_Temp = panel.GetBoundingBox();
+                    if (boundingBox3D_Temp != null)
+                        boundingBox3D = new Geometry.Spatial.BoundingBox3D(new Geometry.Spatial.BoundingBox3D[] { boundingBox3D, boundingBox3D_Temp });
+                }
+
                 faceList.Add(face);
+            }
+
+            List<Topology> topologyList = new List<Topology>();
+            foreach (Space space in spaces)
+            {
+                if (space == null)
+                    continue;
+
+                Dictionary<string, object> dictionary = new Dictionary<string, object>();
+                dictionary["Name"] = space.Name;
+
+                Geometry.Spatial.Point3D point3D = space.Location;
+                //if(Math.Abs(point3D.Z - boundingBox3D.Min.Z) < tolerance)
+                //    point3D = point3D.GetMoved(new Geometry.Spatial.Vector3D(0, 0, 0.3));
+
+                //if (Math.Abs(point3D.Z - boundingBox3D.Max.Z) < tolerance)
+                //    point3D = point3D.GetMoved(new Geometry.Spatial.Vector3D(0, 0, 0.3));
+
+
+                Vertex vertex = Geometry.Topologic.Convert.ToTopologic(point3D);
+                vertex = (Vertex)vertex.SetDictionary(dictionary);
+                topologyList.Add(vertex);
             }
 
             return TryGetSpaceAdjacency(faceList, topologyList, tolerance, out geometryList, out tupleList);
