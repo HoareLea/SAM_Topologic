@@ -8,7 +8,7 @@ namespace SAM.Analytical.Topologic
 {
     public static partial class Query
     {
-        public static bool TryGetSpaceAdjacency(this IEnumerable<Panel> panels, IEnumerable<Space> spaces, double tolerance, out List<Geometry.Spatial.IGeometry3D> geometryList, out List<Tuple<string, int>> tupleList)
+        public static bool TryGetSpaceAdjacency(this IEnumerable<Panel> panels, IEnumerable<Space> spaces, double tolerance, out List<Geometry.Spatial.IGeometry3D> geometryList, out List<List<string>> names)
         {
 
             Geometry.Spatial.BoundingBox3D boundingBox3D = null;
@@ -58,16 +58,16 @@ namespace SAM.Analytical.Topologic
                 topologyList.Add(vertex);
             }
 
-            return TryGetSpaceAdjacency(faceList, topologyList, tolerance, out geometryList, out tupleList);
+            return TryGetSpaceAdjacency(faceList, topologyList, tolerance, out geometryList, out names);
         }
 
-        private static bool TryGetSpaceAdjacency(this IEnumerable<Face> faces, IEnumerable<Topology> topologies, double tolerance, out List<Geometry.Spatial.IGeometry3D> geometryList, out List<Tuple<string, int>> tupleList)
+        private static bool TryGetSpaceAdjacency(this IEnumerable<Face> faces, IEnumerable<Topology> topologies, double tolerance, out List<Geometry.Spatial.IGeometry3D> geometryList, out List<List<string>> names)
         {
             CellComplex cellComplex = CellComplex.ByFaces(faces, tolerance);
             if (cellComplex == null)
             {
                 geometryList = null;
-                tupleList = null;
+                names = null;
                 return false;
             }
 
@@ -76,10 +76,14 @@ namespace SAM.Analytical.Topologic
 
             int index = 0;
 
-            tupleList = new List<Tuple<string, int>>();
+            names = new List<List<string>>();
+
             geometryList = new List<Geometry.Spatial.IGeometry3D>();
             foreach (Face face in cellComplex.Faces)
             {
+                List<string> nameList = new List<string>();
+                names.Add(nameList);
+
                 geometryList.Add(Geometry.Topologic.Convert.ToSAM(face));
                 foreach (Cell cell in face.Cells)
                 {
@@ -89,7 +93,7 @@ namespace SAM.Analytical.Topologic
                         if (vertex == null)
                             continue;
 
-                        tupleList.Add(new Tuple<string, int>(vertex.Dictionary["Name"] as string, index));
+                        nameList.Add(vertex.Dictionary["Name"] as string);
                     }
                 }
 

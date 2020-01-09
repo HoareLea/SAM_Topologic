@@ -27,13 +27,13 @@ namespace SAMTopologicAnalyticalDynamo
         public static Dictionary<string, object> SpaceAdjacency(IEnumerable<SAM.Analytical.Panel> panels, IEnumerable<Space> spaces, double tolerance = SAM.Geometry.Tolerance.MicroDistance)
         {
             List<SAM.Geometry.Spatial.IGeometry3D> geometryList = null;
-            List<Tuple<string, int>> tupleList = null;
-            SAM.Analytical.Topologic.Query.TryGetSpaceAdjacency(panels, spaces, tolerance, out geometryList, out tupleList);
+            List<List<string>> names = null;
+            SAM.Analytical.Topologic.Query.TryGetSpaceAdjacency(panels, spaces, tolerance, out geometryList, out names);
 
             return new Dictionary<string, object>
             {
                 {"geometries", geometryList },
-                {"names", tupleList.ConvertAll(x => x.Item1) }
+                {"names", names }
             };
         }
     }

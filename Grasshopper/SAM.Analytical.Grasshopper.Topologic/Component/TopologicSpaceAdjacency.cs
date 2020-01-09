@@ -104,19 +104,20 @@ namespace SAM.Analytical.Grasshopper.Topologic
             }
 
             List<Geometry.Spatial.IGeometry3D> geometryList = new List<Geometry.Spatial.IGeometry3D>();
-            List<Tuple<string, int>> tupleList = new List<Tuple< string, int>>();
+            List<List<string>> names = new List<List<string>>();
 
-            if (Analytical.Topologic.Query.TryGetSpaceAdjacency(panelList, spaceList, gHNumber.Value, out geometryList, out tupleList))
+            if (Analytical.Topologic.Query.TryGetSpaceAdjacency(panelList, spaceList, gHNumber.Value, out geometryList, out names))
             {
-                DataTree<string> nameDataTree = new DataTree<string>();
-                foreach (Tuple<string, int> tuple in tupleList)
+                DataTree<string> dataTree = new DataTree<string>();
+                for (int i = 0; i < names.Count; i++)
                 {
-                    GH_Path path = new GH_Path(tuple.Item2);
-                    nameDataTree.Add(tuple.Item1, path);
+                    GH_Path path = new GH_Path(i);
+                    foreach (string name in names[i])
+                        dataTree.Add(name, path);
                 }
 
                 dataAccess.SetDataList(0, geometryList);
-                dataAccess.SetDataTree(1, nameDataTree);
+                dataAccess.SetDataTree(1, dataTree);
             }
         }
 
