@@ -47,12 +47,11 @@ namespace SAM.Analytical.Topologic
                 dictionary["Name"] = space.Name;
 
                 Geometry.Spatial.Point3D point3D = space.Location;
-                //if(Math.Abs(point3D.Z - boundingBox3D.Min.Z) < tolerance)
-                //    point3D = point3D.GetMoved(new Geometry.Spatial.Vector3D(0, 0, 0.3));
+                if (point3D.Z - boundingBox3D.Max.Z >= 0)
+                    point3D = point3D.GetMoved(new Geometry.Spatial.Vector3D(0, 0, (boundingBox3D.Max.Z - boundingBox3D.Min.Z) / 2));
 
-                //if (Math.Abs(point3D.Z - boundingBox3D.Max.Z) < tolerance)
-                //    point3D = point3D.GetMoved(new Geometry.Spatial.Vector3D(0, 0, 0.3));
-
+                if (point3D.Z - boundingBox3D.Min.Z <= 0)
+                    point3D = point3D.GetMoved(new Geometry.Spatial.Vector3D(0, 0, (boundingBox3D.Max.Z - boundingBox3D.Min.Z) / 2));
 
                 Vertex vertex = Geometry.Topologic.Convert.ToTopologic(point3D);
                 vertex = (Vertex)vertex.SetDictionary(dictionary);
