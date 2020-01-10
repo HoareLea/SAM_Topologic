@@ -59,10 +59,10 @@ namespace SAM.Geometry.Grasshopper.Topologic
                 return;
             }
 
-            Segment3D segment3D = obj as Segment3D;
-            if (segment3D != null)
+            ICurve3D curve3D = obj as ICurve3D;
+            if (curve3D != null)
             {
-                dataAccess.SetData(0, Geometry.Topologic.Convert.ToTopologic(segment3D));
+                dataAccess.SetData(0, Geometry.Topologic.Convert.ToTopologic(curve3D));
                 return;
             }
 
