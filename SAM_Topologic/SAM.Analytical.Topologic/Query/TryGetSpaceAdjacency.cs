@@ -102,7 +102,6 @@ namespace SAM.Analytical.Topologic
 
             return true;
         }
-
     }
 }
 
