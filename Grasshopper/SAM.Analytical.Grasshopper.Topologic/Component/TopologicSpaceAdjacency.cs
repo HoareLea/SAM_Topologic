@@ -31,7 +31,8 @@ namespace SAM.Analytical.Grasshopper.Topologic
         {
             inputParamManager.AddGenericParameter("_panels", "_panels", "SAM Analytical Panels", GH_ParamAccess.list);
             inputParamManager.AddGenericParameter("_spaces", "_spaces", "SAM Analytical Spaces", GH_ParamAccess.list);
-            inputParamManager.AddNumberParameter("_tolerance_", "_tolerance_", "Topologic CellComplex default 0.001", GH_ParamAccess.item, SAM.Geometry.Tolerance.MacroDistance);
+            inputParamManager.AddNumberParameter("_tolerance_", "_tolerance_", string.Format("Topologic CellComplex default {0}", Geometry.Tolerance.MacroDistance), GH_ParamAccess.item, Geometry.Tolerance.MacroDistance);
+            inputParamManager.AddBooleanParameter("_run_", "_run_", "Run", GH_ParamAccess.item, false);
         }
 
         /// <summary>
@@ -41,7 +42,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         {
             outputParamManager.AddGenericParameter("geometry", "geometry", "Face Geometry", GH_ParamAccess.list);
             outputParamManager.AddGenericParameter("faceAdjSpaceNames", "TopoGeo", "List of Adj Space Names for each face", GH_ParamAccess.list);
-
+            outputParamManager.AddBooleanParameter("Sucessfull", "Sucessfull", "Run successfully?", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -50,6 +51,16 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// <param name="dataAccess">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
+            bool run = false;
+            if (!dataAccess.GetData<bool>(3, ref run))
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
+                dataAccess.SetData(2, false);
+                return;
+            }
+            if (!run)
+                return;
+
             List<GH_ObjectWrapper> objectWrapperList = null;
 
             objectWrapperList = new List<GH_ObjectWrapper>();
@@ -57,6 +68,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
             if (!dataAccess.GetDataList(0, objectWrapperList) || objectWrapperList == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
+                dataAccess.SetData(2, false);
                 return;
             }
 
@@ -75,6 +87,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
             if (!dataAccess.GetDataList(1, objectWrapperList) || objectWrapperList == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
+                dataAccess.SetData(2, false);
                 return;
             }
 
@@ -89,24 +102,26 @@ namespace SAM.Analytical.Grasshopper.Topologic
                 spaceList.Add(space);
             }
 
-            GH_ObjectWrapper objectWrapper = null;
-            if (!dataAccess.GetData(2, ref objectWrapper) || objectWrapper.Value == null)
+            double tolerance = double.NaN;
+            if (!dataAccess.GetData<double>(2, ref tolerance))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
+                dataAccess.SetData(2, false);
                 return;
             }
 
-            GH_Number gHNumber = objectWrapper.Value as GH_Number;
-            if(gHNumber == null)
+            if(double.IsNaN(tolerance))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
+                dataAccess.SetData(2, false);
                 return;
             }
 
             List<Geometry.Spatial.IGeometry3D> geometryList = new List<Geometry.Spatial.IGeometry3D>();
             List<List<string>> names = new List<List<string>>();
 
-            if (Analytical.Topologic.Query.TryGetSpaceAdjacency(panelList, spaceList, gHNumber.Value, out geometryList, out names))
+            bool result = false;
+            if (Analytical.Topologic.Query.TryGetSpaceAdjacency(panelList, spaceList, tolerance, out geometryList, out names))
             {
                 DataTree<string> dataTree = new DataTree<string>();
                 for (int i = 0; i < names.Count; i++)
@@ -118,7 +133,10 @@ namespace SAM.Analytical.Grasshopper.Topologic
 
                 dataAccess.SetDataList(0, geometryList);
                 dataAccess.SetDataTree(1, dataTree);
+                result = true;
             }
+            dataAccess.SetData(1, result);
+
         }
 
         /// <summary>
