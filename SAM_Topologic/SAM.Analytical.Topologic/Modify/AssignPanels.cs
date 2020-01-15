@@ -34,8 +34,8 @@ namespace SAM.Analytical.Topologic
                 }
 
                 Dictionary<string, object> dictionary = new Dictionary<string, object>();
-                dictionary["Panel"] = panel;
-                face.SetDictionary(dictionary);
+                dictionary["Panel"] = panel.Guid.ToString();
+                face = (Face)face.SetDictionary(dictionary);
 
                 faceList.Add(face);
             }
@@ -59,7 +59,7 @@ namespace SAM.Analytical.Topologic
                 Vertex vertex = Geometry.Topologic.Convert.ToTopologic(point3D);
 
                 Dictionary<string, object> dictionary = new Dictionary<string, object>();
-                dictionary["Space"] = space;
+                dictionary["Space"] = space.Guid.ToString();
                 vertex = (Vertex)vertex.SetDictionary(dictionary);
                 topologyList.Add(vertex);
             }
@@ -85,7 +85,12 @@ namespace SAM.Analytical.Topologic
                     if (vertex == null)
                         continue;
 
-                    space_Old = vertex.Dictionary["Space"] as Space;
+                    string value = vertex.Dictionary["Space"] as string;
+                    Guid guid_Space;
+                    if (!Guid.TryParse(value, out guid_Space))
+                        continue;
+
+                    space_Old = spaces.ToList().Find(x => x.Guid.Equals(guid_Space));
                     break;
                 }
 
@@ -112,7 +117,12 @@ namespace SAM.Analytical.Topologic
                     if (face_Old == null)
                         continue;
 
-                    Panel panel = face_Old.Dictionary["Panel"] as Panel;
+                    string value = face_Old.Dictionary["Panel"] as string;
+                    Guid guid_panel;
+                    if (!Guid.TryParse(value, out guid_panel))
+                        continue;
+                    
+                    Panel panel = panels.ToList().Find(x => x.Guid.Equals(guid_panel));
                     if (panel == null)
                         continue;
 

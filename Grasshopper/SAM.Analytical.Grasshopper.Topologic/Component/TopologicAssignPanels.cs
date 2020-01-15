@@ -118,8 +118,8 @@ namespace SAM.Analytical.Grasshopper.Topologic
             }
 
             IEnumerable<Space> result = Analytical.Topologic.Modify.AssignPanels(spaceList, panelList, tolerance);
-            dataAccess.SetData(0, result);
-            dataAccess.SetData(1, result == null);
+            dataAccess.SetDataList(0, result);
+            dataAccess.SetData(1, result != null);
         }
 
         /// <summary>
