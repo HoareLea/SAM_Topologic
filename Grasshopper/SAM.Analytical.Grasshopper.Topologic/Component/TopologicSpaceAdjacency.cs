@@ -135,7 +135,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
                 dataAccess.SetDataTree(1, dataTree);
                 result = true;
             }
-            dataAccess.SetData(1, result);
+            dataAccess.SetData(2, result);
 
         }
 
