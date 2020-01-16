@@ -64,8 +64,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Convert\ToSAMGeometry.cs" />
-    <Compile Include="Convert\ToTopologicGeometry.cs" />
+    <Compile Include="Component\IGeometry3D.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

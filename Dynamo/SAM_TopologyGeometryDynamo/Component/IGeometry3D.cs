@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SAM_TopologicGeometryDynamo
 {
-    public static partial class Convert
+    public static class IGeometry3D
     {
         public static SAM.Geometry.Spatial.IGeometry3D ToSAMGeometry(Topologic.Topology topology)
         {

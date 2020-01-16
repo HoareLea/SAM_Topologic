@@ -72,9 +72,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AdjacencyModel.cs" />
+    <Compile Include="Component\AdjacencyModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Panel.cs" />
+    <Compile Include="Component\Panel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
