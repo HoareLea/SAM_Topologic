@@ -40,5 +40,10 @@ namespace SAMTopologicAnalyticalDynamo
         {
             return adjacencyModel.GetExternalPanels();
         }
+
+        public static IEnumerable<SAM.Analytical.Panel> ShadingPanels(SAM.Analytical.Topologic.AdjacencyModel adjacencyModel)
+        {
+            return adjacencyModel.GetShadingPanels();
+        }
     }
 }

@@ -125,7 +125,17 @@ namespace SAM.Analytical.Topologic
             if (topologyList == null || topologyList.Count == 0)
                 return false;
 
-            CellComplex cellComplex = CellComplex.ByFaces(faceList, tolerance);
+
+            CellComplex cellComplex = null;
+            try
+            {
+                cellComplex = CellComplex.ByFaces(faceList, tolerance);
+            }
+            catch(Exception exception)
+            {
+                cellComplex = null;
+            }
+            
 
             if (cellComplex == null)
                 return false;
@@ -315,6 +325,27 @@ namespace SAM.Analytical.Topologic
                     continue;
 
                 panels.Add((Panel)dictionary_SAMObjects[typeof(Panel)][keyValuePair.Key]);
+            }
+
+            return panels;
+        }
+
+        public List<Panel> GetShadingPanels()
+        {
+            Dictionary<Guid, HashSet<Guid>> dictionary;
+            if(!dictionary_Relations.TryGetValue(typeof(Panel), out dictionary))
+                return dictionary_SAMObjects[typeof(Panel)].Values.Cast<Panel>().ToList();
+
+
+            List<Panel> panels = new List<Panel>();
+            foreach (Panel panel in dictionary_SAMObjects[typeof(Panel)].Values)
+            {
+                HashSet<Guid> guids;
+                if (dictionary.TryGetValue(panel.Guid, out guids))
+                    if (guids != null && guids.Count > 0)
+                        continue;
+
+                panels.Add(panel);
             }
 
             return panels;
