@@ -137,7 +137,9 @@ namespace SAM.Analytical.Topologic
 
                 //cellComplexList = topology.CellComplexes;
 
-                cellComplexList = new List<CellComplex>() { CellComplex.ByFaces(faceList, tolerance) };
+                topology = CellComplex.ByFaces(faceList, tolerance);
+
+                cellComplexList = new List<CellComplex>() { (CellComplex)topology };
             }
             catch(Exception exception)
             {
