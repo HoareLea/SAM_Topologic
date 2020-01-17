@@ -8,18 +8,20 @@ using Topologic;
 
 namespace SAM.Analytical.Topologic
 {
-    public class AdjacencyModel
+    public class AdjacencyCluster
     {
-        Dictionary<Type, Dictionary<Guid, SAMObject>> dictionary_SAMObjects;
-        Dictionary<Type, Dictionary<Guid, HashSet<Guid>>> dictionary_Relations;
+        private Topology topology;
+        
+        private Dictionary<Type, Dictionary<Guid, SAMObject>> dictionary_SAMObjects;
+        private Dictionary<Type, Dictionary<Guid, HashSet<Guid>>> dictionary_Relations;
 
-        public AdjacencyModel()
+        public AdjacencyCluster()
         {
             dictionary_SAMObjects = new Dictionary<Type, Dictionary<Guid, SAMObject>>();
             dictionary_Relations = new Dictionary<Type, Dictionary<Guid, HashSet<Guid>>>();
         }
 
-        public AdjacencyModel(IEnumerable<Space> spaces, IEnumerable<Panel> panels)
+        public AdjacencyCluster(IEnumerable<Space> spaces, IEnumerable<Panel> panels)
         {
             dictionary_SAMObjects = new Dictionary<Type, Dictionary<Guid, SAMObject>>();
             dictionary_Relations = new Dictionary<Type, Dictionary<Guid, HashSet<Guid>>>();
@@ -56,6 +58,8 @@ namespace SAM.Analytical.Topologic
 
         public bool Calculate(double tolerance = Geometry.Tolerance.MacroDistance, bool updatePanels = true)
         {
+            topology = null;
+
             dictionary_Relations = new Dictionary<Type, Dictionary<Guid, HashSet<Guid>>>();
 
             Geometry.Spatial.BoundingBox3D boundingBox3D = null;
@@ -125,20 +129,29 @@ namespace SAM.Analytical.Topologic
             if (topologyList == null || topologyList.Count == 0)
                 return false;
 
-
-            CellComplex cellComplex = null;
+            List<CellComplex> cellComplexList = null;
             try
             {
-                cellComplex = CellComplex.ByFaces(faceList, tolerance);
+                Cluster cluster = Cluster.ByTopologies(faceList);
+                topology = cluster.SelfMerge();
+
+                cellComplexList = topology.CellComplexes;
+
+                //cellComplex = CellComplex.ByFaces(faceList, tolerance);
             }
             catch(Exception exception)
             {
-                cellComplex = null;
+                cellComplexList = null;
             }
-            
 
-            if (cellComplex == null)
+            if (cellComplexList == null)
                 return false;
+
+            //Michal D. Indea
+            if (cellComplexList.Count != 1)
+                return false;
+
+            CellComplex cellComplex = cellComplexList[0];
 
             if (topologyList != null)
                 cellComplex = (CellComplex)cellComplex.AddContents(topologyList, 32);
@@ -349,6 +362,14 @@ namespace SAM.Analytical.Topologic
             }
 
             return panels;
+        }
+
+        public Topology Topology
+        {
+            get
+            {
+                return topology;
+            }
         }
     }
 }
