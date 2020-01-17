@@ -172,6 +172,7 @@ namespace SAM.Analytical.Topologic
                 dictionary_Relations[typeof(Space)] = dictionary_Relations_Space;
             }
 
+            HashSet<Guid> guids_Updated = new HashSet<Guid>();
             foreach (Face face_New in cellComplex.Faces)
             {
                 Vertex vertex = global::Topologic.Utilities.FaceUtility.InternalVertex(face_New, tolerance);
@@ -200,9 +201,27 @@ namespace SAM.Analytical.Topologic
                 if (panel_Old == null)
                     continue;
 
-                Panel panel_New = new Panel(panel_Old.Guid, panel_Old, Geometry.Topologic.Convert.ToSAM(face_New));
+                Panel panel_New = null;
+
                 if (updatePanels)
-                    dictionary_SAMObjects[typeof(Panel)][panel_Old.Guid] = panel_New;
+                {
+                    if(guids_Updated.Contains(panel_Old.Guid))
+                    {
+                        panel_New = new Panel(Guid.NewGuid(), panel_Old, Geometry.Topologic.Convert.ToSAM(face_New));
+                    }
+                    else
+                    {
+                        panel_New = new Panel(panel_Old.Guid, panel_Old, Geometry.Topologic.Convert.ToSAM(face_New));
+                        guids_Updated.Add(panel_Old.Guid);
+                    }
+                    
+                    dictionary_SAMObjects[typeof(Panel)][panel_New.Guid] = panel_New;
+                }
+                else
+                {
+                    panel_New = new Panel(panel_Old.Guid, panel_Old, Geometry.Topologic.Convert.ToSAM(face_New));
+                }
+                    
 
                 if (dictionary_Space == null || dictionary_Space.Count == 0)
                     continue;
