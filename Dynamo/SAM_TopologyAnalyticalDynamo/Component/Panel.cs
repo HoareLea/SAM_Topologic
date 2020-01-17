@@ -50,5 +50,10 @@ namespace SAMTopologicAnalyticalDynamo
         {
             return SAM.Analytical.Topologic.Modify.AssignPanels(spaces, panels, tolerance);
         }
+
+        public static object ToTopology(SAM.Analytical.Panel panel)
+        {
+            return SAM.Analytical.Topologic.Convert.ToTopologic(panel);
+        }
     }
 }

@@ -19,7 +19,7 @@ namespace SAM.Analytical.Topologic
                 if (panel == null)
                     continue;
 
-                Face face = Analytical.Topologic.Convert.ToTopologic(panel);
+                Face face = Convert.ToTopologic(panel);
                 if (face == null)
                     continue;
 

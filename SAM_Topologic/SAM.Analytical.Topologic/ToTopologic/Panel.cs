@@ -6,7 +6,15 @@ namespace SAM.Analytical.Topologic
     {
         public static Face ToTopologic(this Panel panel)
         {
-            return Face.ByWire(Geometry.Topologic.Convert.ToTopologic((Geometry.Spatial.ICurvable3D)panel.ToPolycurveLoop()));
+            SAM.Geometry.Spatial.PolycurveLoop3D polycurveLoop3D = panel.ToPolycurveLoop();
+            if (polycurveLoop3D == null)
+                return null;
+
+            Wire wire = Geometry.Topologic.Convert.ToTopologic((Geometry.Spatial.ICurvable3D)polycurveLoop3D);
+            if (wire == null)
+                return null;
+
+            return Face.ByWire(wire);
 
         }
     }
