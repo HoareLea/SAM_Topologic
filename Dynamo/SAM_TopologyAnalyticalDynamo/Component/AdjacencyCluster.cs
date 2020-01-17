@@ -46,7 +46,7 @@ namespace SAMTopologicAnalyticalDynamo
             return adjacencyCluster.GetShadingPanels();
         }
 
-        public static Topology Topology(SAM.Analytical.Topologic.AdjacencyCluster adjacencyCluster)
+        public static object Topology(SAM.Analytical.Topologic.AdjacencyCluster adjacencyCluster)
         {
             return adjacencyCluster.Topology;
         }
