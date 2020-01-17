@@ -132,12 +132,12 @@ namespace SAM.Analytical.Topologic
             List<CellComplex> cellComplexList = null;
             try
             {
-                Cluster cluster = Cluster.ByTopologies(faceList);
-                topology = cluster.SelfMerge();
+                //Cluster cluster = Cluster.ByTopologies(faceList);
+                //topology = cluster.SelfMerge();
 
-                cellComplexList = topology.CellComplexes;
+                //cellComplexList = topology.CellComplexes;
 
-                //cellComplex = CellComplex.ByFaces(faceList, tolerance);
+                cellComplexList = new List<CellComplex>() { CellComplex.ByFaces(faceList, tolerance) };
             }
             catch(Exception exception)
             {
