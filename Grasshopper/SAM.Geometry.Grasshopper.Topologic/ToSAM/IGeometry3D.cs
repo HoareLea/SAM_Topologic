@@ -27,7 +27,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
 
             Face face = topology as Face;
             if (face != null)
-                return Topologic.Convert.ToSAM(face);
+               return Geometry.Topologic.Convert.ToSAM(face);               
 
             return null;
         }

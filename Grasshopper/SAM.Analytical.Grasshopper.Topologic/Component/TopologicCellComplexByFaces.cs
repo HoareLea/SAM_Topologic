@@ -66,7 +66,9 @@ namespace SAM.Analytical.Grasshopper.Topologic
                 return;
             }
 
-            dataAccess.SetData(0, CellComplex.ByFaces(objectWrapperList.ConvertAll(x => x.Value as Face), gHNumber.Value));
+            CellComplex cellComplex = CellComplex.ByFaces(objectWrapperList.ConvertAll(x => x.Value as Face), gHNumber.Value);
+
+            dataAccess.SetData(0, cellComplex);
             return;
 
         }

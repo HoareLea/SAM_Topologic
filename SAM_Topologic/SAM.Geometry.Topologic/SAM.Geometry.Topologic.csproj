@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ToSAM\Face.cs" />
     <Compile Include="ToSAM\Segment3D.cs" />
     <Compile Include="ToSAM\Point3D.cs" />
     <Compile Include="ToSAM\Polygon3D.cs" />

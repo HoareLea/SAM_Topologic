@@ -5,9 +5,9 @@ namespace SAM.Geometry.Topologic
 {
     public static partial class Convert
     {
-        public static Polygon3D ToSAM(this Wire wire)
+        public static Spatial.Face ToSAM(this global::Topologic.Face face)
         {
-            return new Polygon3D(wire.Vertices.ConvertAll(x => x.ToSAM()));
+            return new Spatial.Face(ToSAM(face.ExternalBoundary));
         }
     }
 }
