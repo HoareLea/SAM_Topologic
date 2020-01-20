@@ -42,6 +42,11 @@ namespace SAM.Analytical.Grasshopper.Topologic
         {
             outputParamManager.AddGenericParameter("AdjacencyCluster", "AdjacencyCluster", "AdjacencyCluster", GH_ParamAccess.item);
             outputParamManager.AddGenericParameter("Topology", "Topology", "Topology", GH_ParamAccess.item);
+            outputParamManager.AddGenericParameter("Panels", "Panels", "Panels", GH_ParamAccess.list);
+            outputParamManager.AddGenericParameter("Spaces", "Spaces", "Spaces", GH_ParamAccess.list);
+            outputParamManager.AddGenericParameter("InternalPanels", "InternalPanels", "InternalPanels", GH_ParamAccess.list);
+            outputParamManager.AddGenericParameter("ExternalPanels", "ExternalPanels", "ExternalPanels", GH_ParamAccess.list);
+            outputParamManager.AddGenericParameter("ShadingPanels", "ShadingPanels", "ShadingPanels", GH_ParamAccess.list);
             outputParamManager.AddBooleanParameter("Sucessfull", "Sucessfull", "Run successfully?", GH_ParamAccess.item);
         }
 
@@ -124,7 +129,12 @@ namespace SAM.Analytical.Grasshopper.Topologic
 
             dataAccess.SetData(0, adjacencyCluster);
             dataAccess.SetData(1, adjacencyCluster.Topology);
-            dataAccess.SetData(2, result);
+            dataAccess.SetDataList(2, adjacencyCluster.GetPanels());
+            dataAccess.SetDataList(3, adjacencyCluster.GetSpaces());
+            dataAccess.SetDataList(4, adjacencyCluster.GetInternalPanels());
+            dataAccess.SetDataList(5, adjacencyCluster.GetExternalPanels());
+            dataAccess.SetDataList(6, adjacencyCluster.GetShadingPanels());
+            dataAccess.SetData(7, result);
         }
 
         /// <summary>
