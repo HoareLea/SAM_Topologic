@@ -65,14 +65,14 @@ namespace SAM.Analytical.Grasshopper.Topologic
             if (panelList_Temp != null && panelList_Temp.Count != 0)
                 panelList.AddRange(panelList_Temp);
 
-            List<SAM.Geometry.Spatial.Surface> surfaces = new List<Geometry.Spatial.Surface>();
+            List<IGH_GeometricGoo> geometricGoos = new List<IGH_GeometricGoo>();
 
             DataTree<string> dataTree = new DataTree<string>();
             for (int i=0; i < panelList.Count; i++)
             {
                 Panel panel = panelList[i];
 
-                surfaces.Add(panel.ToSurface());
+                geometricGoos.Add(Geometry.Grasshopper.Convert.ToGrasshopper( panel.ToSurface()));
 
                 List<Space> spaces = adjacencyCluster.GetPanelSpaces(panel.Guid);
                 GH_Path path = new GH_Path(i);
@@ -80,7 +80,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
                     dataTree.Add(name, path);
             }
 
-            dataAccess.SetDataList(0, surfaces);
+            dataAccess.SetDataList(0, geometricGoos);
             dataAccess.SetDataTree(1, dataTree);
             return;
 
