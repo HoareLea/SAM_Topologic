@@ -15,8 +15,8 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
         public TopologicAdjacencies()
-          : base("TopologicAdjacencies", "CellComplexByFaces",
-              "Create Topologic CellComplex by Topologic Face",
+          : base("TopologicAdjacencies", "TopologicAdjacencies",
+              "Create AdjacenciesList/Connected Spaces List from  CellComplex AdjacencyCluster and Analytical Panels based on Topologic calculation",
               "SAM", "Topologic")
         {
         }
@@ -27,7 +27,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
             inputParamManager.AddGenericParameter("AdjacencyCluster", "AdjacencyCluster", "AdjacencyCluster", GH_ParamAccess.item);
-            inputParamManager.AddGenericParameter("SAMObject", "SAMObject", "SAMObject", GH_ParamAccess.item);
+            inputParamManager.AddGenericParameter("Panels", "Panels", "Panels", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
         {
-            outputParamManager.AddGenericParameter("Adjacencies", "Adjacencies", "Adjacencies", GH_ParamAccess.list);
+            outputParamManager.AddGenericParameter("AdjacenciesList", "AdjacenciesList", "AdjacenciesList", GH_ParamAccess.list);
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
 
             Core.SAMObject sAMObject = null;
 
-            if (!dataAccess.GetData<Core.SAMObject>(0, ref sAMObject))
+            if (!dataAccess.GetData<Core.SAMObject>(1, ref sAMObject))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
