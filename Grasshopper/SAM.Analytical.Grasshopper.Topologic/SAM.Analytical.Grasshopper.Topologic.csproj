@@ -79,6 +79,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Component\TopologicAdjacencyInformation.cs" />
     <Compile Include="Component\TopologicAdjacencies.cs" />
     <Compile Include="Component\TopologicTopologyExplode.cs" />
     <Compile Include="Component\TopologicTopologyAnalyze.cs" />
