@@ -72,6 +72,8 @@ namespace SAM.Analytical.Grasshopper.Topologic
             {
                 Panel panel = panelList[i];
 
+                surfaces.Add(panel.ToSurface());
+
                 List<Space> spaces = adjacencyCluster.GetPanelSpaces(panel.Guid);
                 GH_Path path = new GH_Path(i);
                 foreach (string name in spaces.ConvertAll(x => x.Name))
