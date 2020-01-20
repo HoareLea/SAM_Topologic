@@ -79,7 +79,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Component\TopologicAssignPanels.cs" />
     <Compile Include="Component\TopologicTopologyExplode.cs" />
     <Compile Include="Component\TopologicTopologyAnalyze.cs" />
     <Compile Include="Component\TopologicCreateAdjacencyCluster.cs" />

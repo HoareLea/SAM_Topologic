@@ -37,20 +37,6 @@ namespace SAMTopologicAnalyticalDynamo
             };
         }
 
-        /// <summary>
-        /// Assign Panels to spaces
-        /// </summary>
-        /// <param name="panels">SAM Analytical Panels</param>
-        /// <param name="spaces">Topologic Topologies</param>
-        /// <param name="tolerance">Tolerance</param>
-        /// <search>
-        /// Topologic, AssignPanels, Analytical Panel, Analytical Spaces
-        /// </search>
-        public static IEnumerable<Space> AssignPanels(IEnumerable<SAM.Analytical.Panel> panels, IEnumerable<Space> spaces, double tolerance = SAM.Geometry.Tolerance.MicroDistance)
-        {
-            return SAM.Analytical.Topologic.Modify.AssignPanels(spaces, panels, tolerance);
-        }
-
         public static object ToTopology(SAM.Analytical.Panel panel)
         {
             return SAM.Analytical.Topologic.Convert.ToTopologic(panel);
