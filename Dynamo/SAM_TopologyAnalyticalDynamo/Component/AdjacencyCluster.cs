@@ -50,5 +50,16 @@ namespace SAMTopologicAnalyticalDynamo
         {
             return adjacencyCluster.Topology;
         }
+
+        public static IEnumerable<object> Adjacencies(SAM.Analytical.Topologic.AdjacencyCluster adjacencyCluster, SAM.Core.SAMObject sAMObject)
+        {
+            if(sAMObject is SAM.Analytical.Panel)
+                return adjacencyCluster.GetPanelSpaces(sAMObject.Guid);
+
+            if (sAMObject is Space)
+                return adjacencyCluster.GetSpacePanels(sAMObject.Guid);
+
+            return null;
+        }
     }
 }
