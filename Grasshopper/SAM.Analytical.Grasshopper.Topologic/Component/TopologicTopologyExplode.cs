@@ -55,11 +55,11 @@ namespace SAM.Analytical.Grasshopper.Topologic
                 return;
             }
 
-            dataAccess.SetData(0, topology.CellComplexes);
-            dataAccess.SetData(1, topology.Cells);
-            dataAccess.SetData(2, topology.Faces);
-            dataAccess.SetData(3, topology.Wires);
-            dataAccess.SetData(4, topology.Vertices);
+            dataAccess.SetDataList(0, topology.CellComplexes);
+            dataAccess.SetDataList(1, topology.Cells);
+            dataAccess.SetDataList(2, topology.Faces);
+            dataAccess.SetDataList(3, topology.Wires);
+            dataAccess.SetDataList(4, topology.Vertices);
             return;
 
         }
