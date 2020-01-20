@@ -80,6 +80,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Component\TopologicAssignPanels.cs" />
+    <Compile Include="Component\TopologicTopologyAnalyze.cs" />
+    <Compile Include="Component\TopologicCreateAdjacencyCluster.cs" />
     <Compile Include="Component\TopologicSpaceAdjacency.cs" />
     <Compile Include="Component\TopologicFaces.cs" />
     <Compile Include="Component\TopologicCellComplexByFaces.cs" />
