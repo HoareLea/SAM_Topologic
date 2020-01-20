@@ -135,18 +135,29 @@ namespace SAM.Analytical.Topologic
                 Cluster cluster = Cluster.ByTopologies(faceList);
                 topology = cluster.SelfMerge();
                 if (topology.Cells == null || topology.Cells.Count == 0)
-                    return true;
-
-                topology = CellComplex.ByCells(topology.Cells);
-
-                //cellComplexList = topology.CellComplexes;
-                //topology = CellComplex.ByFaces(faceList, tolerance);
+                    topology = null;
+                else
+                    topology = CellComplex.ByCells(topology.Cells);
 
                 cellComplexList = new List<CellComplex>() { (CellComplex)topology };
             }
             catch(Exception exception)
             {
                 cellComplexList = null;
+            }
+
+
+            if(topology == null)
+            {
+                try
+                {
+                    topology = CellComplex.ByFaces(faceList, tolerance);
+                    cellComplexList = new List<CellComplex>() { (CellComplex)topology };
+                }
+                catch (Exception exception)
+                {
+                    cellComplexList = null;
+                }
             }
 
             if (cellComplexList == null)
