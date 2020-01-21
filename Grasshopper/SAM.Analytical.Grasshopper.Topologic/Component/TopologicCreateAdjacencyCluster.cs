@@ -127,6 +127,8 @@ namespace SAM.Analytical.Grasshopper.Topologic
             SAM.Analytical.Topologic.AdjacencyCluster adjacencyCluster = new Analytical.Topologic.AdjacencyCluster(spaceList, panelList);
             result = adjacencyCluster.Calculate(tolerance);
 
+            AddRuntimeMessage(GH_RuntimeMessageLevel.Remark, string.Join("\n", adjacencyCluster.Report));
+
             dataAccess.SetData(0, adjacencyCluster);
             dataAccess.SetData(1, adjacencyCluster.Topology);
             dataAccess.SetDataList(2, adjacencyCluster.GetPanels());

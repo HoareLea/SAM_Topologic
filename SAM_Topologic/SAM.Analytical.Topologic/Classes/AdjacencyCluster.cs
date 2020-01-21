@@ -10,6 +10,8 @@ namespace SAM.Analytical.Topologic
 {
     public class AdjacencyCluster
     {
+        private List<string> report;
+        
         private Topology topology;
         
         private Dictionary<Type, Dictionary<Guid, SAMObject>> dictionary_SAMObjects;
@@ -17,12 +19,15 @@ namespace SAM.Analytical.Topologic
 
         public AdjacencyCluster()
         {
+            topology = null;
             dictionary_SAMObjects = new Dictionary<Type, Dictionary<Guid, SAMObject>>();
             dictionary_Relations = new Dictionary<Type, Dictionary<Guid, HashSet<Guid>>>();
         }
 
         public AdjacencyCluster(IEnumerable<Space> spaces, IEnumerable<Panel> panels)
         {
+            topology = null;
+            
             dictionary_SAMObjects = new Dictionary<Type, Dictionary<Guid, SAMObject>>();
             dictionary_Relations = new Dictionary<Type, Dictionary<Guid, HashSet<Guid>>>();
 
@@ -58,231 +63,269 @@ namespace SAM.Analytical.Topologic
 
         public bool Calculate(double tolerance = Geometry.Tolerance.MacroDistance, bool updatePanels = true)
         {
-            topology = null;
+            report = new List<string>();
 
-            dictionary_Relations = new Dictionary<Type, Dictionary<Guid, HashSet<Guid>>>();
+            report.Add(string.Format("Method Name: {0}, Tolerance: {1}, Update Panels: {2}", "Calculate", tolerance, updatePanels));
 
-            Geometry.Spatial.BoundingBox3D boundingBox3D = null;
-
-            List<Face> faceList = new List<Face>();
-
-            Dictionary<Guid, SAMObject> dictionary_Panel = dictionary_SAMObjects[typeof(Panel)];
-            if (dictionary_Panel == null || dictionary_Panel.Count == 0)
-                return false;
-
-            foreach (Panel panel in dictionary_Panel.Values)
-            {
-                if (panel == null)
-                    continue;
-
-                Face face = Convert.ToTopologic(panel);
-                if (face == null)
-                    continue;
-
-                if (boundingBox3D == null)
-                {
-                    boundingBox3D = panel.GetBoundingBox();
-                }
-                else
-                {
-                    Geometry.Spatial.BoundingBox3D boundingBox3D_Temp = panel.GetBoundingBox();
-                    if (boundingBox3D_Temp != null)
-                        boundingBox3D = new Geometry.Spatial.BoundingBox3D(new Geometry.Spatial.BoundingBox3D[] { boundingBox3D, boundingBox3D_Temp });
-                }
-
-                Dictionary<string, object> dictionary = new Dictionary<string, object>();
-                dictionary["Panel"] = panel.Guid.ToString();
-                face = (Face)face.SetDictionary(dictionary);
-
-                faceList.Add(face);
-            }
-
-            if (faceList == null || faceList.Count == 0)
-                return false;
-
-            List<Topology> topologyList = new List<Topology>();
-            Dictionary<Guid, SAMObject> dictionary_Space = dictionary_SAMObjects[typeof(Space)];
-            if (dictionary_Space != null && dictionary_Space.Count > 0)
-            {
-                foreach (Space space in dictionary_Space.Values)
-                {
-                    if (space == null)
-                        continue;
-
-                    Geometry.Spatial.Point3D point3D = space.Location;
-                    if (point3D.Z - boundingBox3D.Max.Z >= 0)
-                        point3D = (Geometry.Spatial.Point3D)point3D.GetMoved(new Geometry.Spatial.Vector3D(0, 0, (boundingBox3D.Max.Z - boundingBox3D.Min.Z) / 2));
-
-                    if (point3D.Z - boundingBox3D.Min.Z <= 0)
-                        point3D = (Geometry.Spatial.Point3D)point3D.GetMoved(new Geometry.Spatial.Vector3D(0, 0, (boundingBox3D.Max.Z - boundingBox3D.Min.Z) / 2));
-
-                    Vertex vertex = Geometry.Topologic.Convert.ToTopologic(point3D);
-
-                    Dictionary<string, object> dictionary = new Dictionary<string, object>();
-                    dictionary["Space"] = space.Guid.ToString();
-                    vertex = (Vertex)vertex.SetDictionary(dictionary);
-                    topologyList.Add(vertex);
-                }
-            }
-
-
-            if (topologyList == null || topologyList.Count == 0)
-                return false;
-
-            List<CellComplex> cellComplexList = null;
             try
             {
-                Cluster cluster = Cluster.ByTopologies(faceList);
-                topology = cluster.SelfMerge();
-                if (topology.Cells == null || topology.Cells.Count == 0)
-                    topology = null;
-                else
-                    topology = CellComplex.ByCells(topology.Cells);
+                topology = null;
 
-                cellComplexList = new List<CellComplex>() { (CellComplex)topology };
-            }
-            catch(Exception exception)
-            {
-                cellComplexList = null;
-            }
+                dictionary_Relations = new Dictionary<Type, Dictionary<Guid, HashSet<Guid>>>();
+
+                Geometry.Spatial.BoundingBox3D boundingBox3D = null;
+
+                List<Face> faceList = new List<Face>();
+
+                Dictionary<Guid, SAMObject> dictionary_Panel = dictionary_SAMObjects[typeof(Panel)];
+                if (dictionary_Panel == null || dictionary_Panel.Count == 0)
+                    return false;
+
+                foreach (Panel panel in dictionary_Panel.Values)
+                {
+                    if (panel == null)
+                        continue;
+
+                    Face face = Convert.ToTopologic(panel);
+                    if (face == null)
+                        continue;
+
+                    if (boundingBox3D == null)
+                    {
+                        boundingBox3D = panel.GetBoundingBox();
+                    }
+                    else
+                    {
+                        Geometry.Spatial.BoundingBox3D boundingBox3D_Temp = panel.GetBoundingBox();
+                        if (boundingBox3D_Temp != null)
+                            boundingBox3D = new Geometry.Spatial.BoundingBox3D(new Geometry.Spatial.BoundingBox3D[] { boundingBox3D, boundingBox3D_Temp });
+                    }
+
+                    Dictionary<string, object> dictionary = new Dictionary<string, object>();
+                    dictionary["Panel"] = panel.Guid.ToString();
+                    face = (Face)face.SetDictionary(dictionary);
+
+                    faceList.Add(face);
+                    report.Add(string.Format("Face added. Panel [{0}]", panel.Guid));
+                }
+
+                if (faceList == null || faceList.Count == 0)
+                    return false;
+
+                List<Topology> topologyList = new List<Topology>();
+                Dictionary<Guid, SAMObject> dictionary_Space = dictionary_SAMObjects[typeof(Space)];
+                if (dictionary_Space != null && dictionary_Space.Count > 0)
+                {
+                    foreach (Space space in dictionary_Space.Values)
+                    {
+                        if (space == null)
+                            continue;
+
+                        Geometry.Spatial.Point3D point3D = space.Location;
+                        if (point3D.Z - boundingBox3D.Max.Z >= 0)
+                            point3D = (Geometry.Spatial.Point3D)point3D.GetMoved(new Geometry.Spatial.Vector3D(0, 0, (boundingBox3D.Max.Z - boundingBox3D.Min.Z) / 2));
+
+                        if (point3D.Z - boundingBox3D.Min.Z <= 0)
+                            point3D = (Geometry.Spatial.Point3D)point3D.GetMoved(new Geometry.Spatial.Vector3D(0, 0, (boundingBox3D.Max.Z - boundingBox3D.Min.Z) / 2));
+
+                        Vertex vertex = Geometry.Topologic.Convert.ToTopologic(point3D);
+
+                        Dictionary<string, object> dictionary = new Dictionary<string, object>();
+                        dictionary["Space"] = space.Guid.ToString();
+                        vertex = (Vertex)vertex.SetDictionary(dictionary);
+                        topologyList.Add(vertex);
+
+                        report.Add(string.Format("Vertex added. Space [{0}] {1}", space.Guid, point3D.ToString()));
+                    }
+                }
 
 
-            if(topology == null)
-            {
+                if (topologyList == null || topologyList.Count == 0)
+                    return false;
+
+                List<CellComplex> cellComplexList = null;
                 try
                 {
-                    topology = CellComplex.ByFaces(faceList, tolerance);
+                    Cluster cluster = Cluster.ByTopologies(faceList);
+                    topology = cluster.SelfMerge();
+                    if (topology.Cells == null || topology.Cells.Count == 0)
+                        topology = null;
+                    else
+                        topology = CellComplex.ByCells(topology.Cells);
+
                     cellComplexList = new List<CellComplex>() { (CellComplex)topology };
                 }
                 catch (Exception exception)
                 {
+                    report.Add(string.Format("Cannot create CellComplex By Cells"));
+                    report.Add(string.Format("Exception Message: {0}", exception.Message));
                     cellComplexList = null;
                 }
-            }
 
-            if (cellComplexList == null)
-                return false;
 
-            //Michal D. Indea
-            if (cellComplexList.Count != 1)
-                return false;
-
-            CellComplex cellComplex = cellComplexList[0];
-
-            if (topologyList != null)
-                cellComplex = (CellComplex)cellComplex.AddContents(topologyList, 32);
-
-            Dictionary<Guid, HashSet<Guid>> dictionary_Relations_Panel;
-            if (!dictionary_Relations.TryGetValue(typeof(Panel), out dictionary_Relations_Panel))
-            {
-                dictionary_Relations_Panel = new Dictionary<Guid, HashSet<Guid>>();
-                dictionary_Relations[typeof(Panel)] = dictionary_Relations_Panel;
-            }
-
-            Dictionary<Guid, HashSet<Guid>> dictionary_Relations_Space;
-            if (!dictionary_Relations.TryGetValue(typeof(Space), out dictionary_Relations_Space))
-            {
-                dictionary_Relations_Space = new Dictionary<Guid, HashSet<Guid>>();
-                dictionary_Relations[typeof(Space)] = dictionary_Relations_Space;
-            }
-
-            HashSet<Guid> guids_Updated = new HashSet<Guid>();
-            foreach (Face face_New in cellComplex.Faces)
-            {
-                Vertex vertex = global::Topologic.Utilities.FaceUtility.InternalVertex(face_New, tolerance);
-                if (vertex == null)
-                    continue;
-
-                Face face_Old = null;
-                foreach (Face face in faceList)
+                if (topology == null)
                 {
-                    if (global::Topologic.Utilities.FaceUtility.IsInside(face, vertex, tolerance))
+                    try
                     {
-                        face_Old = face;
-                        break;
+                        topology = CellComplex.ByFaces(faceList, tolerance);
+                        cellComplexList = new List<CellComplex>() { (CellComplex)topology };
+                    }
+                    catch (Exception exception)
+                    {
+                        report.Add(string.Format("Cannot create CellComplex By Faces"));
+                        report.Add(string.Format("Exception Message: {0}", exception.Message));
+
+                        cellComplexList = null;
                     }
                 }
 
-                if (face_Old == null)
-                    continue;
+                if (cellComplexList == null)
+                    return false;
 
-                string value = face_Old.Dictionary["Panel"] as string;
-                Guid guid_panel;
-                if (!Guid.TryParse(value, out guid_panel))
-                    continue;
+                //Michal D. Indea
+                if (cellComplexList.Count != 1)
+                    return false;
 
-                Panel panel_Old = (Panel)dictionary_Panel[guid_panel];
-                if (panel_Old == null)
-                    continue;
+                CellComplex cellComplex = cellComplexList[0];
 
-                Panel panel_New = null;
+                report.Add(string.Format("Single CellComplex created"));
 
-                if (updatePanels)
+                if (topologyList != null)
+                    cellComplex = (CellComplex)cellComplex.AddContents(topologyList, 32);
+
+                Dictionary<Guid, HashSet<Guid>> dictionary_Relations_Panel;
+                if (!dictionary_Relations.TryGetValue(typeof(Panel), out dictionary_Relations_Panel))
                 {
-                    if(guids_Updated.Contains(panel_Old.Guid))
+                    dictionary_Relations_Panel = new Dictionary<Guid, HashSet<Guid>>();
+                    dictionary_Relations[typeof(Panel)] = dictionary_Relations_Panel;
+                }
+
+                Dictionary<Guid, HashSet<Guid>> dictionary_Relations_Space;
+                if (!dictionary_Relations.TryGetValue(typeof(Space), out dictionary_Relations_Space))
+                {
+                    dictionary_Relations_Space = new Dictionary<Guid, HashSet<Guid>>();
+                    dictionary_Relations[typeof(Space)] = dictionary_Relations_Space;
+                }
+
+                report.Add(string.Format("Dictionaries created"));
+
+                HashSet<Guid> guids_Updated = new HashSet<Guid>();
+                foreach (Face face_New in cellComplex.Faces)
+                {
+                    report.Add(string.Format("Analyzing face"));
+
+                    Vertex vertex = global::Topologic.Utilities.FaceUtility.InternalVertex(face_New, tolerance);
+                    if (vertex == null)
+                        continue;
+
+                    Face face_Old = null;
+                    foreach (Face face in faceList)
                     {
-                        panel_New = new Panel(Guid.NewGuid(), panel_Old, Geometry.Topologic.Convert.ToSAM(face_New));
+                        if (global::Topologic.Utilities.FaceUtility.IsInside(face, vertex, tolerance))
+                        {
+                            face_Old = face;
+                            break;
+                        }
+                    }
+
+                    if (face_Old == null)
+                        continue;
+
+                    string value = face_Old.Dictionary["Panel"] as string;
+                    Guid guid_panel;
+                    if (!Guid.TryParse(value, out guid_panel))
+                        continue;
+
+                    Panel panel_Old = (Panel)dictionary_Panel[guid_panel];
+                    if (panel_Old == null)
+                        continue;
+
+                    report.Add(string.Format("Panel found. Panel [{0}]", value));
+
+                    Panel panel_New = null;
+
+                    if (updatePanels)
+                    {
+                        if (guids_Updated.Contains(panel_Old.Guid))
+                        {
+                            panel_New = new Panel(Guid.NewGuid(), panel_Old, Geometry.Topologic.Convert.ToSAM(face_New));
+                            report.Add(string.Format("Creating new Panel for Old Panel [{0}]. New Panel [{1}]", panel_Old.Guid, panel_New.Guid));
+                        }
+                        else
+                        {
+                            panel_New = new Panel(panel_Old.Guid, panel_Old, Geometry.Topologic.Convert.ToSAM(face_New));
+                            guids_Updated.Add(panel_Old.Guid);
+                            report.Add(string.Format("Updating Panel [{0}] with new geometry", panel_New.Guid));
+                        }
+
+                        dictionary_SAMObjects[typeof(Panel)][panel_New.Guid] = panel_New;
                     }
                     else
                     {
                         panel_New = new Panel(panel_Old.Guid, panel_Old, Geometry.Topologic.Convert.ToSAM(face_New));
-                        guids_Updated.Add(panel_Old.Guid);
-                    }
-                    
-                    dictionary_SAMObjects[typeof(Panel)][panel_New.Guid] = panel_New;
-                }
-                else
-                {
-                    panel_New = new Panel(panel_Old.Guid, panel_Old, Geometry.Topologic.Convert.ToSAM(face_New));
-                }
-                    
-
-                if (dictionary_Space == null || dictionary_Space.Count == 0)
-                    continue;
-
-                HashSet<Guid> guids_Space;
-                if (!dictionary_Relations_Panel.TryGetValue(panel_New.Guid, out guids_Space))
-                {
-                    guids_Space = new HashSet<Guid>();
-                    dictionary_Relations_Panel[panel_New.Guid] = guids_Space;
-                }
-
-                foreach (Cell cell in face_New.Cells)
-                {
-                    Space space = null;
-
-                    foreach (Topology topology in cell.Contents)
-                    {
-                        Vertex vertex_Space = topology as Vertex;
-                        if (vertex_Space == null)
-                            continue;
-
-                        string value_Space = vertex_Space.Dictionary["Space"] as string;
-                        Guid guid_Space;
-                        if (!Guid.TryParse(value_Space, out guid_Space))
-                            continue;
-
-                        space = (Space)dictionary_Space[guid_Space];
-                        break;
+                        report.Add(string.Format("Creating temporary Panel for Panel [{0}]", panel_New.Guid));
                     }
 
-                    if (space == null)
+
+                    if (dictionary_Space == null || dictionary_Space.Count == 0)
                         continue;
 
-                    guids_Space.Add(space.Guid);
-
-                    HashSet<Guid> guids_Panel;
-                    if (!dictionary_Relations_Space.TryGetValue(space.Guid, out guids_Panel))
+                    HashSet<Guid> guids_Space;
+                    if (!dictionary_Relations_Panel.TryGetValue(panel_New.Guid, out guids_Space))
                     {
-                        guids_Panel = new HashSet<Guid>();
-                        dictionary_Relations_Space[space.Guid] = guids_Panel;
+                        guids_Space = new HashSet<Guid>();
+                        dictionary_Relations_Panel[panel_New.Guid] = guids_Space;
                     }
 
-                    guids_Panel.Add(panel_New.Guid);
+                    foreach (Cell cell in face_New.Cells)
+                    {
+                        report.Add(string.Format("Analyzing Cell"));
+
+                        Space space = null;
+
+                        foreach (Topology topology in cell.Contents)
+                        {
+                            Vertex vertex_Space = topology as Vertex;
+                            if (vertex_Space == null)
+                                continue;
+
+                            string value_Space = vertex_Space.Dictionary["Space"] as string;
+                            Guid guid_Space;
+                            if (!Guid.TryParse(value_Space, out guid_Space))
+                                continue;
+
+                            space = (Space)dictionary_Space[guid_Space];
+                            break;
+                        }
+
+                        if (space == null)
+                            continue;
+
+                        guids_Space.Add(space.Guid);
+
+                        report.Add(string.Format("Space [{0}] added for Panel [{1}]", space.Guid, panel_New.Guid));
+
+                        HashSet<Guid> guids_Panel;
+                        if (!dictionary_Relations_Space.TryGetValue(space.Guid, out guids_Panel))
+                        {
+                            guids_Panel = new HashSet<Guid>();
+                            dictionary_Relations_Space[space.Guid] = guids_Panel;
+                        }
+
+                        guids_Panel.Add(panel_New.Guid);
+
+                        report.Add(string.Format("Panel [{0}] added for Space [{1}]", panel_New.Guid, space.Guid));
+                    }
                 }
+
+                return true;
+            }
+            catch(Exception exception)
+            {
+                report.Add(string.Format("Exception Message: {0}", exception.Message));
             }
 
-            return true;
+            return false;
         }
 
         public bool Add(Panel panel)
@@ -404,6 +447,14 @@ namespace SAM.Analytical.Topologic
             get
             {
                 return topology;
+            }
+        }
+
+        public List<string> Report
+        {
+            get
+            {
+                return report;
             }
         }
     }
