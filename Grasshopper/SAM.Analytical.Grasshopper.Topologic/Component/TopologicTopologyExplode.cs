@@ -15,8 +15,8 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
         public TopologicTopologyExplode()
-          : base("TopologicTopologyExplode", "CellComplexByFaces",
-              "Create Topologic CellComplex by Topologic Face",
+          : base("Topology.Explode", "Topologic.Explode",
+              "Explode Topology into CellComplex, Cells, Faces, Wired and Vertices",
               "SAM", "Topologic")
         {
         }
@@ -26,7 +26,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
-            inputParamManager.AddGenericParameter("Topology", "_topology", "Topology", GH_ParamAccess.item);
+            inputParamManager.AddGenericParameter("_topology", "_topology", "Topology", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -34,11 +34,11 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
         {
-            outputParamManager.AddGenericParameter("CellComplexes", "CellComplexes", "Topologic CellComplexes", GH_ParamAccess.list);
-            outputParamManager.AddGenericParameter("Cells", "Cells", "Topologic Cells", GH_ParamAccess.list);
-            outputParamManager.AddGenericParameter("Faces", "Faces", "Topologic Faces", GH_ParamAccess.list);
-            outputParamManager.AddGenericParameter("Wires", "Wires", "Topologic Wires", GH_ParamAccess.list);
-            outputParamManager.AddGenericParameter("Vertices", "Vertices", "Topologic Vertices", GH_ParamAccess.list);
+            outputParamManager.AddGenericParameter("CellComplexes", "CellComplexes", "Topology CellComplexes", GH_ParamAccess.list);
+            outputParamManager.AddGenericParameter("Cells", "Cells", "Topology Cells", GH_ParamAccess.list);
+            outputParamManager.AddGenericParameter("Faces", "Faces", "Topology Faces", GH_ParamAccess.list);
+            outputParamManager.AddGenericParameter("Wires", "Wires", "Topology Wires", GH_ParamAccess.list);
+            outputParamManager.AddGenericParameter("Vertices", "Vertices", "Topology Vertices", GH_ParamAccess.list);
         }
 
         /// <summary>

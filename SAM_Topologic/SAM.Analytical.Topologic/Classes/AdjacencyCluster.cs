@@ -10,7 +10,7 @@ namespace SAM.Analytical.Topologic
 {
     public class AdjacencyCluster
     {
-        private List<string> report;
+        private string reportPath;
         
         private Topology topology;
         
@@ -31,8 +31,12 @@ namespace SAM.Analytical.Topologic
             dictionary_SAMObjects = new Dictionary<Type, Dictionary<Guid, SAMObject>>();
             dictionary_Relations = new Dictionary<Type, Dictionary<Guid, HashSet<Guid>>>();
 
-            foreach (Space space in spaces)
-                Add(space);
+            if(spaces != null)
+            {
+                foreach (Space space in spaces)
+                    Add(space);
+            }
+
 
             foreach (Panel panel in panels)
                 Add(panel);
@@ -41,7 +45,13 @@ namespace SAM.Analytical.Topologic
 
         private IEnumerable<T> GetSAMObjects<T>()
         {
-            return dictionary_SAMObjects[typeof(T)].Values.Cast<T>();
+            Type type = typeof(T);
+
+            Dictionary<Guid, SAMObject> dictionary;
+            if (!dictionary_SAMObjects.TryGetValue(type, out dictionary))
+                return null;
+            
+            return dictionary_SAMObjects[type].Values.Cast<T>();
         }
 
         private bool Add(SAMObject sAMObject)
@@ -60,12 +70,41 @@ namespace SAM.Analytical.Topologic
             return true;
         }
 
+        private bool Report(params object[] values)
+        {
+            if (string.IsNullOrWhiteSpace(reportPath))
+                return false;
+
+            string value = null;
+
+            if(values != null)
+            {
+                List<string> valueList = new List<string>();
+                foreach(object @object in values)
+                {
+                    if(@object == null)
+                        valueList.Add(string.Empty);
+                    else
+                        valueList.Add(@object.ToString());
+                }
+
+                value = string.Join("\t", valueList);
+            }
+
+            if (value == null)
+                value = string.Empty;
+
+            value = string.Format("[{0}]\t {1}", DateTime.Now.ToString("HH:mm:ss tt"), value);
+
+            System.IO.File.AppendAllText(reportPath, value + "\n");
+            return true;
+        }
+
 
         public bool Calculate(double tolerance = Geometry.Tolerance.MacroDistance, bool updatePanels = true)
         {
-            report = new List<string>();
 
-            report.Add(string.Format("Method Name: {0}, Tolerance: {1}, Update Panels: {2}", "Calculate", tolerance, updatePanels));
+            Report(string.Format("Method Name: {0}, Tolerance: {1}, Update Panels: {2}", "Calculate", tolerance, updatePanels));
 
             try
             {
@@ -81,6 +120,7 @@ namespace SAM.Analytical.Topologic
                 if (dictionary_Panel == null || dictionary_Panel.Count == 0)
                     return false;
 
+                int index = 1;
                 foreach (Panel panel in dictionary_Panel.Values)
                 {
                     if (panel == null)
@@ -106,15 +146,18 @@ namespace SAM.Analytical.Topologic
                     face = (Face)face.SetDictionary(dictionary);
 
                     faceList.Add(face);
-                    report.Add(string.Format("Face added. Panel [{0}]", panel.Guid));
+                    Report(string.Format("Face {0:D4} added. Panel [{1}]", index, panel.Guid));
+                    index++;
                 }
 
                 if (faceList == null || faceList.Count == 0)
                     return false;
 
                 List<Topology> topologyList = new List<Topology>();
-                Dictionary<Guid, SAMObject> dictionary_Space = dictionary_SAMObjects[typeof(Space)];
-                if (dictionary_Space != null && dictionary_Space.Count > 0)
+
+                index = 1;
+                Dictionary<Guid, SAMObject> dictionary_Space;
+                if (dictionary_SAMObjects.TryGetValue(typeof(Space), out dictionary_Space) && dictionary_Space != null && dictionary_Space.Count > 0)
                 {
                     foreach (Space space in dictionary_Space.Values)
                     {
@@ -135,13 +178,15 @@ namespace SAM.Analytical.Topologic
                         vertex = (Vertex)vertex.SetDictionary(dictionary);
                         topologyList.Add(vertex);
 
-                        report.Add(string.Format("Vertex added. Space [{0}] {1}", space.Guid, point3D.ToString()));
+                        Report(string.Format("Vertex added. Space {0:D4} [{1}] {2}", index, space.Guid, point3D.ToString()));
+                        index++;
                     }
                 }
 
+                if (dictionary_Space == null)
+                    dictionary_Space = new Dictionary<Guid, SAMObject>();
 
-                if (topologyList == null || topologyList.Count == 0)
-                    return false;
+
 
                 List<CellComplex> cellComplexList = null;
                 try
@@ -154,11 +199,12 @@ namespace SAM.Analytical.Topologic
                         topology = CellComplex.ByCells(topology.Cells);
 
                     cellComplexList = new List<CellComplex>() { (CellComplex)topology };
+                    Report(string.Format("CellComplex By Cells"));
                 }
                 catch (Exception exception)
                 {
-                    report.Add(string.Format("Cannot create CellComplex By Cells"));
-                    report.Add(string.Format("Exception Message: {0}", exception.Message));
+                    Report(string.Format("Cannot create CellComplex By Cells"));
+                    Report(string.Format("Exception Message: {0}", exception.Message));
                     cellComplexList = null;
                 }
 
@@ -169,11 +215,12 @@ namespace SAM.Analytical.Topologic
                     {
                         topology = CellComplex.ByFaces(faceList, tolerance);
                         cellComplexList = new List<CellComplex>() { (CellComplex)topology };
+                        Report(string.Format("CellComplex By Faces"));
                     }
                     catch (Exception exception)
                     {
-                        report.Add(string.Format("Cannot create CellComplex By Faces"));
-                        report.Add(string.Format("Exception Message: {0}", exception.Message));
+                        Report(string.Format("Cannot create CellComplex By Faces"));
+                        Report(string.Format("Exception Message: {0}", exception.Message));
 
                         cellComplexList = null;
                     }
@@ -187,10 +234,39 @@ namespace SAM.Analytical.Topologic
                     return false;
 
                 CellComplex cellComplex = cellComplexList[0];
+                
 
-                report.Add(string.Format("Single CellComplex created"));
+                if(dictionary_Space.Count == 0)
+                {
+                    List<Vertex> vertices = cellComplex.Cells.ConvertAll(x => global::Topologic.Utilities.CellUtility.InternalVertex(x, Geometry.Tolerance.MacroDistance));
+                    index = 1;
 
-                if (topologyList != null)
+                    Dictionary<Guid, SAMObject> dictionary_SAMObjects_Space;
+                    if (!dictionary_SAMObjects.TryGetValue(typeof(Space), out dictionary_SAMObjects_Space))
+                    {
+                        dictionary_SAMObjects_Space = new Dictionary<Guid, SAMObject>();
+                        dictionary_SAMObjects[typeof(Space)] = dictionary_SAMObjects_Space;
+                    }
+
+                    foreach(Vertex vertex in vertices)
+                    {
+                        Space space = new Space("Cell " + index, Geometry.Topologic.Convert.ToSAM(vertex));
+                        dictionary_Space[space.Guid] = space;
+                        index++;
+
+                        dictionary_SAMObjects_Space[space.Guid] = space;
+
+                        Dictionary<string, object> dictionary = new Dictionary<string, object>();
+                        dictionary["Space"] = space.Guid.ToString();
+                        Vertex vertex_Temp = (Vertex)vertex.SetDictionary(dictionary);
+                        topologyList.Add(vertex_Temp);
+                    }
+                        
+                }
+
+                Report(string.Format("Single CellComplex created"));
+
+                if (topologyList != null && topologyList.Count > 0)
                     cellComplex = (CellComplex)cellComplex.AddContents(topologyList, 32);
 
                 Dictionary<Guid, HashSet<Guid>> dictionary_Relations_Panel;
@@ -207,16 +283,18 @@ namespace SAM.Analytical.Topologic
                     dictionary_Relations[typeof(Space)] = dictionary_Relations_Space;
                 }
 
-                report.Add(string.Format("Dictionaries created"));
+                Report(string.Format("Dictionaries created"));
 
                 HashSet<Guid> guids_Updated = new HashSet<Guid>();
                 foreach (Face face_New in cellComplex.Faces)
                 {
-                    report.Add(string.Format("Analyzing face"));
+                    Report(string.Format("Analyzing face"));
 
-                    Vertex vertex = global::Topologic.Utilities.FaceUtility.InternalVertex(face_New, tolerance);
+                    Vertex vertex = global::Topologic.Utilities.FaceUtility.VertexAtParameters(face_New, 0.5, 0.5);//global::Topologic.Utilities.FaceUtility.InternalVertex(face_New, tolerance);
                     if (vertex == null)
                         continue;
+
+                    Report(string.Format("Vertex for face found:", string.Format("X={0};Y={1};Z={2}", vertex.X, vertex.Y, vertex.Z)));
 
                     Face face_Old = null;
                     foreach (Face face in faceList)
@@ -240,7 +318,7 @@ namespace SAM.Analytical.Topologic
                     if (panel_Old == null)
                         continue;
 
-                    report.Add(string.Format("Panel found. Panel [{0}]", value));
+                    Report(string.Format("Panel found. Panel [{0}]", value));
 
                     Panel panel_New = null;
 
@@ -249,13 +327,13 @@ namespace SAM.Analytical.Topologic
                         if (guids_Updated.Contains(panel_Old.Guid))
                         {
                             panel_New = new Panel(Guid.NewGuid(), panel_Old, Geometry.Topologic.Convert.ToSAM(face_New));
-                            report.Add(string.Format("Creating new Panel for Old Panel [{0}]. New Panel [{1}]", panel_Old.Guid, panel_New.Guid));
+                            Report(string.Format("Creating new Panel for Old Panel [{0}]. New Panel [{1}]", panel_Old.Guid, panel_New.Guid));
                         }
                         else
                         {
                             panel_New = new Panel(panel_Old.Guid, panel_Old, Geometry.Topologic.Convert.ToSAM(face_New));
                             guids_Updated.Add(panel_Old.Guid);
-                            report.Add(string.Format("Updating Panel [{0}] with new geometry", panel_New.Guid));
+                            Report(string.Format("Updating Panel [{0}] with new geometry", panel_New.Guid));
                         }
 
                         dictionary_SAMObjects[typeof(Panel)][panel_New.Guid] = panel_New;
@@ -263,7 +341,7 @@ namespace SAM.Analytical.Topologic
                     else
                     {
                         panel_New = new Panel(panel_Old.Guid, panel_Old, Geometry.Topologic.Convert.ToSAM(face_New));
-                        report.Add(string.Format("Creating temporary Panel for Panel [{0}]", panel_New.Guid));
+                        Report(string.Format("Creating temporary Panel for Panel [{0}]", panel_New.Guid));
                     }
 
 
@@ -279,9 +357,11 @@ namespace SAM.Analytical.Topologic
 
                     foreach (Cell cell in face_New.Cells)
                     {
-                        report.Add(string.Format("Analyzing Cell"));
+                        Report(string.Format("Analyzing Cell"));
 
                         Space space = null;
+
+
 
                         foreach (Topology topology in cell.Contents)
                         {
@@ -303,7 +383,7 @@ namespace SAM.Analytical.Topologic
 
                         guids_Space.Add(space.Guid);
 
-                        report.Add(string.Format("Space [{0}] added for Panel [{1}]", space.Guid, panel_New.Guid));
+                        Report(string.Format("Space [{0}] added for Panel [{1}]", space.Guid, panel_New.Guid));
 
                         HashSet<Guid> guids_Panel;
                         if (!dictionary_Relations_Space.TryGetValue(space.Guid, out guids_Panel))
@@ -314,19 +394,24 @@ namespace SAM.Analytical.Topologic
 
                         guids_Panel.Add(panel_New.Guid);
 
-                        report.Add(string.Format("Panel [{0}] added for Space [{1}]", panel_New.Guid, space.Guid));
+                        Report(string.Format("Panel [{0}] added for Space [{1}]", panel_New.Guid, space.Guid));
                     }
+
+                    Report("Face finished");
                 }
+
+                Report("Sucesfully completed");
 
                 return true;
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
-                report.Add(string.Format("Exception Message: {0}", exception.Message));
+                Report(string.Format("Exception Message: {0}", exception.Message));
             }
 
             return false;
         }
+
 
         public bool Add(Panel panel)
         {
@@ -395,8 +480,12 @@ namespace SAM.Analytical.Topologic
 
         public List<Panel> GetInternalPanels()
         {
+            Dictionary<Guid, HashSet<Guid>> dictionary;
+            if (!dictionary_Relations.TryGetValue(typeof(Panel), out dictionary))
+                return null;
+            
             List<Panel> panels = new List<Panel>();
-            foreach (KeyValuePair<Guid, HashSet<Guid>> keyValuePair in dictionary_Relations[typeof(Panel)])
+            foreach (KeyValuePair<Guid, HashSet<Guid>> keyValuePair in dictionary)
             {
                 if (keyValuePair.Value.Count < 2)
                     continue;
@@ -409,8 +498,12 @@ namespace SAM.Analytical.Topologic
 
         public List<Panel> GetExternalPanels()
         {
+            Dictionary<Guid, HashSet<Guid>> dictionary;
+            if (!dictionary_Relations.TryGetValue(typeof(Panel), out dictionary))
+                return null;
+
             List<Panel> panels = new List<Panel>();
-            foreach (KeyValuePair<Guid, HashSet<Guid>> keyValuePair in dictionary_Relations[typeof(Panel)])
+            foreach (KeyValuePair<Guid, HashSet<Guid>> keyValuePair in dictionary)
             {
                 if (keyValuePair.Value.Count > 1)
                     continue;
@@ -450,11 +543,15 @@ namespace SAM.Analytical.Topologic
             }
         }
 
-        public List<string> Report
+        public string ReportPath
         {
             get
             {
-                return report;
+                return reportPath;
+            }
+            set
+            {
+                reportPath = value;
             }
         }
     }

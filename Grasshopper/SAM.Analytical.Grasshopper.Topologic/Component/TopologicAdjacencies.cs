@@ -15,8 +15,8 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
         public TopologicAdjacencies()
-          : base("TopologicAdjacencies", "TopologicAdjacencies",
-              "Create AdjacenciesList/Connected Spaces List from  CellComplex AdjacencyCluster and Analytical Panels based on Topologic calculation",
+          : base("Topology.Adjacencies", "Topology.Adjacencies",
+              "Create AdjacenciesList/Connected Spaces List from  SAM AdjacencyCluster and SAM Analytical Panels based on Topologic calculation",
               "SAM", "Topologic")
         {
         }
@@ -26,8 +26,8 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
-            inputParamManager.AddGenericParameter("AdjacencyCluster", "AdjacencyCluster", "AdjacencyCluster", GH_ParamAccess.item);
-            inputParamManager.AddGenericParameter("Panels", "Panels", "Panels", GH_ParamAccess.item);
+            inputParamManager.AddGenericParameter("_adjacencyCluster", "AdjacencyCluster", "SAM AdjacencyCluster", GH_ParamAccess.item);
+            inputParamManager.AddGenericParameter("_panels", "_panels", "SAM Analytical Panels", GH_ParamAccess.item);
         }
 
         /// <summary>
