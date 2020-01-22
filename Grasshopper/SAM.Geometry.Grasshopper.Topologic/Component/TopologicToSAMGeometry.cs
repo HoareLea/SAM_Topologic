@@ -13,7 +13,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
         /// Initializes a new instance of the SAMGeometryByGHGeometry class.
         /// </summary>
         public TopologicToSAMGeometry()
-          : base("TopologicToSAMGeometry", "SAMgeo",
+          : base("Topology.SAMGeometry", "Topology.SAMGeometry",
               "Convert Topologic Geometry to SAM Geometry",
               "SAM", "Topologic")
         {
@@ -24,7 +24,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
-            inputParamManager.AddGenericParameter("_topologicGeometry", "_topologicGeometry", "Topologic Geometry", GH_ParamAccess.item);
+            inputParamManager.AddGenericParameter("_topology", "_topology", "Topologic Geometry", GH_ParamAccess.item);
         }
 
 

@@ -14,7 +14,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
         public TopologicGeometry()
-          : base("TopologicGeometry", "TopoGeo",
+          : base("SAMGeometry.Topology", "SAMGeometry.Topology",
               "Convert SAM Geometry To Topologic Geometry",
               "SAM", "Topologic")
         {
@@ -33,7 +33,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
         {
-            outputParamManager.AddGenericParameter("TopologicGeometry", "TopoGeo", "Topologic Geometry", GH_ParamAccess.item);
+            outputParamManager.AddGenericParameter("TopologicGeometry", "TopoGeo", "Topologic Geometry: Wire, Edge, Vertex", GH_ParamAccess.item);
         }
 
         /// <summary>
