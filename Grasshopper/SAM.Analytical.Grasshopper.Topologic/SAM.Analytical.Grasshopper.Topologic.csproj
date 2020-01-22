@@ -88,6 +88,7 @@
     <Compile Include="Component\TopologicCreateAdjacencyCluster.cs" />
     <Compile Include="Component\TopologicFaces.cs" />
     <Compile Include="Component\TopologicCellComplexByFaces.cs" />
+    <Compile Include="Kernel\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
