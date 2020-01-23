@@ -72,7 +72,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
             {
                 Panel panel = panelList[i];
 
-                geometricGoos.Add(Geometry.Grasshopper.Convert.ToGrasshopper( panel.ToSurface()));
+                geometricGoos.Add(Geometry.Grasshopper.Convert.ToGrasshopper( panel.GetFace()));
 
                 List<Space> spaces = adjacencyCluster.GetPanelSpaces(panel.Guid);
                 GH_Path path = new GH_Path(i);
