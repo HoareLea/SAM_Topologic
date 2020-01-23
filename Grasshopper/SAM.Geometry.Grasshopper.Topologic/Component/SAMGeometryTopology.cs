@@ -33,7 +33,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
         {
-            outputParamManager.AddGenericParameter("TopologicGeometry", "TopoGeo", "Topologic Geometry: Wire, Edge, Vertex", GH_ParamAccess.item);
+            outputParamManager.AddGenericParameter("Topology", "Topology", "Topology Geometry: Wire, Edge, Vertex", GH_ParamAccess.item);
         }
 
         /// <summary>
