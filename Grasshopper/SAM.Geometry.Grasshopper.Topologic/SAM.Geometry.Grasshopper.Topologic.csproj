@@ -79,8 +79,8 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Component\TopologicGeometry.cs" />
-    <Compile Include="Component\TopologicToSAMGeometry.cs" />
+    <Compile Include="Component\SAMGeometryTopology.cs" />
+    <Compile Include="Component\TopologySAMGeometry.cs" />
     <Compile Include="ToSAM\IGeometry3D.cs" />
   </ItemGroup>
   <ItemGroup>

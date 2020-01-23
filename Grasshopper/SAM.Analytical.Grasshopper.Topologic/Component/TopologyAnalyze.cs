@@ -5,17 +5,18 @@ using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 
 using SAM.Analytical.Grasshopper.Topologic.Properties;
+using Topologic;
 
 namespace SAM.Analytical.Grasshopper.Topologic
 {
-    public class TopologicAnalyticalGeometry : GH_Component
+    public class TopologyAnalyze : GH_Component
     {
         /// <summary>
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
-        public TopologicAnalyticalGeometry()
-          : base("SAMAnalytical.Topology", "SAMAnalytical.Topology",
-              "Convert SAM Analytical To Topologic Geometry ie. SAM Panel to Topology Face",
+        public TopologyAnalyze()
+          : base("Topology.Analyze", "Topology.Analyze",
+              "Analyze Topology geometry and output summary, slow down GH",
               "SAM", "Topologic")
         {
         }
@@ -25,7 +26,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
-            inputParamManager.AddGenericParameter("_SAMAnalytical", "_SAMAnalytical", "SAM Analytical Object: Panel", GH_ParamAccess.item);
+            inputParamManager.AddGenericParameter("_topology", "_topology", "Topology", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -33,7 +34,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
         {
-            outputParamManager.AddGenericParameter("Topology", "Topology", "Topologic Geometry", GH_ParamAccess.item);
+            outputParamManager.AddGenericParameter("Analyze", "analyze", "Topologic Analyze summary", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -42,24 +43,16 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// <param name="dataAccess">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
-            GH_ObjectWrapper objectWrapper = null;
+            Topology topology = null;
 
-            if (!dataAccess.GetData(0, ref objectWrapper) || objectWrapper.Value == null)
+            if (!dataAccess.GetData<Topology>(0, ref topology))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
-            object obj = objectWrapper.Value;
-
-            Panel panel = obj as Panel;
-            if(panel != null)
-            {
-                dataAccess.SetData(0, Analytical.Topologic.Convert.ToTopologic((Panel)obj));
-                return;
-            }
-
-            AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Cannot convert geometry");
+            dataAccess.SetData(0, topology.Analyze());
+            return;
 
         }
 
@@ -81,7 +74,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("d3dc979f-71b4-444d-8b75-9c29d1f7e769"); }
+            get { return new Guid("98b4ca69-28ef-4a34-932b-0733c7a59e43"); }
         }
     }
 }

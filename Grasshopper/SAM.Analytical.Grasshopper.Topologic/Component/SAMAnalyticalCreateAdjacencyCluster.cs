@@ -10,12 +10,12 @@ using SAM.Analytical.Grasshopper.Topologic.Properties;
 
 namespace SAM.Analytical.Grasshopper.Topologic
 {
-    public class TopologicCreateAdjacencyCluster : GH_Component
+    public class SAMAnalyticalCreateAdjacencyCluster : GH_Component
     {
         /// <summary>
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
-        public TopologicCreateAdjacencyCluster()
+        public SAMAnalyticalCreateAdjacencyCluster()
           : base("SAMAnalytical.CreateAdjacencyCluster", "SAMAnalytical.CreateAdjacencyCluster",
               "Convert SAM Analytical Panel To Topologic Cellcomplex and then rerun for each Face list of Adjacent Space Names",
               "SAM", "Topologic")

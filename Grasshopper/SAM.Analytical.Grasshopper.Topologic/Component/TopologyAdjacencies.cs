@@ -9,14 +9,14 @@ using Topologic;
 
 namespace SAM.Analytical.Grasshopper.Topologic
 {
-    public class TopologicTopologyAnalyze : GH_Component
+    public class TopologyAdjacencies : GH_Component
     {
         /// <summary>
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
-        public TopologicTopologyAnalyze()
-          : base("Topology.Analyze", "Topology.Analyze",
-              "Analyze Topology geometry and output summary, slow down GH",
+        public TopologyAdjacencies()
+          : base("Topology.Adjacencies", "Topology.Adjacencies",
+              "Create AdjacenciesList/Connected Spaces List from  SAM AdjacencyCluster and SAM Analytical Panels based on Topologic calculation",
               "SAM", "Topologic")
         {
         }
@@ -26,7 +26,8 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
-            inputParamManager.AddGenericParameter("_topology", "_topology", "Topology", GH_ParamAccess.item);
+            inputParamManager.AddGenericParameter("_adjacencyCluster", "AdjacencyCluster", "SAM AdjacencyCluster", GH_ParamAccess.item);
+            inputParamManager.AddGenericParameter("_panels", "_panels", "SAM Analytical Panels", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -34,7 +35,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
         {
-            outputParamManager.AddGenericParameter("Analyze", "analyze", "Topologic Analyze summary", GH_ParamAccess.item);
+            outputParamManager.AddGenericParameter("AdjacenciesList", "AdjacenciesList", "AdjacenciesList", GH_ParamAccess.list);
         }
 
         /// <summary>
@@ -43,15 +44,29 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// <param name="dataAccess">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
-            Topology topology = null;
+            Analytical.Topologic.AdjacencyCluster adjacencyCluster = null;
 
-            if (!dataAccess.GetData<Topology>(0, ref topology))
+            if (!dataAccess.GetData<Analytical.Topologic.AdjacencyCluster>(0, ref adjacencyCluster))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
-            dataAccess.SetData(0, topology.Analyze());
+            Core.SAMObject sAMObject = null;
+
+            if (!dataAccess.GetData<Core.SAMObject>(1, ref sAMObject))
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
+                return;
+            }
+
+            IEnumerable<Core.SAMObject> result = null;
+            if (sAMObject is Space)
+                result = adjacencyCluster.GetSpacePanels(sAMObject.Guid);
+            else if (sAMObject is Panel)
+                result = adjacencyCluster.GetPanelSpaces(sAMObject.Guid);
+
+            dataAccess.SetDataList(0, result);
             return;
 
         }
@@ -74,7 +89,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("98b4ca69-28ef-4a34-932b-0733c7a59e43"); }
+            get { return new Guid("a4a56d41-a2b2-4484-b8d9-787b5beedeb8"); }
         }
     }
 }

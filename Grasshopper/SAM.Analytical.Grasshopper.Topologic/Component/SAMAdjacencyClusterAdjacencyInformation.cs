@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using Grasshopper;
 using Grasshopper.Kernel;
+using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Types;
 
 using SAM.Analytical.Grasshopper.Topologic.Properties;
@@ -9,14 +10,14 @@ using Topologic;
 
 namespace SAM.Analytical.Grasshopper.Topologic
 {
-    public class TopologicAdjacencies : GH_Component
+    public class SAMAdjacencyClusterAdjacencyInformation : GH_Component
     {
         /// <summary>
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
-        public TopologicAdjacencies()
-          : base("Topology.Adjacencies", "Topology.Adjacencies",
-              "Create AdjacenciesList/Connected Spaces List from  SAM AdjacencyCluster and SAM Analytical Panels based on Topologic calculation",
+        public SAMAdjacencyClusterAdjacencyInformation()
+          : base("SAMAdjacencyCluster.AdjacencyInformation", "SAMAdjacencyCluster.AdjacencyInformation",
+              "Outout Geometry and Ajd names from Panels",
               "SAM", "Topologic")
         {
         }
@@ -26,8 +27,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
-            inputParamManager.AddGenericParameter("_adjacencyCluster", "AdjacencyCluster", "SAM AdjacencyCluster", GH_ParamAccess.item);
-            inputParamManager.AddGenericParameter("_panels", "_panels", "SAM Analytical Panels", GH_ParamAccess.item);
+            inputParamManager.AddGenericParameter("AdjacencyCluster", "AdjacencyCluster", "SAM AdjacencyCluster", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -35,7 +35,8 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
         {
-            outputParamManager.AddGenericParameter("AdjacenciesList", "AdjacenciesList", "AdjacenciesList", GH_ParamAccess.list);
+            outputParamManager.AddGenericParameter("Geometry", "Geometry", "GH Geometry from SAM Analytical Panel", GH_ParamAccess.list);
+            outputParamManager.AddGenericParameter("Names", "Names", "Names where each Panel is connected", GH_ParamAccess.tree);
         }
 
         /// <summary>
@@ -52,21 +53,35 @@ namespace SAM.Analytical.Grasshopper.Topologic
                 return;
             }
 
-            Core.SAMObject sAMObject = null;
+            List<Panel> panelList = new List<Panel>();
 
-            if (!dataAccess.GetData<Core.SAMObject>(1, ref sAMObject))
+            List<Panel> panelList_Temp = null;
+
+            panelList_Temp = adjacencyCluster.GetExternalPanels();
+            if (panelList_Temp != null && panelList_Temp.Count != 0)
+                panelList.AddRange(panelList_Temp);
+
+            panelList_Temp = adjacencyCluster.GetInternalPanels();
+            if (panelList_Temp != null && panelList_Temp.Count != 0)
+                panelList.AddRange(panelList_Temp);
+
+            List<IGH_GeometricGoo> geometricGoos = new List<IGH_GeometricGoo>();
+
+            DataTree<string> dataTree = new DataTree<string>();
+            for (int i=0; i < panelList.Count; i++)
             {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
-                return;
+                Panel panel = panelList[i];
+
+                geometricGoos.Add(Geometry.Grasshopper.Convert.ToGrasshopper( panel.ToSurface()));
+
+                List<Space> spaces = adjacencyCluster.GetPanelSpaces(panel.Guid);
+                GH_Path path = new GH_Path(i);
+                foreach (string name in spaces.ConvertAll(x => x.Name))
+                    dataTree.Add(name, path);
             }
 
-            IEnumerable<Core.SAMObject> result = null;
-            if (sAMObject is Space)
-                result = adjacencyCluster.GetSpacePanels(sAMObject.Guid);
-            else if (sAMObject is Panel)
-                result = adjacencyCluster.GetPanelSpaces(sAMObject.Guid);
-
-            dataAccess.SetDataList(0, result);
+            dataAccess.SetDataList(0, geometricGoos);
+            dataAccess.SetDataTree(1, dataTree);
             return;
 
         }
@@ -89,7 +104,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("a4a56d41-a2b2-4484-b8d9-787b5beedeb8"); }
+            get { return new Guid("1189208f-a10b-4693-ba93-fc7f86dc2bad"); }
         }
     }
 }

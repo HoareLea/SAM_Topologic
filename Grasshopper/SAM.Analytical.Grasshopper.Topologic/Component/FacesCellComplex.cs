@@ -1,20 +1,22 @@
 ﻿using System;
+using System.Collections.Generic;
 
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
-using SAM.Geometry.Grasshopper.Topologic.Properties;
+
+using SAM.Analytical.Grasshopper.Topologic.Properties;
 using Topologic;
 
-namespace SAM.Geometry.Grasshopper.Topologic
+namespace SAM.Analytical.Grasshopper.Topologic
 {
-    public class TopologicToSAMGeometry : GH_Component
+    public class FacesCellComplex : GH_Component
     {
         /// <summary>
-        /// Initializes a new instance of the SAMGeometryByGHGeometry class.
+        /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
-        public TopologicToSAMGeometry()
-          : base("Topology.SAMGeometry", "Topology.SAMGeometry",
-              "Convert Topologic Geometry to SAM Geometry",
+        public FacesCellComplex()
+          : base("Faces.CellComplex", "Faces.CellComplex",
+              "Create Topologic CellComplex by Topologic Face",
               "SAM", "Topologic")
         {
         }
@@ -24,16 +26,16 @@ namespace SAM.Geometry.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
-            inputParamManager.AddGenericParameter("_topology", "_topology", "Topologic Geometry", GH_ParamAccess.item);
+            inputParamManager.AddGenericParameter("_faces", "_faces", "Topology Faces", GH_ParamAccess.list);
+            inputParamManager.AddNumberParameter("_tolerance_", "_tolerance_", "Topology CellComplex Telerance default = 0.001", GH_ParamAccess.item, Geometry.Tolerance.MacroDistance);
         }
-
 
         /// <summary>
         /// Registers all the output parameters for this component.
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
         {
-            outputParamManager.AddGenericParameter("SAMGeometry", "SAMGeometry", "SAM Geometry", GH_ParamAccess.item);
+            outputParamManager.AddGenericParameter("cellComplex", "cellComplex", "Topology CellComplex", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -42,29 +44,33 @@ namespace SAM.Geometry.Grasshopper.Topologic
         /// <param name="dataAccess">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
+            List<GH_ObjectWrapper> objectWrapperList = new List<GH_ObjectWrapper>();
+            if (!dataAccess.GetDataList(0, objectWrapperList) || objectWrapperList == null)
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
+                return;
+            }
+
             GH_ObjectWrapper objectWrapper = null;
 
-            if (!dataAccess.GetData(0, ref objectWrapper) || objectWrapper.Value == null)
+            if (!dataAccess.GetData(1, ref objectWrapper) || objectWrapper.Value == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
-            Topology topology = objectWrapper.Value as Topology;
-            if(topology == null)
+            GH_Number gHNumber = objectWrapper.Value as GH_Number;
+            if(gHNumber == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
-            Spatial.IGeometry3D geometry3D = Convert.ToSAM(topology);
-            if(geometry3D == null)
-            {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Cannot convert geometry");
-                return;
-            }
+            CellComplex cellComplex = CellComplex.ByFaces(objectWrapperList.ConvertAll(x => x.Value as Face), gHNumber.Value);
 
-            dataAccess.SetData(0, geometry3D);
+            dataAccess.SetData(0, cellComplex);
+            return;
+
         }
 
         /// <summary>
@@ -85,7 +91,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("0fca6d19-95ee-4461-9be1-ab784aa800db"); }
+            get { return new Guid("6ce7b31d-ba55-4e37-9ef8-967f2040e11a"); }
         }
     }
 }

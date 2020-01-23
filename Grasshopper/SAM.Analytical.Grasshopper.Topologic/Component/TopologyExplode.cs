@@ -9,12 +9,12 @@ using Topologic;
 
 namespace SAM.Analytical.Grasshopper.Topologic
 {
-    public class TopologicTopologyExplode : GH_Component
+    public class TopologyExplode : GH_Component
     {
         /// <summary>
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
-        public TopologicTopologyExplode()
+        public TopologyExplode()
           : base("Topology.Explode", "Topologic.Explode",
               "Explode Topology into CellComplex, Cells, Faces, Wired and Vertices",
               "SAM", "Topologic")
