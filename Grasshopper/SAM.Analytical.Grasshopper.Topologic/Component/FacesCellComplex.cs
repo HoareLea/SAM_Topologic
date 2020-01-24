@@ -35,7 +35,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
         {
-            outputParamManager.AddGenericParameter("cellComplex", "cellComplex", "Topology CellComplex", GH_ParamAccess.item);
+            outputParamManager.AddGenericParameter("CellComplex", "CellComplex", "Topology CellComplex", GH_ParamAccess.item);
         }
 
         /// <summary>

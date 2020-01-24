@@ -26,7 +26,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
-            inputParamManager.AddGenericParameter("_topology", "_topology", "Topology", GH_ParamAccess.item);
+            inputParamManager.AddGenericParameter("_topology", "_topology", "Topology Explode into CellComplex, Cells, Faces, Wired and Vertices", GH_ParamAccess.item);
         }
 
         /// <summary>

@@ -34,7 +34,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
         {
-            outputParamManager.AddGenericParameter("Analyze", "analyze", "Topologic Analyze summary", GH_ParamAccess.item);
+            outputParamManager.AddGenericParameter("Analyze", "Analyze", "Topologic Analyze summary", GH_ParamAccess.item);
         }
 
         /// <summary>

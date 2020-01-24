@@ -34,7 +34,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
         {
-            outputParamManager.AddGenericParameter("faces", "faces", "Topology Faces", GH_ParamAccess.list);
+            outputParamManager.AddGenericParameter("Faces", "Faces", "Topology Faces", GH_ParamAccess.list);
         }
 
         /// <summary>
