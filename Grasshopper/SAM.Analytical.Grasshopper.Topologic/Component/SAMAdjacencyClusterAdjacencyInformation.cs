@@ -13,6 +13,16 @@ namespace SAM.Analytical.Grasshopper.Topologic
     public class SAMAdjacencyClusterAdjacencyInformation : GH_Component
     {
         /// <summary>
+        /// Gets the unique ID for this component. Do not change this ID after release.
+        /// </summary>
+        public override Guid ComponentGuid => new Guid("1189208f-a10b-4693-ba93-fc7f86dc2bad");
+
+        /// <summary>
+        /// Provides an Icon for the component.
+        /// </summary>
+        protected override System.Drawing.Bitmap Icon => Resources.SAM_Topologic;
+
+        /// <summary>
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
         public SAMAdjacencyClusterAdjacencyInformation()
@@ -35,8 +45,8 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
         {
-            outputParamManager.AddGenericParameter("Geometry", "Geometry", "GH Geometry from SAM Analytical Panel", GH_ParamAccess.list);
-            outputParamManager.AddGenericParameter("SpaceAdjNames", "SpaceAdjNames", "Space Adjacency Names, to which Space each Panel is connected", GH_ParamAccess.tree);
+            outputParamManager.AddGeometryParameter("Geometry", "Geometry", "GH Geometry from SAM Analytical Panel", GH_ParamAccess.list);
+            outputParamManager.AddTextParameter("SpaceAdjNames", "SpaceAdjNames", "Space Adjacency Names, to which Space each Panel is connected", GH_ParamAccess.tree);
         }
 
         /// <summary>
@@ -47,7 +57,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         {
             Analytical.Topologic.AdjacencyCluster adjacencyCluster = null;
 
-            if (!dataAccess.GetData<Analytical.Topologic.AdjacencyCluster>(0, ref adjacencyCluster))
+            if (!dataAccess.GetData(0, ref adjacencyCluster))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
@@ -84,27 +94,6 @@ namespace SAM.Analytical.Grasshopper.Topologic
             dataAccess.SetDataTree(1, dataTree);
             return;
 
-        }
-
-        /// <summary>
-        /// Provides an Icon for the component.
-        /// </summary>
-        protected override System.Drawing.Bitmap Icon
-        {
-            get
-            {
-                //You can add image files to your project resources and access them like this:
-                // return Resources.IconForThisComponent;
-                return Resources.SAM_Topologic;
-            }
-        }
-
-        /// <summary>
-        /// Gets the unique ID for this component. Do not change this ID after release.
-        /// </summary>
-        public override Guid ComponentGuid
-        {
-            get { return new Guid("1189208f-a10b-4693-ba93-fc7f86dc2bad"); }
         }
     }
 }

@@ -8,7 +8,7 @@ using Topologic;
 
 namespace SAM.Analytical.Topologic
 {
-    public class AdjacencyCluster
+    public class AdjacencyCluster : SAMObject
     {
         private string reportPath;
         

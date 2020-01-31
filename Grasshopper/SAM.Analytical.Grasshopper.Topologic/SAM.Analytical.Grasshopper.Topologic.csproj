@@ -44,9 +44,15 @@
     <Reference Include="SAM.Analytical">
       <HintPath>..\..\..\SAM\build\SAM.Analytical.dll</HintPath>
     </Reference>
+    <Reference Include="SAM.Analytical.Grasshopper">
+      <HintPath>..\..\..\SAM\build\SAM.Analytical.Grasshopper.dll</HintPath>
+    </Reference>
     <Reference Include="SAM.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\SAM\build\SAM.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="SAM.Core.Grasshopper">
+      <HintPath>..\..\..\SAM\build\SAM.Core.Grasshopper.dll</HintPath>
     </Reference>
     <Reference Include="SAM.Geometry, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -88,6 +94,7 @@
     <Compile Include="Component\SAMAnalyticalCreateAdjacencyCluster.cs" />
     <Compile Include="Component\CellComplexFaces.cs" />
     <Compile Include="Component\FacesCellComplex.cs" />
+    <Compile Include="Classes\GooAdjacencyCluster.cs" />
     <Compile Include="Kernel\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
