@@ -38,7 +38,6 @@ namespace SAM.Analytical.Grasshopper.Topologic
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
             inputParamManager.AddParameter(new GooAdjacencyClusterParam(), "_adjacencyCluster", "_adjacencyCluster", "SAM AdjacencyCluster", GH_ParamAccess.item);
-            inputParamManager.AddBooleanParameter("_UpdatePanelTypes_", "_upt_", "Update PanelType for Panels", GH_ParamAccess.item, true);
         }
 
         /// <summary>
@@ -46,7 +45,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
         {
-            outputParamManager.AddParameter(new GooPanelParam(), "Panels", "Panels", "SAM Analytical Panels", GH_ParamAccess.list);
+            outputParamManager.AddGenericParameter("PanelTypes", "PanelTypes", "SAM Analytical PanelTypes", GH_ParamAccess.list);
             outputParamManager.AddGeometryParameter("Geometries", "Geometries", "GH Geometries from SAM Analytical Panels", GH_ParamAccess.tree);
             outputParamManager.AddTextParameter("SpaceAdjNames", "SpaceAdjNames", "Space Adjacency Names, to which Space each Panel is connected", GH_ParamAccess.tree);
         }
@@ -127,7 +126,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
                     dictionary[panel] = PanelType.Shade;
             }
 
-            List<GooPanel> gooPanels = new List<GooPanel>();
+            List<PanelType> panelTypes = new List<PanelType>();
 
             DataTree<string> dataTree_Names = new DataTree<string>();
             DataTree<IGH_GeometricGoo> dataTree_GeometricGoos = new DataTree<IGH_GeometricGoo>();
@@ -136,11 +135,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
             {
                 Panel panel = keyValuePair.Key;
 
-                if (updatePanelTypes && keyValuePair.Value != panel.PanelType)
-                    panel = new Panel(panel, keyValuePair.Value);
-
-
-                gooPanels.Add(new GooPanel(panel));
+                panelTypes.Add(keyValuePair.Value);
 
                 List<Space> spaces = adjacencyCluster.GetPanelSpaces(panel.Guid);
                 GH_Path path = new GH_Path(i);
@@ -152,7 +147,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
                 i++;
             }
 
-            dataAccess.SetDataList(0, gooPanels);
+            dataAccess.SetDataList(0, panelTypes);
             dataAccess.SetDataTree(1, dataTree_GeometricGoos);
             dataAccess.SetDataTree(2, dataTree_Names);
             return;
