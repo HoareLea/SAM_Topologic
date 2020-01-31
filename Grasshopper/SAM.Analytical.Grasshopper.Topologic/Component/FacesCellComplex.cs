@@ -12,6 +12,16 @@ namespace SAM.Analytical.Grasshopper.Topologic
     public class FacesCellComplex : GH_Component
     {
         /// <summary>
+        /// Gets the unique ID for this component. Do not change this ID after release.
+        /// </summary>
+        public override Guid ComponentGuid => new Guid("6ce7b31d-ba55-4e37-9ef8-967f2040e11a");
+
+        /// <summary>
+        /// Provides an Icon for the component.
+        /// </summary>
+        protected override System.Drawing.Bitmap Icon => Resources.SAM_Topologic;
+
+        /// <summary>
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
         public FacesCellComplex()
@@ -69,29 +79,6 @@ namespace SAM.Analytical.Grasshopper.Topologic
             CellComplex cellComplex = CellComplex.ByFaces(objectWrapperList.ConvertAll(x => x.Value as Face), gHNumber.Value);
 
             dataAccess.SetData(0, cellComplex);
-            return;
-
-        }
-
-        /// <summary>
-        /// Provides an Icon for the component.
-        /// </summary>
-        protected override System.Drawing.Bitmap Icon
-        {
-            get
-            {
-                //You can add image files to your project resources and access them like this:
-                // return Resources.IconForThisComponent;
-                return Resources.SAM_Topologic;
-            }
-        }
-
-        /// <summary>
-        /// Gets the unique ID for this component. Do not change this ID after release.
-        /// </summary>
-        public override Guid ComponentGuid
-        {
-            get { return new Guid("6ce7b31d-ba55-4e37-9ef8-967f2040e11a"); }
         }
     }
 }

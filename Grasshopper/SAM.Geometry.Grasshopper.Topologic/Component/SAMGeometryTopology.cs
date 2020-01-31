@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
+
 using SAM.Geometry.Grasshopper.Topologic.Properties;
 using SAM.Geometry.Spatial;
 
