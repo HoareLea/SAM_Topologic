@@ -7,6 +7,7 @@ using Grasshopper.Kernel.Types;
 
 using SAM.Core.Grasshopper;
 using SAM.Analytical.Topologic;
+using SAM.Analytical.Grasshopper.Topologic.Properties;
 
 namespace SAM.Analytical.Grasshopper.Topologic
 {
@@ -99,8 +100,10 @@ namespace SAM.Analytical.Grasshopper.Topologic
     {
         public override Guid ComponentGuid => new Guid("408ca3f4-0598-4f18-8b25-1f9646c53ef0");
 
+        protected override System.Drawing.Bitmap Icon => Resources.SAM_Topologic;
+
         public GooAdjacencyClusterParam()
-            : base(typeof(Panel).Name, typeof(AdjacencyCluster).Name, typeof(AdjacencyCluster).FullName.Replace(".", " "), "SAM", "Parameters")
+            : base(typeof(Panel).Name, typeof(AdjacencyCluster).Name, typeof(AdjacencyCluster).FullName.Replace(".", " "), "Params", "SAM")
         {
         }
 
