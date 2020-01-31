@@ -63,13 +63,6 @@ namespace SAM.Analytical.Grasshopper.Topologic
                 return;
             }
 
-            bool updatePanelTypes = true;
-            if (!dataAccess.GetData(1, ref updatePanelTypes))
-            {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
-                return;
-            }
-
             Dictionary<Panel, PanelType> dictionary = new Dictionary<Panel, PanelType>();
 
             List<Panel> panelList = null;
@@ -126,16 +119,12 @@ namespace SAM.Analytical.Grasshopper.Topologic
                     dictionary[panel] = PanelType.Shade;
             }
 
-            List<PanelType> panelTypes = new List<PanelType>();
-
             DataTree<string> dataTree_Names = new DataTree<string>();
             DataTree<IGH_GeometricGoo> dataTree_GeometricGoos = new DataTree<IGH_GeometricGoo>();
             int i = 0;
             foreach (KeyValuePair<Panel, PanelType> keyValuePair in dictionary)
             {
                 Panel panel = keyValuePair.Key;
-
-                panelTypes.Add(keyValuePair.Value);
 
                 List<Space> spaces = adjacencyCluster.GetPanelSpaces(panel.Guid);
                 GH_Path path = new GH_Path(i);
@@ -147,7 +136,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
                 i++;
             }
 
-            dataAccess.SetDataList(0, panelTypes);
+            dataAccess.SetDataList(0, dictionary.Values);
             dataAccess.SetDataTree(1, dataTree_GeometricGoos);
             dataAccess.SetDataTree(2, dataTree_Names);
             return;
