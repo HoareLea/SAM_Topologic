@@ -1,16 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.Linq;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 
 using SAM.Analytical.Grasshopper.Topologic.Properties;
+using SAM.Core;
 using Topologic;
 
 namespace SAM.Analytical.Grasshopper.Topologic
 {
     public class TopologyAdjacencies : GH_Component
     {
+        /// <summary>
+        /// Gets the unique ID for this component. Do not change this ID after release.
+        /// </summary>
+        public override Guid ComponentGuid => new Guid("a4a56d41-a2b2-4484-b8d9-787b5beedeb8");
+
+        /// <summary>
+        /// Provides an Icon for the component.
+        /// </summary>
+        protected override System.Drawing.Bitmap Icon => Resources.SAM_Topologic;
+
         /// <summary>
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
@@ -26,8 +37,8 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
-            inputParamManager.AddGenericParameter("_adjacencyCluster", "_adjacencyCluster", "SAM AdjacencyCluster", GH_ParamAccess.item);
-            inputParamManager.AddGenericParameter("_panels", "_panels", "SAM Analytical Panels", GH_ParamAccess.item);
+            inputParamManager.AddParameter(new GooAdjacencyClusterParam(), "_adjacencyCluster", "_adjacencyCluster", "SAM AdjacencyCluster", GH_ParamAccess.item);
+            inputParamManager.AddParameter(new GooPanelParam(), "_panel", "_panel", "SAM Analytical Panel", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -35,7 +46,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
         {
-            outputParamManager.AddGenericParameter("AdjacenciesList", "AdjacenciesList", "AdjacenciesList", GH_ParamAccess.list);
+            outputParamManager.AddParameter(new Core.Grasshopper.GooSAMObjectParam<SAMObject>(), "AdjacenciesList", "AdjacenciesList", "AdjacenciesList", GH_ParamAccess.list);
         }
 
         /// <summary>
@@ -46,50 +57,38 @@ namespace SAM.Analytical.Grasshopper.Topologic
         {
             Analytical.Topologic.AdjacencyCluster adjacencyCluster = null;
 
-            if (!dataAccess.GetData<Analytical.Topologic.AdjacencyCluster>(0, ref adjacencyCluster))
+            if (!dataAccess.GetData(0, ref adjacencyCluster))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
-            Core.SAMObject sAMObject = null;
-
-            if (!dataAccess.GetData<Core.SAMObject>(1, ref sAMObject))
+            SAMObject sAMObject = null;
+            if (!dataAccess.GetData(1, ref sAMObject))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
-            IEnumerable<Core.SAMObject> result = null;
+            IEnumerable<SAMObject> result = null;
             if (sAMObject is Space)
                 result = adjacencyCluster.GetSpacePanels(sAMObject.Guid);
             else if (sAMObject is Panel)
                 result = adjacencyCluster.GetPanelSpaces(sAMObject.Guid);
 
-            dataAccess.SetDataList(0, result);
-            return;
-
-        }
-
-        /// <summary>
-        /// Provides an Icon for the component.
-        /// </summary>
-        protected override System.Drawing.Bitmap Icon
-        {
-            get
+            if (result == null)
             {
-                //You can add image files to your project resources and access them like this:
-                // return Resources.IconForThisComponent;
-                return Resources.SAM_Topologic;
+                dataAccess.SetDataList(0, null);
+                return;
             }
-        }
 
-        /// <summary>
-        /// Gets the unique ID for this component. Do not change this ID after release.
-        /// </summary>
-        public override Guid ComponentGuid
-        {
-            get { return new Guid("a4a56d41-a2b2-4484-b8d9-787b5beedeb8"); }
+            if(result.Count() == 0)
+            {
+                dataAccess.SetDataList(0, result);
+                return;
+            }
+
+            dataAccess.SetDataList(0, result.ToList().ConvertAll(x => new Core.Grasshopper.GooSAMObject<SAMObject>(x)));
         }
     }
 }
