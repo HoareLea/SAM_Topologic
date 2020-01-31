@@ -93,7 +93,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
                 return;
             }
 
-            List<Space> spaceList = null;
+            List<Space> spaceList = new List<Space>();
             dataAccess.GetDataList(1, spaceList);
 
             double tolerance = double.NaN;
