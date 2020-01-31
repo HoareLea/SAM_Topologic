@@ -37,7 +37,8 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
-            inputParamManager.AddGenericParameter("_adjacencyCluster", "_adjacencyCluster", "SAM AdjacencyCluster", GH_ParamAccess.item);
+            inputParamManager.AddParameter(new GooAdjacencyClusterParam(), "_adjacencyCluster", "_adjacencyCluster", "SAM AdjacencyCluster", GH_ParamAccess.item);
+            inputParamManager.AddBooleanParameter("_UpdatePanelTypes_", "_upt_", "Update PanelType for Panels", GH_ParamAccess.item, true);
         }
 
         /// <summary>
@@ -45,7 +46,8 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
         {
-            outputParamManager.AddGeometryParameter("Geometry", "Geometry", "GH Geometry from SAM Analytical Panel", GH_ParamAccess.list);
+            outputParamManager.AddParameter(new GooPanelParam(), "Panels", "Panels", "SAM Analytical Panels", GH_ParamAccess.list);
+            outputParamManager.AddGeometryParameter("Geometries", "Geometries", "GH Geometries from SAM Analytical Panels", GH_ParamAccess.tree);
             outputParamManager.AddTextParameter("SpaceAdjNames", "SpaceAdjNames", "Space Adjacency Names, to which Space each Panel is connected", GH_ParamAccess.tree);
         }
 
@@ -56,44 +58,104 @@ namespace SAM.Analytical.Grasshopper.Topologic
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
             Analytical.Topologic.AdjacencyCluster adjacencyCluster = null;
-
             if (!dataAccess.GetData(0, ref adjacencyCluster))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
-            List<Panel> panelList = new List<Panel>();
-
-            List<Panel> panelList_Temp = null;
-
-            panelList_Temp = adjacencyCluster.GetExternalPanels();
-            if (panelList_Temp != null && panelList_Temp.Count != 0)
-                panelList.AddRange(panelList_Temp);
-
-            panelList_Temp = adjacencyCluster.GetInternalPanels();
-            if (panelList_Temp != null && panelList_Temp.Count != 0)
-                panelList.AddRange(panelList_Temp);
-
-            List<IGH_GeometricGoo> geometricGoos = new List<IGH_GeometricGoo>();
-
-            DataTree<string> dataTree = new DataTree<string>();
-            for (int i=0; i < panelList.Count; i++)
+            bool updatePanelTypes = true;
+            if (!dataAccess.GetData(1, ref updatePanelTypes))
             {
-                Panel panel = panelList[i];
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
+                return;
+            }
 
-                geometricGoos.Add(Geometry.Grasshopper.Convert.ToGrasshopper( panel.GetFace()));
+            Dictionary<Panel, PanelType> dictionary = new Dictionary<Panel, PanelType>();
+
+            List<Panel> panelList = null;
+
+            //Internal
+            panelList = adjacencyCluster.GetExternalPanels();
+            if (panelList != null && panelList.Count != 0)
+            {
+                foreach (Panel panel in panelList)
+                {
+                    PanelType panelType = panel.PanelType;
+
+                    switch (panelType)
+                    {
+                        case PanelType.Wall:
+                            panelType = PanelType.WallExternal;
+                            break;
+                        case PanelType.Floor:
+                            panelType = PanelType.SlabOnGrade;
+                            break;
+                    }
+
+                    dictionary[panel] = panelType;
+                }
+            }
+
+            //External
+            panelList = adjacencyCluster.GetExternalPanels();
+            if (panelList != null && panelList.Count != 0)
+            {
+                foreach (Panel panel in panelList)
+                {
+                    PanelType panelType = panel.PanelType;
+
+                    switch (panelType)
+                    {
+                        case PanelType.Wall:
+                            panelType = PanelType.WallInternal;
+                            break;
+                        case PanelType.Floor:
+                            panelType = PanelType.FloorInternal;
+                            break;
+                    }
+
+                    dictionary[panel] = panelType;
+                }
+            }
+
+            //Shading
+            panelList = adjacencyCluster.GetShadingPanels();
+            if (panelList != null && panelList.Count != 0)
+            {
+                foreach (Panel panel in panelList)
+                    dictionary[panel] = PanelType.Shade;
+            }
+
+            List<GooPanel> gooPanels = new List<GooPanel>();
+
+            DataTree<string> dataTree_Names = new DataTree<string>();
+            DataTree<IGH_GeometricGoo> dataTree_GeometricGoos = new DataTree<IGH_GeometricGoo>();
+            int i = 0;
+            foreach (KeyValuePair<Panel, PanelType> keyValuePair in dictionary)
+            {
+                Panel panel = keyValuePair.Key;
+
+                if (updatePanelTypes && keyValuePair.Value != panel.PanelType)
+                    panel = new Panel(panel, keyValuePair.Value);
+
+
+                gooPanels.Add(new GooPanel(panel));
 
                 List<Space> spaces = adjacencyCluster.GetPanelSpaces(panel.Guid);
                 GH_Path path = new GH_Path(i);
                 foreach (string name in spaces.ConvertAll(x => x.Name))
-                    dataTree.Add(name, path);
+                    dataTree_Names.Add(name, path);
+
+                dataTree_GeometricGoos.Add(Geometry.Grasshopper.Convert.ToGrasshopper(panel.GetFace()), path);
+
+                i++;
             }
 
-            dataAccess.SetDataList(0, geometricGoos);
-            dataAccess.SetDataTree(1, dataTree);
+            dataAccess.SetDataList(0, gooPanels);
+            dataAccess.SetDataTree(1, dataTree_GeometricGoos);
+            dataAccess.SetDataTree(2, dataTree_Names);
             return;
-
         }
     }
 }
