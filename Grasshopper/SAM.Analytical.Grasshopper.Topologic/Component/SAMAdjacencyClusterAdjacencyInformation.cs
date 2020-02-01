@@ -69,7 +69,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
             List<Panel> panelList = null;
 
             //Internal
-            panelList = adjacencyCluster.GetExternalPanels();
+            panelList = adjacencyCluster.GetInternalPanels();
             if (panelList != null && panelList.Count != 0)
             {
                 foreach (Panel panel in panelList)
@@ -79,10 +79,10 @@ namespace SAM.Analytical.Grasshopper.Topologic
                     switch (panelType)
                     {
                         case PanelType.Wall:
-                            panelType = PanelType.WallExternal;
+                            panelType = PanelType.WallInternal;
                             break;
                         case PanelType.Floor:
-                            panelType = PanelType.SlabOnGrade;
+                            panelType = PanelType.FloorInternal;
                             break;
                     }
 
@@ -101,10 +101,10 @@ namespace SAM.Analytical.Grasshopper.Topologic
                     switch (panelType)
                     {
                         case PanelType.Wall:
-                            panelType = PanelType.WallInternal;
+                            panelType = PanelType.WallExternal;
                             break;
                         case PanelType.Floor:
-                            panelType = PanelType.FloorInternal;
+                            panelType = PanelType.SlabOnGrade;
                             break;
                     }
 
