@@ -55,13 +55,19 @@ namespace SAM.Analytical.Grasshopper.Topologic
         {
 
             SAMObject sAMObject = null;
-            if (!dataAccess.GetData(0, ref sAMObject) || sAMObject is Panel)
+            if (!dataAccess.GetData(0, ref sAMObject))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
-            dataAccess.SetData(0, Analytical.Topologic.Convert.ToTopologic((Panel)sAMObject));
+            if(sAMObject is Panel)
+            {
+                dataAccess.SetData(0, Analytical.Topologic.Convert.ToTopologic((Panel)sAMObject));
+                return;
+            }
+
+            AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
         }
     }
 }
