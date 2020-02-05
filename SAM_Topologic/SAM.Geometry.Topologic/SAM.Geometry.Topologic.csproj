@@ -54,6 +54,7 @@
     <Compile Include="ToSAM\Segment3D.cs" />
     <Compile Include="ToSAM\Point3D.cs" />
     <Compile Include="ToSAM\Polygon3D.cs" />
+    <Compile Include="ToTopologic\Face.cs" />
     <Compile Include="ToTopologic\Topology.cs" />
     <Compile Include="ToTopologic\Wire.cs" />
     <Compile Include="ToTopologic\Edge.cs" />

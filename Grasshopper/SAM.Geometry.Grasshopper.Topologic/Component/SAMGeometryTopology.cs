@@ -80,6 +80,13 @@ namespace SAM.Geometry.Grasshopper.Topologic
                 return;
             }
 
+            Face face = geometry3D as Face;
+            if (face != null)
+            {
+                dataAccess.SetData(0, Geometry.Topologic.Convert.ToTopologic(face));
+                return;
+            }
+
             AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Cannot convert geometry");
         }
     }
