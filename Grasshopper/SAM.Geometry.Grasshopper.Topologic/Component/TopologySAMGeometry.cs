@@ -59,14 +59,14 @@ namespace SAM.Geometry.Grasshopper.Topologic
                 return;
             }
 
-            Spatial.IGeometry3D geometry3D = Convert.ToSAM(topology);
-            if(geometry3D == null)
+            Spatial.ISAMGeometry3D sAMGeometry3D = Convert.ToSAM(topology);
+            if(sAMGeometry3D == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Cannot convert geometry");
                 return;
             }
 
-            dataAccess.SetData(0, new GooGeometry3D(geometry3D));
+            dataAccess.SetData(0, new GooGeometry3D(sAMGeometry3D));
         }
     }
 }

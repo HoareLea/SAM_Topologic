@@ -41,6 +41,9 @@
       <HintPath>..\..\packages\DynamoVisualProgramming.ZeroTouchLibrary.2.4.0.6186\lib\net47\DynamoUnits.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="ProtoGeometry, Version=2.3.0.5132, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\DynamoVisualProgramming.ZeroTouchLibrary.2.4.0.6186\lib\net47\ProtoGeometry.dll</HintPath>
       <Private>False</Private>
@@ -64,7 +67,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Component\IGeometry3D.cs" />
+    <Compile Include="Component\ISAMGeometry3D.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

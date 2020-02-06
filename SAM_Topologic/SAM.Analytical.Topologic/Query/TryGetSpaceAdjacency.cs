@@ -8,7 +8,7 @@ namespace SAM.Analytical.Topologic
 {
     public static partial class Query
     {
-        public static bool TryGetSpaceAdjacency(this IEnumerable<Panel> panels, IEnumerable<Space> spaces, double tolerance, out List<Geometry.Spatial.IGeometry3D> geometryList, out List<List<string>> names)
+        public static bool TryGetSpaceAdjacency(this IEnumerable<Panel> panels, IEnumerable<Space> spaces, double tolerance, out List<Geometry.Spatial.ISAMGeometry3D> geometryList, out List<List<string>> names)
         {
 
             Geometry.Spatial.BoundingBox3D boundingBox3D = null;
@@ -61,12 +61,12 @@ namespace SAM.Analytical.Topologic
             return TryGetSpaceAdjacency(faceList, topologyList, tolerance, out geometryList, out names);
         }
 
-        private static bool TryGetSpaceAdjacency(this IEnumerable<Face> faces, IEnumerable<Topology> topologies, double tolerance, out List<Geometry.Spatial.IGeometry3D> geometryList, out List<List<string>> names)
+        private static bool TryGetSpaceAdjacency(this IEnumerable<Face> faces, IEnumerable<Topology> topologies, double tolerance, out List<Geometry.Spatial.ISAMGeometry3D> sAMGeometryList, out List<List<string>> names)
         {
             CellComplex cellComplex = CellComplex.ByFaces(faces, tolerance);
             if (cellComplex == null)
             {
-                geometryList = null;
+                sAMGeometryList = null;
                 names = null;
                 return false;
             }
@@ -78,13 +78,13 @@ namespace SAM.Analytical.Topologic
 
             names = new List<List<string>>();
 
-            geometryList = new List<Geometry.Spatial.IGeometry3D>();
+            sAMGeometryList = new List<Geometry.Spatial.ISAMGeometry3D>();
             foreach (Face face in cellComplex.Faces)
             {
                 List<string> nameList = new List<string>();
                 names.Add(nameList);
 
-                geometryList.Add(Geometry.Topologic.Convert.ToSAM(face));
+                sAMGeometryList.Add(Geometry.Topologic.Convert.ToSAM(face));
                 foreach (Cell cell in face.Cells)
                 {
                     foreach (Topology topology in cell.Contents)

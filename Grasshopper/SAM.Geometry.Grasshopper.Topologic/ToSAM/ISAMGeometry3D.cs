@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Grasshopper.Kernel.Types;
-using Topologic;
+﻿using Topologic;
 
 namespace SAM.Geometry.Grasshopper.Topologic
 {
     public static partial class Convert
     {
-        public static Spatial.IGeometry3D ToSAM(this Topology topology)
+        public static Spatial.ISAMGeometry3D ToSAM(this Topology topology)
         {
             Vertex vertex = topology as Vertex;
             if (vertex != null)

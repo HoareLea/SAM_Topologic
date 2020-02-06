@@ -52,35 +52,35 @@ namespace SAM.Geometry.Grasshopper.Topologic
         /// <param name="dataAccess">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
-            IGeometry3D geometry3D = null;
-            if (!dataAccess.GetData(0, ref geometry3D) || geometry3D == null)
+            ISAMGeometry3D sAMGeometry3D = null;
+            if (!dataAccess.GetData(0, ref sAMGeometry3D) || sAMGeometry3D == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
-            Point3D point3D = geometry3D as Point3D;
+            Point3D point3D = sAMGeometry3D as Point3D;
             if (point3D != null)
             {
                 dataAccess.SetData(0, Geometry.Topologic.Convert.ToTopologic(point3D));
                 return;
             }
 
-            ICurve3D curve3D = geometry3D as ICurve3D;
+            ICurve3D curve3D = sAMGeometry3D as ICurve3D;
             if (curve3D != null)
             {
                 dataAccess.SetData(0, Geometry.Topologic.Convert.ToTopologic(curve3D));
                 return;
             }
 
-            Polygon3D polygon3D = geometry3D as Polygon3D;
+            Polygon3D polygon3D = sAMGeometry3D as Polygon3D;
             if (polygon3D != null)
             {
                 dataAccess.SetData(0, Geometry.Topologic.Convert.ToTopologic(polygon3D));
                 return;
             }
 
-            Face face = geometry3D as Face;
+            Face face = sAMGeometry3D as Face;
             if (face != null)
             {
                 dataAccess.SetData(0, Geometry.Topologic.Convert.ToTopologic(face));
