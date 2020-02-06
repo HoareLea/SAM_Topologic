@@ -129,10 +129,14 @@ namespace SAM.Analytical.Grasshopper.Topologic
                 Panel panel = keyValuePair.Key;
                 gooPanels.Add(new GooPanel(new Panel(panel, keyValuePair.Value)));
 
-                List<Space> spaces = adjacencyCluster.GetPanelSpaces(panel.Guid);
                 GH_Path path = new GH_Path(i);
-                foreach (string name in spaces.ConvertAll(x => x.Name))
-                    dataTree_Names.Add(name, path);
+
+                List<Space> spaces = adjacencyCluster.GetPanelSpaces(panel.Guid);
+                if (spaces != null && spaces.Count > 0)
+                {
+                    foreach (string name in spaces.ConvertAll(x => x.Name))
+                        dataTree_Names.Add(name, path);
+                }
 
                 dataTree_GeometricGoos.Add(Geometry.Grasshopper.Convert.ToGrasshopper(panel.GetFace()), path);
 
