@@ -35,7 +35,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
-            inputParamManager.AddParameter(new GooGeometry3DParam(), "_SAMGeometry", "_SAMGeometry", "SAM Geometry: Polygon3D, Segment3D, Point3D", GH_ParamAccess.item);
+            inputParamManager.AddParameter(new GooSAMGeometryParam(), "_SAMGeometry", "_SAMGeometry", "SAM Geometry: Polygon3D, Segment3D, Point3D", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -52,38 +52,38 @@ namespace SAM.Geometry.Grasshopper.Topologic
         /// <param name="dataAccess">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
-            ISAMGeometry3D sAMGeometry3D = null;
-            if (!dataAccess.GetData(0, ref sAMGeometry3D) || sAMGeometry3D == null)
+            ISAMGeometry sAMGeometry = null;
+            if (!dataAccess.GetData(0, ref sAMGeometry) || sAMGeometry == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
-            Point3D point3D = sAMGeometry3D as Point3D;
+            Point3D point3D = sAMGeometry as Point3D;
             if (point3D != null)
             {
                 dataAccess.SetData(0, Geometry.Topologic.Convert.ToTopologic(point3D));
                 return;
             }
 
-            ICurve3D curve3D = sAMGeometry3D as ICurve3D;
+            ICurve3D curve3D = sAMGeometry as ICurve3D;
             if (curve3D != null)
             {
                 dataAccess.SetData(0, Geometry.Topologic.Convert.ToTopologic(curve3D));
                 return;
             }
 
-            Polygon3D polygon3D = sAMGeometry3D as Polygon3D;
+            Polygon3D polygon3D = sAMGeometry as Polygon3D;
             if (polygon3D != null)
             {
                 dataAccess.SetData(0, Geometry.Topologic.Convert.ToTopologic(polygon3D));
                 return;
             }
 
-            Face face = sAMGeometry3D as Face;
-            if (face != null)
+            Face3D face3D = sAMGeometry as Face3D;
+            if (face3D != null)
             {
-                dataAccess.SetData(0, Geometry.Topologic.Convert.ToTopologic(face));
+                dataAccess.SetData(0, Geometry.Topologic.Convert.ToTopologic(face3D));
                 return;
             }
 

@@ -8,7 +8,7 @@ namespace SAM.Geometry.Topologic
 {
     public static partial class Convert
     {
-        public static global::Topologic.Face ToTopologic(this Spatial.Face face)
+        public static global::Topologic.Face ToTopologic(this Face3D face)
         {
             IClosedPlanar3D closedPlanar3D = face.ToClosedPlanar3D();
             if(closedPlanar3D is ICurvable3D)

@@ -43,7 +43,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
         {
-            outputParamManager.AddParameter(new GooGeometry3DParam(), "SAMGeometry", "SAMGeometry", "SAM Geometry", GH_ParamAccess.item);
+            outputParamManager.AddParameter(new GooSAMGeometryParam(), "SAMGeometry", "SAMGeometry", "SAM Geometry", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
                 return;
             }
 
-            dataAccess.SetData(0, new GooGeometry3D(sAMGeometry3D));
+            dataAccess.SetData(0, new GooSAMGeometry(sAMGeometry3D));
         }
     }
 }

@@ -5,9 +5,9 @@ namespace SAM.Geometry.Topologic
 {
     public static partial class Convert
     {
-        public static Spatial.Face ToSAM(this global::Topologic.Face face)
+        public static Face3D ToSAM(this global::Topologic.Face face)
         {
-            return new Spatial.Face(ToSAM(face.ExternalBoundary));
+            return new Face3D(ToSAM(face.ExternalBoundary));
         }
     }
 }
