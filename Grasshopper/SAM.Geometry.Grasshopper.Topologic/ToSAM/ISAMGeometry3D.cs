@@ -18,7 +18,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
             if (wire != null)
                 return Topologic.Convert.ToSAM(wire);
 
-            Face face = topology as Face;
+            global::Topologic.Face face = topology as global::Topologic.Face;
             if (face != null)
                return Geometry.Topologic.Convert.ToSAM(face);               
 

@@ -10,7 +10,7 @@ namespace SAM.Geometry.Topologic
     {
         public static global::Topologic.Face ToTopologic(this Face3D face)
         {
-            IClosedPlanar3D closedPlanar3D = face.ToClosedPlanar3D();
+            IClosedPlanar3D closedPlanar3D = face.GetExternalEdge();
             if(closedPlanar3D is ICurvable3D)
             {
                 List<Edge> edges = new List<Edge>();
