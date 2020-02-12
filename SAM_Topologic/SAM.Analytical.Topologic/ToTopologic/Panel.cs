@@ -10,7 +10,7 @@ namespace SAM.Analytical.Topologic
             if (panel == null)
                 return null;
 
-            Geometry.Spatial.Face3D face3D = panel.GetFace();
+            Geometry.Spatial.Face3D face3D = panel.GetFace3D();
             if (face3D == null)
                 return null;
 
