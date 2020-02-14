@@ -96,14 +96,16 @@ namespace SAM.Analytical.Grasshopper.Topologic
         }
     }
 
+    //Params Components -> SAM used for internalizing data
     public class GooAdjacencyClusterParam : GH_PersistentParam<GooAdjacencyCluster>, IGH_PreviewObject
     {
         public override Guid ComponentGuid => new Guid("408ca3f4-0598-4f18-8b25-1f9646c53ef0");
 
         protected override System.Drawing.Bitmap Icon => Resources.SAM_Topologic;
 
+        //Here we control name, nickname, description, category, sub-category as deafult we use typeofclass name
         public GooAdjacencyClusterParam()
-            : base(typeof(Panel).Name, typeof(AdjacencyCluster).Name, typeof(AdjacencyCluster).FullName.Replace(".", " "), "Params", "SAM")
+            : base(typeof(AdjacencyCluster).Name, typeof(AdjacencyCluster).Name, typeof(AdjacencyCluster).FullName.Replace(".", " "), "Params", "SAM")
         {
         }
 
