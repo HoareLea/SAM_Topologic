@@ -191,8 +191,11 @@ namespace SAM.Analytical.Topologic
                 List<CellComplex> cellComplexList = null;
                 try
                 {
+                    Report(string.Format("Trying to make CellComplex By Cells"));
                     Cluster cluster = Cluster.ByTopologies(faceList);
+                    Report(string.Format("Cluster.ByTopologies Done"));
                     topology = cluster.SelfMerge();
+                    Report(string.Format("Cluster SelfMerge Done"));
                     if (topology.Cells == null || topology.Cells.Count == 0)
                         topology = null;
                     else
@@ -288,7 +291,7 @@ namespace SAM.Analytical.Topologic
                 HashSet<Guid> guids_Updated = new HashSet<Guid>();
                 foreach (Face face_New in cellComplex.Faces)
                 {
-                    Report(string.Format("Analyzing face"));
+                    Report(string.Format("Analyzing face and looking for Internal vertex"));
                     //global::Topologic.Utilities.FaceUtility.InternalVertex(face_New, tolerance);
                     //global::Topologic.Utilities.FaceUtility.VertexAtParameters(face_New, 0.5, 0.5)
                     Vertex vertex = global::Topologic.Utilities.FaceUtility.InternalVertex(face_New, tolerance);//global::Topologic.Utilities.FaceUtility.InternalVertex(face_New, tolerance);
