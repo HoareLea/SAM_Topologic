@@ -532,25 +532,6 @@ namespace SAM.Analytical.Topologic
                 panels.Add((Panel)dictionary_SAMObjects[typeof(Panel)][keyValuePair.Key]);
             }
 
-            //TODO: MOve away in the future to another object
-            for(int i =0; i < panels.Count; i++ )
-            {
-                if (panels[i].PanelType == PanelType.Wall || panels[i].PanelType == PanelType.WallExternal)
-                {
-                    Panel panel = new Panel(panels[i], new Construction("Basic Wall: SIM_INT_SLD_Partition"));
-                    panel = new Panel(panel, PanelType.WallInternal);
-                    //panel.Name = panel.Construction.Name;
-                    panels[i] = panel;
-                }
-                else if (panels[i].PanelType == PanelType.Roof || panels[i].PanelType == PanelType.Floor || panels[i].PanelType == PanelType.FloorExposed || panels[i].PanelType == PanelType.SlabOnGrade)
-                {
-                    Panel panel = new Panel(panels[i], new Construction("Floor: SIM_INT_SLD_FLR FLR02"));
-                    panel = new Panel(panel, PanelType.FloorInternal);
-                    panels[i] = panel;
-                }
-            }
-            //
-
             return panels;
         }
 
@@ -568,25 +549,6 @@ namespace SAM.Analytical.Topologic
 
                 panels.Add((Panel)dictionary_SAMObjects[typeof(Panel)][keyValuePair.Key]);
             }
-
-            //TODO: MOve away in the future to another object 2
-            for (int i = 0; i < panels.Count; i++)
-            {
-                if (panels[i].PanelType == PanelType.Wall)
-                {
-                    Panel panel = new Panel(panels[i], new Construction("Basic Wall: SIM_EXT_SLD"));
-                    panel = new Panel(panel, PanelType.WallExternal);
-                    //panel.Name = panel.Construction.Name;
-                    panels[i] = panel;
-                }
-                else if (panels[i].PanelType == PanelType.Floor)
-                {
-                    Panel panel = new Panel(panels[i], new Construction("Floor: SIM_EXT_GRD_FLR FLR01"));
-                    panel = new Panel(panel, PanelType.SlabOnGrade);
-                    panels[i] = panel;
-                }
-            }
-            //
 
             return panels;
         }
@@ -608,20 +570,6 @@ namespace SAM.Analytical.Topologic
 
                 panels.Add(panel);
             }
-
-            //TODO: MOve away in the future to another object 2
-            for (int i = 0; i < panels.Count; i++)
-            {
-                if (panels[i].PanelType == PanelType.Wall)
-                {
-                    Panel panel = new Panel(panels[i], new Construction("Basic Wall: SIM_EXT_SLD"));
-                    panel = new Panel(panel, PanelType.WallExternal);
-                    //panel.Name = panel.Construction.Name;
-                    panels[i] = panel;
-                }
-
-            }
-            //
 
             return panels;
         }
