@@ -38,22 +38,6 @@ namespace SAM.Analytical.Grasshopper.Topologic
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
             inputParamManager.AddParameter(new GooAdjacencyClusterParam(), "_adjacencyCluster", "_adjacencyCluster", "SAM AdjacencyCluster", GH_ParamAccess.item);
-            
-            inputParamManager.AddTextParameter("_wallInternalConstructionPrefix_", "_wicp_", "Wall Internal Construction Prefix", GH_ParamAccess.item, "Basic Wall: SIM_INT_");
-            inputParamManager.AddTextParameter("_wallInternalConstructionSufix_", "_wics_", "Wall Internal Construction Sufix", GH_ParamAccess.item, "SLD_Partition");
-
-            inputParamManager.AddTextParameter("_wallExternalConstructionPrefix_", "_wecp_", "Wall External Construction Prefix", GH_ParamAccess.item, "Basic Wall: SIM_EXT_");
-            inputParamManager.AddTextParameter("_wallExternalConstructionSufix_", "_wecs_", "Wall External Construction Sufix", GH_ParamAccess.item, "SLD");
-
-            inputParamManager.AddTextParameter("_wallShadingConstructionPrefix_", "_wscp_", "Wall Shading Construction Prefix", GH_ParamAccess.item, "Basic Wall: SIM_EXT_");
-            inputParamManager.AddTextParameter("_wallShadingConstructionSufix_", "_wscs_", "Wall Shading Construction Sufix", GH_ParamAccess.item, "SLD");
-
-            inputParamManager.AddTextParameter("_floorInternalConstructionPrefix_", "_ficp_", "Floor Internal Construction Prefix", GH_ParamAccess.item, "Floor: SIM_INT_");
-            inputParamManager.AddTextParameter("_floorInternalConstructionSufix_", "_fics_", "Floor Internal Construction Sufix", GH_ParamAccess.item, "SLD_FLR FLR02");
-
-            inputParamManager.AddTextParameter("_floorExternalConstructionPrefix_", "_fecp_", "Floor External Construction Prefix", GH_ParamAccess.item, "Floor: SIM_EXT_GRD_");
-            inputParamManager.AddTextParameter("_floorExternalConstructionSufix_", "_fecs_", "Floor External Construction Sufix", GH_ParamAccess.item, "FLR FLR01");
-
         }
 
         /// <summary>
@@ -80,75 +64,18 @@ namespace SAM.Analytical.Grasshopper.Topologic
                 return;
             }
 
-            string wallInternalConstructionPrefix = null;
-            if(!dataAccess.GetData(1, ref wallInternalConstructionPrefix))
-            {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
-                return;
-            }
-
-            string wallInternalConstructionSufix = null;
-            if (!dataAccess.GetData(2, ref wallInternalConstructionSufix))
-            {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
-                return;
-            }
-
-            string wallExternalConstructionPrefix = null;
-            if (!dataAccess.GetData(3, ref wallExternalConstructionPrefix))
-            {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
-                return;
-            }
-
-            string wallExternalConstructionSufix = null;
-            if (!dataAccess.GetData(4, ref wallExternalConstructionSufix))
-            {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
-                return;
-            }
-
-            string wallShadingConstructionPrefix = null;
-            if (!dataAccess.GetData(5, ref wallShadingConstructionPrefix))
-            {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
-                return;
-            }
-
-            string wallShadingConstructionSufix = null;
-            if (!dataAccess.GetData(6, ref wallShadingConstructionSufix))
-            {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
-                return;
-            }
-
-            string floorInternalConstructionPrefix = null;
-            if (!dataAccess.GetData(7, ref floorInternalConstructionPrefix))
-            {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
-                return;
-            }
-
-            string floorInternalConstructionSufix = null;
-            if (!dataAccess.GetData(8, ref floorInternalConstructionSufix))
-            {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
-                return;
-            }
-
-            string floorExternalConstructionPrefix = null;
-            if (!dataAccess.GetData(9, ref floorExternalConstructionPrefix))
-            {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
-                return;
-            }
-
-            string floorExternalConstructionSufix = null;
-            if (!dataAccess.GetData(10, ref floorExternalConstructionSufix))
-            {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
-                return;
-            }
+            string wallInternalConstructionPrefix = "Basic Wall: SIM_INT_";
+            string wallInternalConstructionSufix = "SLD_Partition";
+            string wallExternalConstructionPrefix = "Basic Wall: SIM_EXT_";
+            string wallExternalConstructionSufix = "SLD";
+            string wallShadingConstructionPrefix = "Basic Wall: SIM_EXT_";
+            string wallShadingConstructionSufix = "SLD";
+            string floorInternalConstructionPrefix = "Floor: SIM_INT_";
+            string floorInternalConstructionSufix = "SLD_FLR FLR02";
+            string floorExternalConstructionPrefix = "Floor: SIM_EXT_GRD_";
+            string floorExternalConstructionSufix = "FLR FLR01";
+            string roofExternalConstructionPrefix = "Basic Roof: SIM_EXT_";
+            string roofExternalConstructionSufix = "SLD_Roof DA01";
 
             Dictionary<Panel, PanelType> dictionary = new Dictionary<Panel, PanelType>();
 
@@ -199,7 +126,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
                     PanelType panelType = panel.PanelType;
 
                     Panel panel_New = panel;
-                    
+
                     if (panelType == PanelType.Wall)
                     {
                         if (!panel_New.Construction.Name.StartsWith(wallExternalConstructionPrefix))
@@ -210,17 +137,33 @@ namespace SAM.Analytical.Grasshopper.Topologic
                             panel_New = new Panel(panel_New, panelType);
                         }
                     }
-                    else if (panelType == PanelType.Floor)
+                    else if (panelType == PanelType.Floor || panelType == PanelType.Roof)
                     {
-                        if (!panel_New.Construction.Name.StartsWith(floorExternalConstructionPrefix))
-                        {
-                            panelType = PanelType.SlabOnGrade;
+                        Geometry.Spatial.Vector3D vector3D_Normal = panel.PlanarBoundary3D?.GetNormal();
 
-                            panel_New = new Panel(panel, new Construction(floorExternalConstructionPrefix + floorExternalConstructionSufix));
-                            panel_New = new Panel(panel_New, panelType);
+                        PanelType panelType_Normal = Query.PanelType(vector3D_Normal);
+                        if (panelType_Normal == PanelType.Floor)
+                        {
+                            if (!panel_New.Construction.Name.StartsWith(floorExternalConstructionPrefix))
+                            {
+                                panelType = PanelType.Floor;
+
+                                panel_New = new Panel(panel, new Construction(floorExternalConstructionPrefix + floorExternalConstructionSufix));
+                                panel_New = new Panel(panel_New, panelType);
+                            }
+                        }
+                        else if (panelType_Normal == PanelType.Roof)
+
+                        {
+                            if (!panel_New.Construction.Name.StartsWith(roofExternalConstructionPrefix))
+                            {
+                                panelType = PanelType.Roof;
+
+                                panel_New = new Panel(panel, new Construction(roofExternalConstructionPrefix + roofExternalConstructionSufix));
+                                panel_New = new Panel(panel_New, panelType);
+                            }
                         }
                     }
-
 
                     dictionary[panel_New] = panelType;
                 }
