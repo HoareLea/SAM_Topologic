@@ -289,6 +289,7 @@ namespace SAM.Analytical.Topologic
                 Report(string.Format("Dictionaries created"));
 
                 HashSet<Guid> guids_Updated = new HashSet<Guid>();
+                Dictionary<Guid, SAMObject> dictionary_Panel_New = new Dictionary<Guid, SAMObject>();
                 foreach (Face face_New in cellComplex.Faces)
                 {
                     Report(string.Format("Analyzing face and looking for Internal vertex"));
@@ -301,6 +302,7 @@ namespace SAM.Analytical.Topologic
                     Report(string.Format("Vertex for face found:", string.Format("X={0};Y={1};Z={2}", vertex.X, vertex.Y, vertex.Z)));
 
                     Face face_Old = null;
+                    //TODO: More sophisticated method for face finding (to be checked)
                     foreach (Face face in faceList)
                     {
                         if (global::Topologic.Utilities.FaceUtility.IsInside(face, vertex, tolerance))
@@ -332,6 +334,7 @@ namespace SAM.Analytical.Topologic
                         {
                             panel_New = new Panel(Guid.NewGuid(), panel_Old, Geometry.Topologic.Convert.ToSAM(face_New));
                             Report(string.Format("Creating new Panel for Old Panel [{0}]. New Panel [{1}]", panel_Old.Guid, panel_New.Guid));
+                            //break;
                         }
                         else
                         {
@@ -340,7 +343,8 @@ namespace SAM.Analytical.Topologic
                             Report(string.Format("Updating Panel [{0}] with new geometry", panel_New.Guid));
                         }
 
-                        dictionary_SAMObjects[typeof(Panel)][panel_New.Guid] = panel_New;
+                        //dictionary_SAMObjects[typeof(Panel)][panel_New.Guid] = panel_New;
+                        dictionary_Panel_New[panel_New.Guid] = panel_New;
                     }
                     else
                     {
@@ -364,8 +368,6 @@ namespace SAM.Analytical.Topologic
                         Report(string.Format("Analyzing Cell"));
 
                         Space space = null;
-
-
 
                         foreach (Topology topology in cell.Contents)
                         {
@@ -402,6 +404,11 @@ namespace SAM.Analytical.Topologic
                     }
 
                     Report("Face finished");
+                }
+
+                if(updatePanels)
+                {
+                    dictionary_SAMObjects[typeof(Panel)] = dictionary_Panel_New;
                 }
 
                 Report("Sucesfully completed");
