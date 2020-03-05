@@ -76,6 +76,10 @@ namespace SAM.Analytical.Grasshopper.Topologic
             string floorExternalConstructionSufix = "FLR FLR01";
             string roofExternalConstructionPrefix = "Basic Roof: SIM_EXT_";
             string roofExternalConstructionSufix = "SLD_Roof DA01";
+            string floorExposedConstructionPrefix = "Floor: SIM_EXT_";
+            string floorExposedConstructionSufix = "SLD_FLR Exposed";
+            string slabOnGradeConstructionPrefix = "Floor: SIM_EXT_";
+            string slabOnGradeConstructionSufix = "GRD_FLR FLR01";
 
             Dictionary<Panel, PanelType> dictionary = new Dictionary<Panel, PanelType>();
 
@@ -144,12 +148,37 @@ namespace SAM.Analytical.Grasshopper.Topologic
                         PanelType panelType_Normal = Query.PanelType(vector3D_Normal);
                         if (panelType_Normal == PanelType.Floor)
                         {
-                            if (!panel_New.Construction.Name.StartsWith(floorExternalConstructionPrefix))
-                            {
-                                panelType = PanelType.Floor;
+                            double elevation = Query.MaxElevation(panel_New);
 
-                                panel_New = new Panel(panel, new Construction(floorExternalConstructionPrefix + floorExternalConstructionSufix));
-                                panel_New = new Panel(panel_New, panelType);
+                            if(elevation == 0)
+                            {
+                                if (!panel_New.Construction.Name.StartsWith(floorExternalConstructionPrefix))
+                                {
+                                    panelType = PanelType.SlabOnGrade;
+
+                                    panel_New = new Panel(panel, new Construction(floorExternalConstructionPrefix + floorExternalConstructionSufix));
+                                    panel_New = new Panel(panel_New, panelType);
+                                }
+                            }
+                            else if (elevation < 0)
+                            {
+                                if (!panel_New.Construction.Name.StartsWith(slabOnGradeConstructionPrefix))
+                                {
+                                    panelType = PanelType.SlabOnGrade;
+
+                                    panel_New = new Panel(panel, new Construction(slabOnGradeConstructionPrefix + slabOnGradeConstructionSufix));
+                                    panel_New = new Panel(panel_New, panelType);
+                                }
+                            }
+                            else
+                            {
+                                if (!panel_New.Construction.Name.StartsWith(floorExposedConstructionPrefix))
+                                {
+                                    panelType = PanelType.FloorExposed;
+
+                                    panel_New = new Panel(panel, new Construction(floorExposedConstructionPrefix + floorExposedConstructionSufix));
+                                    panel_New = new Panel(panel_New, panelType);
+                                }
                             }
                         }
                         else if (panelType_Normal == PanelType.Roof)
