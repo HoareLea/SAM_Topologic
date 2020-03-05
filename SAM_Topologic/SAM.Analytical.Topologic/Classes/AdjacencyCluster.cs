@@ -100,6 +100,29 @@ namespace SAM.Analytical.Topologic
             return true;
         }
 
+        private static Face FindFace(Dictionary<Face, double> facesDictionary, Vertex vertex, double area, double tolerance = Geometry.Tolerance.MacroDistance)
+        {
+            double areaDifferece_Min = double.MaxValue;
+            Face result = null;
+            foreach (KeyValuePair<Face, double> keyValuePair in facesDictionary)
+            {
+                double areaDifference = Math.Abs(keyValuePair.Value - area);
+                
+                if (areaDifferece_Min < areaDifference)
+                    continue;
+
+                Face face = keyValuePair.Key;
+
+                if (!global::Topologic.Utilities.FaceUtility.IsInside(face, vertex, tolerance))
+                    continue;
+
+                result = face;
+                areaDifferece_Min = areaDifference;
+            }
+
+            return result;
+        }
+
 
         public bool Calculate(double tolerance = Geometry.Tolerance.MacroDistance, bool updatePanels = true)
         {
@@ -290,6 +313,10 @@ namespace SAM.Analytical.Topologic
 
                 HashSet<Guid> guids_Updated = new HashSet<Guid>();
                 Dictionary<Guid, SAMObject> dictionary_Panel_New = new Dictionary<Guid, SAMObject>();
+                
+                Dictionary<Face, double> dictionary_Area = new Dictionary<Face, double>();
+                faceList.ForEach(x => dictionary_Area[x] = global::Topologic.Utilities.FaceUtility.Area(x));
+                
                 foreach (Face face_New in cellComplex.Faces)
                 {
                     Report(string.Format("Analyzing face and looking for Internal vertex"));
@@ -301,16 +328,17 @@ namespace SAM.Analytical.Topologic
 
                     Report(string.Format("Vertex for face found:", string.Format("X={0};Y={1};Z={2}", vertex.X, vertex.Y, vertex.Z)));
 
-                    Face face_Old = null;
                     //TODO: More sophisticated method for face finding (to be checked)
-                    foreach (Face face in faceList)
-                    {
-                        if (global::Topologic.Utilities.FaceUtility.IsInside(face, vertex, tolerance))
-                        {
-                            face_Old = face;
-                            break;
-                        }
-                    }
+                    Face face_Old = FindFace(dictionary_Area, vertex, global::Topologic.Utilities.FaceUtility.Area(face_New), tolerance);
+                    //Face face_Old = null;
+                    //foreach (Face face in faceList)
+                    //{
+                    //    if (global::Topologic.Utilities.FaceUtility.IsInside(face, vertex, tolerance))
+                    //    {
+                    //        face_Old = face;
+                    //        break;
+                    //    }
+                    //}
 
                     if (face_Old == null)
                         continue;
