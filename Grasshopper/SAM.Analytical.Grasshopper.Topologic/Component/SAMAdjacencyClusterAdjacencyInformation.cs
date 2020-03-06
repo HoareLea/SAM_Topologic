@@ -97,25 +97,21 @@ namespace SAM.Analytical.Grasshopper.Topologic
 
                     if (panelType == PanelType.Wall || panelType == PanelType.WallExternal)
                     {
-                        if (!panel_New.Construction.Name.StartsWith(wallInternalConstructionPrefix))
-                        {
-                            panelType = PanelType.WallInternal;
+                        panelType = PanelType.WallInternal;
 
+                        if (!panel_New.Construction.Name.StartsWith(wallInternalConstructionPrefix))
                             panel_New = new Panel(panel, new Construction(wallInternalConstructionPrefix + wallInternalConstructionSufix));
-                            panel_New = new Panel(panel_New, panelType);
-                        }
                     }
                     else if (panelType == PanelType.Roof || panelType == PanelType.Floor || panelType == PanelType.FloorExposed || panelType == PanelType.SlabOnGrade)
                     {
-                        if (!panel_New.Construction.Name.StartsWith(floorInternalConstructionPrefix))
-                        {
-                            panelType = PanelType.FloorInternal;
+                        panelType = PanelType.FloorInternal;
 
+                        if (!panel_New.Construction.Name.StartsWith(floorInternalConstructionPrefix))
                             panel_New = new Panel(panel, new Construction(floorInternalConstructionPrefix + floorInternalConstructionSufix));
-                            panel_New = new Panel(panel_New, panelType);
-                        }
                     }
 
+                    if (panel_New.PanelType != panelType)
+                        panel_New = new Panel(panel_New, panelType);
 
                     dictionary[panel_New] = panelType;
                 }
@@ -133,13 +129,10 @@ namespace SAM.Analytical.Grasshopper.Topologic
 
                     if (panelType == PanelType.Wall)
                     {
-                        if (!panel_New.Construction.Name.StartsWith(wallExternalConstructionPrefix))
-                        {
-                            panelType = PanelType.WallExternal;
+                        panelType = PanelType.WallExternal;
 
+                        if (!panel_New.Construction.Name.StartsWith(wallExternalConstructionPrefix))
                             panel_New = new Panel(panel, new Construction(wallExternalConstructionPrefix + wallExternalConstructionSufix));
-                            panel_New = new Panel(panel_New, panelType);
-                        }
                     }
                     else if (panelType == PanelType.Floor || panelType == PanelType.Roof)
                     {
@@ -152,47 +145,37 @@ namespace SAM.Analytical.Grasshopper.Topologic
 
                             if(elevation == 0)
                             {
-                                if (!panel_New.Construction.Name.StartsWith(floorExternalConstructionPrefix))
-                                {
-                                    panelType = PanelType.SlabOnGrade;
+                                panelType = PanelType.SlabOnGrade;
 
+                                if (!panel_New.Construction.Name.StartsWith(floorExternalConstructionPrefix))
                                     panel_New = new Panel(panel, new Construction(floorExternalConstructionPrefix + floorExternalConstructionSufix));
-                                    panel_New = new Panel(panel_New, panelType);
-                                }
                             }
                             else if (elevation < 0)
                             {
-                                if (!panel_New.Construction.Name.StartsWith(slabOnGradeConstructionPrefix))
-                                {
-                                    panelType = PanelType.SlabOnGrade;
+                                panelType = PanelType.SlabOnGrade;
 
+                                if (!panel_New.Construction.Name.StartsWith(slabOnGradeConstructionPrefix))
                                     panel_New = new Panel(panel, new Construction(slabOnGradeConstructionPrefix + slabOnGradeConstructionSufix));
-                                    panel_New = new Panel(panel_New, panelType);
-                                }
                             }
                             else
                             {
-                                if (!panel_New.Construction.Name.StartsWith(floorExposedConstructionPrefix))
-                                {
-                                    panelType = PanelType.FloorExposed;
+                                panelType = PanelType.FloorExposed;
 
+                                if (!panel_New.Construction.Name.StartsWith(floorExposedConstructionPrefix))
                                     panel_New = new Panel(panel, new Construction(floorExposedConstructionPrefix + floorExposedConstructionSufix));
-                                    panel_New = new Panel(panel_New, panelType);
-                                }
                             }
                         }
                         else if (panelType_Normal == PanelType.Roof)
-
                         {
-                            if (!panel_New.Construction.Name.StartsWith(roofExternalConstructionPrefix))
-                            {
-                                panelType = PanelType.Roof;
+                            panelType = PanelType.Roof;
 
+                            if (!panel_New.Construction.Name.StartsWith(roofExternalConstructionPrefix))
                                 panel_New = new Panel(panel, new Construction(roofExternalConstructionPrefix + roofExternalConstructionSufix));
-                                panel_New = new Panel(panel_New, panelType);
-                            }
                         }
                     }
+
+                    if (panel_New.PanelType != panelType)
+                        panel_New = new Panel(panel_New, panelType);
 
                     dictionary[panel_New] = panelType;
                 }
@@ -210,14 +193,14 @@ namespace SAM.Analytical.Grasshopper.Topologic
 
                     if (panelType == PanelType.Wall)
                     {
-                        if (!panel_New.Construction.Name.StartsWith(wallShadingConstructionPrefix))
-                        {
-                            panelType = PanelType.WallExternal;
+                        panelType = PanelType.WallExternal;
 
+                        if (!panel_New.Construction.Name.StartsWith(wallShadingConstructionPrefix))
                             panel_New = new Panel(panel, new Construction(wallShadingConstructionPrefix + wallShadingConstructionSufix));
-                            panel_New = new Panel(panel_New, panelType);
-                        }
                     }
+
+                    if (panel_New.PanelType != panelType)
+                        panel_New = new Panel(panel_New, panelType);
 
                     dictionary[panel_New] = panelType;
                 }
