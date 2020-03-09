@@ -322,7 +322,8 @@ namespace SAM.Analytical.Topologic
                     Report(string.Format("Analyzing face and looking for Internal vertex"));
                     //global::Topologic.Utilities.FaceUtility.InternalVertex(face_New, tolerance);
                     //global::Topologic.Utilities.FaceUtility.VertexAtParameters(face_New, 0.5, 0.5)
-                    Vertex vertex = global::Topologic.Utilities.FaceUtility.VertexAtParameters(face_New, 0.5, 0.5);//global::Topologic.Utilities.FaceUtility.InternalVertex(face_New, tolerance);
+                    //Vertex vertex = global::Topologic.Utilities.FaceUtility.VertexAtParameters(face_New, 0.5, 0.5);//global::Topologic.Utilities.FaceUtility.InternalVertex(face_New, tolerance);
+                    Vertex vertex = global::Topologic.Utilities.FaceUtility.InternalVertex(face_New, tolerance);
                     if (vertex == null)
                         continue;
 
