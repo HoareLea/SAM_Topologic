@@ -44,9 +44,10 @@ namespace SAM.Analytical.Grasshopper.Topologic
             inputParamManager.AddParameter(gooSpaceParam, "_spaces", "_spaces", "SAM Analytical Spaces", GH_ParamAccess.list);
 
             inputParamManager.AddNumberParameter("_tolerance_", "_tolerance_", string.Format("Topologic CellComplex default {0}", Geometry.Tolerance.MacroDistance), GH_ParamAccess.item, Geometry.Tolerance.MacroDistance);
-            inputParamManager.AddBooleanParameter("_run_", "_run_", "Run", GH_ParamAccess.item, false);
+            //inputParamManager.AddBooleanParameter("_run_", "_run_", "Run", GH_ParamAccess.item, false);
             inputParamManager.AddBooleanParameter("_tryCellComplexByCells_", "_CCompl_", "Try to Create Cell Complex By Cells", GH_ParamAccess.item, false);
             inputParamManager.AddTextParameter("_reportPath_", "_reportPath_", "Report Path to write each step in text file", GH_ParamAccess.item, string.Empty);
+            inputParamManager.AddBooleanParameter("_run_", "_run_", "Run", GH_ParamAccess.item, false);
         }
 
         /// <summary>
@@ -71,7 +72,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
             bool run = false;
-            if (!dataAccess.GetData(3, ref run))
+            if (!dataAccess.GetData(5, ref run))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 dataAccess.SetData(2, false);
@@ -101,14 +102,14 @@ namespace SAM.Analytical.Grasshopper.Topologic
             }
 
             string reportPath = null;
-            if(dataAccess.GetData(5, ref reportPath))
+            if(dataAccess.GetData(4, ref reportPath))
             {
                 if (System.IO.File.Exists(reportPath))
                     System.IO.File.Delete(reportPath);
             }
 
             bool tryCellComplexByCells = false;
-            if (!dataAccess.GetData(4, ref tryCellComplexByCells))
+            if (!dataAccess.GetData(3, ref tryCellComplexByCells))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 dataAccess.SetData(2, false);

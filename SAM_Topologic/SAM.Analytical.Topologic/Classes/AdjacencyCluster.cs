@@ -262,7 +262,7 @@ namespace SAM.Analytical.Topologic
                             topology = CellComplex.ByCells(topology.Cells);
 
                         cellComplexList = new List<CellComplex>() { (CellComplex)topology };
-                        Report(string.Format("CellComplex By Cells"));
+                        Report(string.Format("CellComplex By Cells Created"));
                     }
                     catch (Exception exception)
                     {
@@ -276,9 +276,10 @@ namespace SAM.Analytical.Topologic
                 {
                     try
                     {
+                        Report(string.Format("Trying to make CellComplex By Faces"));
                         topology = CellComplex.ByFaces(faceList, tolerance);
                         cellComplexList = new List<CellComplex>() { (CellComplex)topology };
-                        Report(string.Format("CellComplex By Faces"));
+                        Report(string.Format("CellComplex By Faces Created"));
                     }
                     catch (Exception exception)
                     {
