@@ -163,7 +163,7 @@ namespace SAM.Analytical.Topologic
             return result;
         }
 
-        public bool Calculate(double tolerance = Geometry.Tolerance.MacroDistance, bool tryCellComplexByCells = true, bool updatePanels = true)
+        public bool Calculate(double tolerance = Geometry.Tolerance.MacroDistance, bool tryCellComplexByCells = false, bool updatePanels = true)
         {
 
             Report(string.Format("Method Name: {0}, Tolerance: {1}, Update Panels: {2}", "Calculate", tolerance, updatePanels));
@@ -247,28 +247,30 @@ namespace SAM.Analytical.Topologic
 
 
                 List<CellComplex> cellComplexList = null;
-                try
+                if(tryCellComplexByCells)
                 {
-                    Report(string.Format("Trying to make CellComplex By Cells"));
-                    Cluster cluster = Cluster.ByTopologies(faceList);
-                    Report(string.Format("Cluster.ByTopologies Done"));
-                    topology = cluster.SelfMerge();
-                    Report(string.Format("Cluster SelfMerge Done"));
-                    if (topology.Cells == null || topology.Cells.Count == 0)
-                        topology = null;
-                    else
-                        topology = CellComplex.ByCells(topology.Cells);
+                    try
+                    {
+                        Report(string.Format("Trying to make CellComplex By Cells"));
+                        Cluster cluster = Cluster.ByTopologies(faceList);
+                        Report(string.Format("Cluster.ByTopologies Done"));
+                        topology = cluster.SelfMerge();
+                        Report(string.Format("Cluster SelfMerge Done"));
+                        if (topology.Cells == null || topology.Cells.Count == 0)
+                            topology = null;
+                        else
+                            topology = CellComplex.ByCells(topology.Cells);
 
-                    cellComplexList = new List<CellComplex>() { (CellComplex)topology };
-                    Report(string.Format("CellComplex By Cells"));
+                        cellComplexList = new List<CellComplex>() { (CellComplex)topology };
+                        Report(string.Format("CellComplex By Cells"));
+                    }
+                    catch (Exception exception)
+                    {
+                        Report(string.Format("Cannot create CellComplex By Cells"));
+                        Report(string.Format("Exception Message: {0}", exception.Message));
+                        cellComplexList = null;
+                    }
                 }
-                catch (Exception exception)
-                {
-                    Report(string.Format("Cannot create CellComplex By Cells"));
-                    Report(string.Format("Exception Message: {0}", exception.Message));
-                    cellComplexList = null;
-                }
-
 
                 if (topology == null)
                 {
