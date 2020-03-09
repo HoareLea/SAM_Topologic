@@ -45,7 +45,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
 
             inputParamManager.AddNumberParameter("_tolerance_", "_tolerance_", string.Format("Topologic CellComplex default {0}", Geometry.Tolerance.MacroDistance), GH_ParamAccess.item, Geometry.Tolerance.MacroDistance);
             inputParamManager.AddBooleanParameter("_run_", "_run_", "Run", GH_ParamAccess.item, false);
-            inputParamManager.AddBooleanParameter("_tryCellComplexByCells_", "_CCompl_", "Try to Create Cell Complex By Cells", GH_ParamAccess.item, true);
+            inputParamManager.AddBooleanParameter("_tryCellComplexByCells_", "_CCompl_", "Try to Create Cell Complex By Cells", GH_ParamAccess.item, false);
             inputParamManager.AddTextParameter("_reportPath_", "_reportPath_", "Report Path to write each step in text file", GH_ParamAccess.item, string.Empty);
         }
 
