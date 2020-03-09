@@ -131,6 +131,9 @@ namespace SAM.Analytical.Topologic
             Geometry.Spatial.Plane plane = face3D.GetPlane();
             double area = face3D.GetArea();
 
+            Geometry.Planar.IClosed2D closed2D_1 = plane.Convert(face3D.GetExternalEdge());
+            Geometry.Planar.Point2D point2D_Internal = closed2D_1.GetInternalPoint2D();
+
             double areaDifferece_Min = double.MaxValue;
             Panel result = null;
             foreach (KeyValuePair<Panel, Geometry.Spatial.Face3D> keyValuePair in panelsDictionary)
@@ -149,9 +152,6 @@ namespace SAM.Analytical.Topologic
                 if (!plane.Coplanar(plane_Temp, tolerance))
                     continue;
 
-                Geometry.Planar.IClosed2D closed2D_1 = plane.Convert(face3D.GetExternalEdge());
-                Geometry.Planar.Point2D point2D_Internal = closed2D_1.GetInternalPoint2D();
-
                 Geometry.Planar.IClosed2D closed2D_2 = plane.Convert(face3D_Temp.GetExternalEdge());
                 if(closed2D_2.Inside(point2D_Internal))
                 {
@@ -163,7 +163,7 @@ namespace SAM.Analytical.Topologic
             return result;
         }
 
-        public bool Calculate(double tolerance = Geometry.Tolerance.MacroDistance, bool updatePanels = true)
+        public bool Calculate(double tolerance = Geometry.Tolerance.MacroDistance, bool tryCellComplexByCells = true, bool updatePanels = true)
         {
 
             Report(string.Format("Method Name: {0}, Tolerance: {1}, Update Panels: {2}", "Calculate", tolerance, updatePanels));
@@ -202,10 +202,6 @@ namespace SAM.Analytical.Topologic
                         if (boundingBox3D_Temp != null)
                             boundingBox3D = new Geometry.Spatial.BoundingBox3D(new Geometry.Spatial.BoundingBox3D[] { boundingBox3D, boundingBox3D_Temp });
                     }
-
-                    Dictionary<string, object> dictionary = new Dictionary<string, object>();
-                    dictionary["Panel"] = panel.Guid.ToString();
-                    face = (Face)face.SetDictionary(dictionary);
 
                     faceList.Add(face);
                     Report(string.Format("Face {0:D4} added. Panel [{1}]", index, panel.Guid));
@@ -352,10 +348,7 @@ namespace SAM.Analytical.Topologic
 
                 HashSet<Guid> guids_Updated = new HashSet<Guid>();
                 Dictionary<Guid, SAMObject> dictionary_Panel_New = new Dictionary<Guid, SAMObject>();
-                
-                Dictionary<Face, double> dictionary_Area = new Dictionary<Face, double>();
-                faceList.ForEach(x => dictionary_Area[x] = global::Topologic.Utilities.FaceUtility.Area(x));
-
+               
                 Dictionary<Panel, Geometry.Spatial.Face3D> dictionary_Panel_Face3D = new Dictionary<Panel, Geometry.Spatial.Face3D>();
                 dictionary_Panel.Values.ToList().ForEach(x => dictionary_Panel_Face3D[(Panel)x] = ((Panel)x).GetFace3D());
 
@@ -366,48 +359,12 @@ namespace SAM.Analytical.Topologic
                     if (face3D == null)
                         continue;
 
-                    //Report(string.Format("Analyzing face and looking for Internal vertex"));
-                    //global::Topologic.Utilities.FaceUtility.InternalVertex(face_New, tolerance);
-                    //global::Topologic.Utilities.FaceUtility.VertexAtParameters(face_New, 0.5, 0.5)
-                    //Vertex vertex = global::Topologic.Utilities.FaceUtility.VertexAtParameters(face_New, 0.5, 0.5);//global::Topologic.Utilities.FaceUtility.InternalVertex(face_New, tolerance);
-                    //Vertex vertex = global::Topologic.Utilities.FaceUtility.InternalVertex(face_New, tolerance);
-                    //if (vertex == null)
-                    //    continue;
-
                     Report(string.Format("Analyzing face and looking for old Panel"));
                     Panel panel_Old = FindPanel(face3D, dictionary_Panel_Face3D);
                     if (panel_Old == null)
                         continue;
 
                     Report(string.Format("Old Panel found: {0}", panel_Old.Guid));
-
-                    //Report(string.Format("Vertex for face found:", string.Format("X={0};Y={1};Z={2}", vertex.X, vertex.Y, vertex.Z)));
-
-                    //TODO: More sophisticated method for face finding (to be checked)
-                    //Face face_Old = FindFace(dictionary_Area, vertex, global::Topologic.Utilities.FaceUtility.Area(face_New), tolerance);
-                    //Face face_Old = null;
-                    //foreach (Face face in faceList)
-                    //{
-                    //    if (global::Topologic.Utilities.FaceUtility.IsInside(face, vertex, tolerance))
-                    //    {
-                    //        face_Old = face;
-                    //        break;
-                    //    }
-                    //}
-
-                    //if (face_Old == null)
-                    //    continue;
-
-                    //string value = face_Old.Dictionary["Panel"] as string;
-                    //Guid guid_panel;
-                    //if (!Guid.TryParse(value, out guid_panel))
-                    //    continue;
-
-                    //Panel panel_Old = (Panel)dictionary_Panel[guid_panel];
-                    //if (panel_Old == null)
-                    //    continue;
-
-                    //Report(string.Format("Panel found. Panel [{0}]", value));
 
                     Panel panel_New = null;
 
@@ -417,7 +374,6 @@ namespace SAM.Analytical.Topologic
                         {
                             panel_New = new Panel(Guid.NewGuid(), panel_Old, Geometry.Topologic.Convert.ToSAM(face_New));
                             Report(string.Format("Creating new Panel for Old Panel [{0}]. New Panel [{1}]", panel_Old.Guid, panel_New.Guid));
-                            //break;
                         }
                         else
                         {
@@ -426,7 +382,6 @@ namespace SAM.Analytical.Topologic
                             Report(string.Format("Updating Panel [{0}] with new geometry", panel_New.Guid));
                         }
 
-                        //dictionary_SAMObjects[typeof(Panel)][panel_New.Guid] = panel_New;
                         dictionary_Panel_New[panel_New.Guid] = panel_New;
                     }
                     else

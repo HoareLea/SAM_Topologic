@@ -45,6 +45,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
 
             inputParamManager.AddNumberParameter("_tolerance_", "_tolerance_", string.Format("Topologic CellComplex default {0}", Geometry.Tolerance.MacroDistance), GH_ParamAccess.item, Geometry.Tolerance.MacroDistance);
             inputParamManager.AddBooleanParameter("_run_", "_run_", "Run", GH_ParamAccess.item, false);
+            inputParamManager.AddBooleanParameter("_tryCellComplexByCells_", "_CCompl_", "Try to Create Cell Complex By Cells", GH_ParamAccess.item, true);
             inputParamManager.AddTextParameter("_reportPath_", "_reportPath_", "Report Path to write each step in text file", GH_ParamAccess.item, string.Empty);
         }
 
@@ -100,15 +101,23 @@ namespace SAM.Analytical.Grasshopper.Topologic
             }
 
             string reportPath = null;
-            if(dataAccess.GetData(4, ref reportPath))
+            if(dataAccess.GetData(5, ref reportPath))
             {
                 if (System.IO.File.Exists(reportPath))
                     System.IO.File.Delete(reportPath);
             }
 
+            bool tryCellComplexByCells = false;
+            if (!dataAccess.GetData(4, ref tryCellComplexByCells))
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
+                dataAccess.SetData(2, false);
+                return;
+            }
+
             Analytical.Topologic.AdjacencyCluster adjacencyCluster = new Analytical.Topologic.AdjacencyCluster(spaceList, panelList);
             adjacencyCluster.ReportPath = reportPath;
-            bool result = adjacencyCluster.Calculate(tolerance);
+            bool result = adjacencyCluster.Calculate(tolerance, tryCellComplexByCells);
 
             //AddRuntimeMessage(GH_RuntimeMessageLevel.Remark, string.Join("\n", adjacencyCluster.Report));
 
