@@ -5,9 +5,9 @@ namespace SAM.Geometry.Topologic
 {
     public static partial class Convert
     {
-        public static Polygon3D ToSAM(this Wire wire)
+        public static Polygon3D ToSAM_Polygon3D(this Wire wire)
         {
-            return new Polygon3D(wire.Vertices.ConvertAll(x => x.ToSAM()));
+            return Spatial.Create.Polygon3D(wire.Vertices.ConvertAll(x => x.ToSAM()));
         }
     }
 }

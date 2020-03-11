@@ -37,11 +37,15 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
-            inputParamManager.AddParameter(new GooPanelParam(), "_panels", "_panels", "SAM Analytical Panels", GH_ParamAccess.list);
+            int index;
+
+            index = inputParamManager.AddParameter(new GooPanelParam(), "_panels", "_panels", "SAM Analytical Panels", GH_ParamAccess.list);
+            inputParamManager[index].DataMapping = GH_DataMapping.Flatten;
 
             GooSpaceParam gooSpaceParam = new GooSpaceParam();
             gooSpaceParam.Optional = true;
-            inputParamManager.AddParameter(gooSpaceParam, "_spaces", "_spaces", "SAM Analytical Spaces", GH_ParamAccess.list);
+            index = inputParamManager.AddParameter(gooSpaceParam, "_spaces", "_spaces", "SAM Analytical Spaces", GH_ParamAccess.list);
+            inputParamManager[index].DataMapping = GH_DataMapping.Flatten;
 
             inputParamManager.AddNumberParameter("_tolerance_", "_tolerance_", string.Format("Topologic CellComplex default {0}", Geometry.Tolerance.MacroDistance), GH_ParamAccess.item, Geometry.Tolerance.MacroDistance);
             //inputParamManager.AddBooleanParameter("_run_", "_run_", "Run", GH_ParamAccess.item, false);
