@@ -375,12 +375,12 @@ namespace SAM.Analytical.Topologic
                     {
                         if (guids_Updated.Contains(panel_Old.Guid))
                         {
-                            panel_New = new Panel(Guid.NewGuid(), panel_Old, Geometry.Topologic.Convert.ToSAM(face_New));
+                            panel_New = new Panel(Guid.NewGuid(), panel_Old, face3D);
                             Report(string.Format("Creating new Panel for Old Panel [{0}]. New Panel [{1}]", panel_Old.Guid, panel_New.Guid));
                         }
                         else
                         {
-                            panel_New = new Panel(panel_Old.Guid, panel_Old, Geometry.Topologic.Convert.ToSAM(face_New));
+                            panel_New = new Panel(panel_Old.Guid, panel_Old, face3D);
                             guids_Updated.Add(panel_Old.Guid);
                             Report(string.Format("Updating Panel [{0}] with new geometry", panel_New.Guid));
                         }
@@ -857,20 +857,31 @@ namespace SAM.Analytical.Topologic
         {
             return GetPanelSpaces(panel.Guid);
         }
-
+        
         public List<Panel> GetInternalPanels()
         {
-            Dictionary<Guid, HashSet<Guid>> dictionary;
-            if (!dictionary_Relations.TryGetValue(typeof(Panel), out dictionary))
+            Type type = typeof(Panel);
+
+            Dictionary<Guid, HashSet<Guid>> dictionary_Guids;
+            if (!dictionary_Relations.TryGetValue(type, out dictionary_Guids))
                 return null;
-            
+
+            Dictionary<Guid, SAMObject> dictionary_SAMObjects;
+            if (!this.dictionary_SAMObjects.TryGetValue(type, out dictionary_SAMObjects))
+                return null;
+
             List<Panel> panels = new List<Panel>();
-            foreach (KeyValuePair<Guid, HashSet<Guid>> keyValuePair in dictionary)
+            foreach (KeyValuePair<Guid, HashSet<Guid>> keyValuePair in dictionary_Guids)
             {
                 if (keyValuePair.Value.Count < 2)
                     continue;
 
-                panels.Add((Panel)dictionary_SAMObjects[typeof(Panel)][keyValuePair.Key]);
+                SAMObject sAMObject;
+                if (!dictionary_SAMObjects.TryGetValue(keyValuePair.Key, out sAMObject))
+                    continue;
+
+                if (sAMObject is Panel)
+                    panels.Add((Panel)sAMObject);
             }
 
             return panels;
@@ -878,17 +889,28 @@ namespace SAM.Analytical.Topologic
 
         public List<Panel> GetExternalPanels()
         {
-            Dictionary<Guid, HashSet<Guid>> dictionary;
-            if (!dictionary_Relations.TryGetValue(typeof(Panel), out dictionary))
+            Type type = typeof(Panel);
+
+            Dictionary<Guid, HashSet<Guid>> dictionary_Guids;
+            if (!dictionary_Relations.TryGetValue(type, out dictionary_Guids))
+                return null;
+
+            Dictionary<Guid, SAMObject> dictionary_SAMObjects;
+            if (!this.dictionary_SAMObjects.TryGetValue(type, out dictionary_SAMObjects))
                 return null;
 
             List<Panel> panels = new List<Panel>();
-            foreach (KeyValuePair<Guid, HashSet<Guid>> keyValuePair in dictionary)
+            foreach (KeyValuePair<Guid, HashSet<Guid>> keyValuePair in dictionary_Guids)
             {
                 if (keyValuePair.Value.Count > 1)
                     continue;
 
-                panels.Add((Panel)dictionary_SAMObjects[typeof(Panel)][keyValuePair.Key]);
+                SAMObject sAMObject;
+                if (!dictionary_SAMObjects.TryGetValue(keyValuePair.Key, out sAMObject))
+                    continue;
+
+                if (sAMObject is Panel)
+                    panels.Add((Panel)sAMObject);
             }
 
             return panels;
@@ -896,13 +918,15 @@ namespace SAM.Analytical.Topologic
 
         public List<Panel> GetShadingPanels()
         {
+            Type type = typeof(Panel);
+
             Dictionary<Guid, HashSet<Guid>> dictionary;
-            if(!dictionary_Relations.TryGetValue(typeof(Panel), out dictionary))
-                return dictionary_SAMObjects[typeof(Panel)].Values.Cast<Panel>().ToList();
+            if(!dictionary_Relations.TryGetValue(type, out dictionary))
+                return dictionary_SAMObjects[type].Values.Cast<Panel>().ToList();
 
 
             List<Panel> panels = new List<Panel>();
-            foreach (Panel panel in dictionary_SAMObjects[typeof(Panel)].Values)
+            foreach (Panel panel in dictionary_SAMObjects[type].Values)
             {
                 HashSet<Guid> guids;
                 if (dictionary.TryGetValue(panel.Guid, out guids))

@@ -14,11 +14,24 @@ namespace SAM.Geometry.Topologic
             if (face == null)
                 return null;
 
-            List<Polygon3D> polygon3Ds = new List<Polygon3D>() { ToSAM_Polygon3D(face.ExternalBoundary) };
+            Polygon3D polygon3D = ToSAM_Polygon3D(face.ExternalBoundary);
+            if (polygon3D == null)
+                return null;
+
+            List<Polygon3D> polygon3Ds = new List<Polygon3D>() { polygon3D };
 
             List<Wire> wires = face.InternalBoundaries;
             if (wires != null && wires.Count > 0)
-                wires.ForEach(x => polygon3Ds.Add(ToSAM_Polygon3D(x)));
+            {
+                foreach(Wire wire in wires)
+                {
+                    polygon3D = ToSAM_Polygon3D(wire);
+                    if (polygon3D == null)
+                        continue;
+
+                    polygon3Ds.Add(polygon3D);
+                }
+            }
 
             return Face3D.Create(polygon3Ds);
         }
