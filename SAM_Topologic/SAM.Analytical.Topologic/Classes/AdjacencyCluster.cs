@@ -293,7 +293,7 @@ namespace SAM.Analytical.Topologic
                 if (cellComplexList == null)
                     return false;
 
-                //Michal D. Indea
+                //Suprisingly good Michal D. Indea
                 if (cellComplexList.Count != 1)
                     return false;
 
