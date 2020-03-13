@@ -37,7 +37,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
             inputParamManager.AddGenericParameter("_faces", "_faces", "Topology Faces", GH_ParamAccess.list);
-            inputParamManager.AddNumberParameter("_tolerance_", "_tolerance_", "Topology CellComplex Telerance default = 0.001", GH_ParamAccess.item, Geometry.Tolerance.MacroDistance);
+            inputParamManager.AddNumberParameter("_tolerance_", "_tolerance_", "Topology CellComplex Telerance default = 0.001", GH_ParamAccess.item, Core.Tolerance.MacroDistance);
         }
 
         /// <summary>

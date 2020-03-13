@@ -100,7 +100,7 @@ namespace SAM.Analytical.Topologic
             return true;
         }
 
-        private static Face FindFace(Dictionary<Face, double> facesDictionary, Vertex vertex, double area, double tolerance = Geometry.Tolerance.MacroDistance)
+        private static Face FindFace(Dictionary<Face, double> facesDictionary, Vertex vertex, double area, double tolerance = Core.Tolerance.MacroDistance)
         {
             double areaDifferece_Min = double.MaxValue;
             Face result = null;
@@ -123,7 +123,7 @@ namespace SAM.Analytical.Topologic
             return result;
         }
 
-        private static Panel FindPanel(Geometry.Spatial.Face3D face3D, Dictionary<Panel, Geometry.Spatial.Face3D> panelsDictionary, double tolerance = Geometry.Tolerance.MicroDistance)
+        private static Panel FindPanel(Geometry.Spatial.Face3D face3D, Dictionary<Panel, Geometry.Spatial.Face3D> panelsDictionary, double tolerance = Core.Tolerance.MicroDistance)
         {
             if (face3D == null || panelsDictionary == null)
                 return null;
@@ -163,7 +163,7 @@ namespace SAM.Analytical.Topologic
             return result;
         }
 
-        public bool Calculate(double tolerance = Geometry.Tolerance.MacroDistance, bool tryCellComplexByCells = false, bool updatePanels = true)
+        public bool Calculate(double tolerance = Core.Tolerance.MacroDistance, bool tryCellComplexByCells = false, bool updatePanels = true)
         {
 
             Report(string.Format("Method Name: {0}, Tolerance: {1}, Update Panels: {2}", "Calculate", tolerance, updatePanels));
@@ -302,7 +302,7 @@ namespace SAM.Analytical.Topologic
 
                 if(dictionary_Space.Count == 0)
                 {
-                    List<Vertex> vertices = cellComplex.Cells.ConvertAll(x => global::Topologic.Utilities.CellUtility.InternalVertex(x, Geometry.Tolerance.MacroDistance));
+                    List<Vertex> vertices = cellComplex.Cells.ConvertAll(x => global::Topologic.Utilities.CellUtility.InternalVertex(x, Core.Tolerance.MacroDistance));
                     index = 1;
 
                     Dictionary<Guid, SAMObject> dictionary_SAMObjects_Space;
@@ -464,7 +464,7 @@ namespace SAM.Analytical.Topologic
             return false;
         }
 
-        public bool Calculate_Old(double tolerance = Geometry.Tolerance.MacroDistance, bool updatePanels = true)
+        public bool Calculate_Old(double tolerance = Core.Tolerance.MacroDistance, bool updatePanels = true)
         {
 
             Report(string.Format("Method Name: {0}, Tolerance: {1}, Update Panels: {2}", "Calculate", tolerance, updatePanels));
@@ -604,7 +604,7 @@ namespace SAM.Analytical.Topologic
 
                 if (dictionary_Space.Count == 0)
                 {
-                    List<Vertex> vertices = cellComplex.Cells.ConvertAll(x => global::Topologic.Utilities.CellUtility.InternalVertex(x, Geometry.Tolerance.MacroDistance));
+                    List<Vertex> vertices = cellComplex.Cells.ConvertAll(x => global::Topologic.Utilities.CellUtility.InternalVertex(x, Tolerance.MacroDistance));
                     index = 1;
 
                     Dictionary<Guid, SAMObject> dictionary_SAMObjects_Space;
