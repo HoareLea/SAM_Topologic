@@ -7,7 +7,7 @@ namespace SAM.Geometry.Topologic
     public static partial class Convert
     {
         //due to issue with plane calculation we rounding 
-        public static Point3D ToSAM(this Vertex vertex, int decimals = -1)
+        public static Point3D ToSAM(this Vertex vertex, int decimals = Core.Rounding.MicroDistance)
         {
             if (decimals == -1)
                 return new Point3D(vertex.X, vertex.Y, vertex.Z);
