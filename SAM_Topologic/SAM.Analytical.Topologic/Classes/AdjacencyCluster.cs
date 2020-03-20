@@ -163,7 +163,7 @@ namespace SAM.Analytical.Topologic
             return result;
         }
 
-        public bool Calculate(double tolerance = Core.Tolerance.MacroDistance, bool tryCellComplexByCells = false, bool updatePanels = true)
+        public bool Calculate(double tolerance = Core.Tolerance.MacroDistance, bool tryCellComplexByCells = false, bool updatePanels = true, double minArea = Tolerance.MacroDistance)
         {
 
             Report(string.Format("Method Name: {0}, Tolerance: {1}, Update Panels: {2}", "Calculate", tolerance, updatePanels));
@@ -357,6 +357,9 @@ namespace SAM.Analytical.Topologic
 
                 foreach (Face face_New in cellComplex.Faces)
                 {
+                    if (minArea != 0 && global::Topologic.Utilities.FaceUtility.Area(face_New) <= minArea)
+                        continue;
+
                     Report(string.Format("Converting Topologic face to SAM"));
                     Geometry.Spatial.Face3D face3D = Geometry.Topologic.Convert.ToSAM(face_New);
                     if (face3D == null)

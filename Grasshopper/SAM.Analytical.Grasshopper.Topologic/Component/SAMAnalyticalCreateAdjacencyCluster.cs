@@ -51,6 +51,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
             //inputParamManager.AddBooleanParameter("_run_", "_run_", "Run", GH_ParamAccess.item, false);
             inputParamManager.AddBooleanParameter("_tryCellComplexByCells_", "_CCompl_", "Try to Create Cell Complex By Cells", GH_ParamAccess.item, false);
             inputParamManager.AddTextParameter("_reportPath_", "_reportPath_", "Report Path to write each step in text file", GH_ParamAccess.item, string.Empty);
+            inputParamManager.AddNumberParameter("minArea_", "minArea", "Minimal Acceptable area of Aperture", GH_ParamAccess.item, Core.Tolerance.MacroDistance);
             inputParamManager.AddBooleanParameter("_run_", "_run_", "Run", GH_ParamAccess.item, false);
         }
 
@@ -76,7 +77,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
             bool run = false;
-            if (!dataAccess.GetData(5, ref run))
+            if (!dataAccess.GetData(6, ref run))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 dataAccess.SetData(2, false);
@@ -120,9 +121,12 @@ namespace SAM.Analytical.Grasshopper.Topologic
                 return;
             }
 
+            double minArea = Core.Tolerance.MacroDistance;
+            dataAccess.GetData(5, ref minArea);
+
             Analytical.Topologic.AdjacencyCluster adjacencyCluster = new Analytical.Topologic.AdjacencyCluster(spaceList, panelList);
             adjacencyCluster.ReportPath = reportPath;
-            bool result = adjacencyCluster.Calculate(tolerance, tryCellComplexByCells);
+            bool result = adjacencyCluster.Calculate(tolerance, tryCellComplexByCells, true, minArea);
 
             //AddRuntimeMessage(GH_RuntimeMessageLevel.Remark, string.Join("\n", adjacencyCluster.Report));
 
