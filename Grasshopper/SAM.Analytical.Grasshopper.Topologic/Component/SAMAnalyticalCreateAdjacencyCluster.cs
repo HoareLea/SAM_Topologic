@@ -44,14 +44,14 @@ namespace SAM.Analytical.Grasshopper.Topologic
 
             GooSpaceParam gooSpaceParam = new GooSpaceParam();
             gooSpaceParam.Optional = true;
-            index = inputParamManager.AddParameter(gooSpaceParam, "_spaces", "_spaces", "SAM Analytical Spaces", GH_ParamAccess.list);
+            index = inputParamManager.AddParameter(gooSpaceParam, "spaces_", "spaces_", "SAM Analytical Spaces", GH_ParamAccess.list);
             inputParamManager[index].DataMapping = GH_DataMapping.Flatten;
 
-            inputParamManager.AddNumberParameter("_tolerance_", "_tolerance_", string.Format("Topologic CellComplex default {0}", Core.Tolerance.MacroDistance), GH_ParamAccess.item, Core.Tolerance.MacroDistance);
+            inputParamManager.AddNumberParameter("tolerance_", "tolerance_", string.Format("Topologic CellComplex default {0}", Core.Tolerance.MacroDistance), GH_ParamAccess.item, Core.Tolerance.MacroDistance);
             //inputParamManager.AddBooleanParameter("_run_", "_run_", "Run", GH_ParamAccess.item, false);
-            inputParamManager.AddBooleanParameter("_tryCellComplexByCells_", "_CCompl_", "Try to Create Cell Complex By Cells", GH_ParamAccess.item, false);
-            inputParamManager.AddTextParameter("_reportPath_", "_reportPath_", "Report Path to write each step in text file", GH_ParamAccess.item, string.Empty);
-            inputParamManager.AddNumberParameter("minArea_", "minArea", "Minimal Acceptable area of Aperture", GH_ParamAccess.item, Core.Tolerance.MacroDistance);
+            inputParamManager.AddBooleanParameter("tryCellComplexByCells_", "tryCellComplexByCells_", "Try to Create Cell Complex By Cells", GH_ParamAccess.item, false);
+            inputParamManager.AddTextParameter("reportPath_", "reportPath_", "Report Path to write each step in text file", GH_ParamAccess.item, string.Empty);
+            inputParamManager.AddNumberParameter("minArea_", "minArea_", "Minimal Acceptable area of Aperture", GH_ParamAccess.item, Core.Tolerance.MacroDistance);
             inputParamManager.AddBooleanParameter("_run_", "_run_", "Run", GH_ParamAccess.item, false);
         }
 
