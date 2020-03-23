@@ -123,7 +123,7 @@ namespace SAM.Analytical.Topologic
             return result;
         }
 
-        private static Panel FindPanel(Geometry.Spatial.Face3D face3D, Dictionary<Panel, Geometry.Spatial.Face3D> panelsDictionary, double tolerance = Core.Tolerance.MicroDistance)
+        private static Panel FindPanel(Geometry.Spatial.Face3D face3D, Dictionary<Panel, Geometry.Spatial.Face3D> panelsDictionary, double distanceTolerance = Tolerance.MacroDistance, double coplanarTolerance = Tolerance.MacroDistance)
         {
             if (face3D == null || panelsDictionary == null)
                 return null;
@@ -149,12 +149,12 @@ namespace SAM.Analytical.Topologic
                 Geometry.Spatial.Face3D face3D_Temp = keyValuePair.Value;
                 Geometry.Spatial.Plane plane_Temp = face3D_Temp.GetPlane();
 
-                if (!plane.Coplanar(plane_Temp, tolerance))
+                if (!plane.Coplanar(plane_Temp, coplanarTolerance))
                     continue;
 
                 Geometry.Spatial.Point3D point3D_Origin = plane_Temp.Origin;
                 Geometry.Spatial.Point3D point3D_Project = plane.Project(point3D_Origin);
-                if (point3D_Origin.Distance(point3D_Project) > tolerance)
+                if (point3D_Origin.Distance(point3D_Project) > distanceTolerance)
                     continue;
 
                 Geometry.Planar.IClosed2D closed2D_2 = plane.Convert(face3D_Temp.GetExternalEdge());
