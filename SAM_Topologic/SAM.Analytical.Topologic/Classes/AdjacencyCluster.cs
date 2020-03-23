@@ -152,6 +152,11 @@ namespace SAM.Analytical.Topologic
                 if (!plane.Coplanar(plane_Temp, tolerance))
                     continue;
 
+                Geometry.Spatial.Point3D point3D_Origin = plane_Temp.Origin;
+                Geometry.Spatial.Point3D point3D_Project = plane.Project(point3D_Origin);
+                if (point3D_Origin.Distance(point3D_Project) > tolerance)
+                    continue;
+
                 Geometry.Planar.IClosed2D closed2D_2 = plane.Convert(face3D_Temp.GetExternalEdge());
                 if(closed2D_2.Inside(point2D_Internal))
                 {
