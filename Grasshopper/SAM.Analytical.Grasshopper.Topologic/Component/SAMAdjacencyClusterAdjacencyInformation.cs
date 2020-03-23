@@ -136,7 +136,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
                     }
                     else if (panelType == PanelType.Floor || panelType == PanelType.Roof)
                     {
-                        Geometry.Spatial.Vector3D vector3D_Normal = panel.PlanarBoundary3D?.GetNormal();
+                        Geometry.Spatial.Vector3D vector3D_Normal = panel.PlanarBoundary3D?.Normal;
 
                         PanelType panelType_Normal = Query.PanelType(vector3D_Normal);
                         if (panelType_Normal == PanelType.Floor)
