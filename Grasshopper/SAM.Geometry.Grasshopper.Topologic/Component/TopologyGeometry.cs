@@ -1,23 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 using Grasshopper.Kernel;
-using Grasshopper.Kernel.Data;
-using Rhino.Geometry;
 
 using Topologic;
 
 using SAM.Geometry.Grasshopper.Topologic.Properties;
 
-namespace TopologicGH
+namespace SAM.Geometry.Grasshopper.Topologic
 {
     public class TopologyGeometry : GH_Component
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
         /// </summary>
-        public override Guid ComponentGuid => new Guid("8bea7d74f-0834-4f92-b845-fe6f76f0ba84");
+        public override Guid ComponentGuid => new Guid("247cdc4d-ebe1-4083-a150-b412bcc31412");
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -35,13 +32,13 @@ namespace TopologicGH
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
             pManager.AddGenericParameter("_topology", "_topology", "Topology Geometry", GH_ParamAccess.item);
-            pManager.AddNumberParameter("_tolerance_", "_tolerance_", "Tolerance", GH_ParamAccess.item, SAM.Core.Tolerance.Distance);
+            pManager.AddNumberParameter("_tolerance_", "_tolerance_", "Tolerance", GH_ParamAccess.item, Core.Tolerance.Distance);
         }
 
         /// <summary>
         /// Registers all the output parameters for this component.
         /// </summary>
-        protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
+        protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
             pManager.AddGenericParameter("Geometry", "Geometry", "Geometry", GH_ParamAccess.list);
         }
@@ -53,7 +50,7 @@ namespace TopologicGH
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             Topology topology = null;
-            double tolerance = SAM.Core.Tolerance.Distance;
+            double tolerance = Core.Tolerance.Distance;
 
             if (!DA.GetData(0, ref topology))
                 return;
@@ -64,7 +61,7 @@ namespace TopologicGH
             if (topology == null)
                 return;
 
-            List<object> geometries = SAM.Geometry.Grasshopper.Topologic.Convert.ToRhino(topology, tolerance);
+            List<object> geometries = Convert.ToRhino(topology, tolerance);
             
             DA.SetDataList(0, geometries);
         }
