@@ -57,15 +57,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ToSAM\Face.cs" />
-    <Compile Include="ToSAM\Segment3D.cs" />
-    <Compile Include="ToSAM\Point3D.cs" />
-    <Compile Include="ToSAM\Polygon3D.cs" />
-    <Compile Include="ToTopologic\Face.cs" />
-    <Compile Include="ToTopologic\Topology.cs" />
-    <Compile Include="ToTopologic\Wire.cs" />
-    <Compile Include="ToTopologic\Edge.cs" />
-    <Compile Include="ToTopologic\Vertex.cs" />
+    <Compile Include="Convert\ToSAM\Face.cs" />
+    <Compile Include="Convert\ToSAM\Segment3D.cs" />
+    <Compile Include="Convert\ToSAM\Point3D.cs" />
+    <Compile Include="Convert\ToSAM\Polygon3D.cs" />
+    <Compile Include="Convert\ToTopologic\Face.cs" />
+    <Compile Include="Convert\ToTopologic\Topology.cs" />
+    <Compile Include="Convert\ToTopologic\Wire.cs" />
+    <Compile Include="Convert\ToTopologic\Edge.cs" />
+    <Compile Include="Convert\ToTopologic\Vertex.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

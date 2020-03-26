@@ -62,11 +62,11 @@
     <Compile Include="Classes\AdjacencyCluster.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Query\TryGetSpaceAdjacency.cs" />
-    <Compile Include="ToTopologic\Panel.cs" />
+    <Compile Include="Convert\ToTopologic\Panel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Convert\ToSAM\" />
     <Folder Include="Modify\" />
-    <Folder Include="ToSAM\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SAM.Geometry.Topologic\SAM.Geometry.Topologic.csproj">
