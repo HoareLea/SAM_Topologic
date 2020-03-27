@@ -8,7 +8,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
 {
     public static partial class Convert
     {
-        public static List<object> ToRhino(this Topology topology, double tolerance = Core.Tolerance.MicroDistance)
+        public static List<object> ToRhino(this Topology topology, double tolerance = Core.Tolerance.Distance)
         {
             if (topology == null)
             {
@@ -74,7 +74,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
             throw new Exception("The type of the input topology is not recognized.");
         }
 
-        public static List<object> ToRhino(this IEnumerable<Topology> topologies, double tolerance = Core.Tolerance.MicroDistance)
+        public static List<object> ToRhino(this IEnumerable<Topology> topologies, double tolerance = Core.Tolerance.Distance)
         {
             List<object> result = new List<object>();
             foreach (Topology subTopology in topologies)

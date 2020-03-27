@@ -24,7 +24,7 @@ namespace SAMTopologicAnalyticalDynamo
         /// Topologic, SpaceAdjacency, Analytical Panel
         /// </search>
         [MultiReturn(new[] { "SAMGeometries", "names" })]
-        public static Dictionary<string, object> SpaceAdjacency(IEnumerable<SAM.Analytical.Panel> panels, IEnumerable<Space> spaces, double tolerance = SAM.Core.Tolerance.MicroDistance)
+        public static Dictionary<string, object> SpaceAdjacency(IEnumerable<SAM.Analytical.Panel> panels, IEnumerable<Space> spaces, double tolerance = SAM.Core.Tolerance.Distance)
         {
             List<SAM.Geometry.Spatial.ISAMGeometry3D> sAMGeometryList = null;
             List<List<string>> names = null;

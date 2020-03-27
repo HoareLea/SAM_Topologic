@@ -9,7 +9,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
 {
     public static partial class Convert
     {
-        public static Brep ToRhino(global::Topologic.Face face, double tolerance = Core.Tolerance.MicroDistance)
+        public static Brep ToRhino(global::Topologic.Face face, double tolerance = Core.Tolerance.Distance)
         {
             Rhino.Geometry.Surface ghSurface = ToRhino(face);
 

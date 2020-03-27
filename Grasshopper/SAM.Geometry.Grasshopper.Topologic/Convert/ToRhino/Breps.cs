@@ -10,7 +10,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
 {
     public static partial class Convert
     {
-        public static List<Brep> ToRhino_Breps(Topology topology, double tolerance = Core.Tolerance.MicroDistance)
+        public static List<Brep> ToRhino_Breps(Topology topology, double tolerance = Core.Tolerance.Distance)
         {
             List<global::Topologic.Face> faces = topology.Faces;
             List<Brep> ghBrepSurfaces = new List<Brep>();

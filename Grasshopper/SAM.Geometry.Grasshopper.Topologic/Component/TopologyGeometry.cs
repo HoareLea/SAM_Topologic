@@ -29,10 +29,10 @@ namespace SAM.Geometry.Grasshopper.Topologic
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
-        protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
+        protected override void RegisterInputParams(GH_InputParamManager manager)
         {
-            pManager.AddGenericParameter("_topology", "_topology", "Topology Geometry", GH_ParamAccess.item);
-            pManager.AddNumberParameter("_tolerance_", "_tolerance_", "Tolerance", GH_ParamAccess.item, Core.Tolerance.Distance);
+            manager.AddGenericParameter("_topology", "_topology", "Topology Geometry", GH_ParamAccess.item);
+            manager.AddNumberParameter("_tolerance_", "_tolerance_", "Tolerance", GH_ParamAccess.item, Core.Tolerance.Distance);
         }
 
         /// <summary>
