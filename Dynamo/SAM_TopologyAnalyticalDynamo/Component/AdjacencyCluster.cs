@@ -15,9 +15,7 @@ namespace SAMTopologicAnalyticalDynamo
         /// <param name="spaces">The spaces.</param>
         /// <param name="tolerance">The tolerance.</param>
         /// <param name="updatePanels">if set to <c>true</c> [update panels].</param>
-        /// <returns name="adjacencyCluster" > 
-        ///   <see cref="SAM.Analytical.Topologic.AdjacencyCluster"/>
-        /// </returns>
+        /// <returns name="adjacencyCluster"><see cref="SAM.Analytical.Topologic.AdjacencyCluster"/></returns>
         public static SAM.Analytical.Topologic.AdjacencyCluster ByPanelsAndSpaces(IEnumerable<SAM.Analytical.Panel> panels, IEnumerable<Space> spaces, double tolerance = SAM.Core.Tolerance.MacroDistance, bool updatePanels = true)
         {
             SAM.Analytical.Topologic.AdjacencyCluster adjacencyModel = new SAM.Analytical.Topologic.AdjacencyCluster(spaces, panels);
