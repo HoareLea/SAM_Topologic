@@ -35,7 +35,6 @@ namespace SAM.Geometry.Grasshopper.Topologic
             double ghYMin = occtYMin;// - occtHalfDeltaY - safetyMarginY;
             double ghYMax = occtYMax;// - occtHalfDeltaY + safetyMarginY;
 
-
             Interval xExtents = new Interval(
                 ghXMin,
                 ghXMax);

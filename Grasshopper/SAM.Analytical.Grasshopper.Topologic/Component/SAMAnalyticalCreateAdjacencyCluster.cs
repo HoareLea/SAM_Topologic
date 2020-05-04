@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-
-using Grasshopper.Kernel;
-using Grasshopper.Kernel.Types;
-
+﻿using Grasshopper.Kernel;
 using SAM.Analytical.Grasshopper.Topologic.Properties;
-
+using System;
+using System.Collections.Generic;
 
 namespace SAM.Analytical.Grasshopper.Topologic
 {
@@ -20,7 +16,6 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// Provides an Icon for the component.
         /// </summary>
         protected override System.Drawing.Bitmap Icon => Resources.SAM_Topologic;
-
 
         /// <summary>
         /// Initializes a new instance of the SAM_point3D class.
@@ -73,7 +68,9 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// <summary>
         /// This is the method that actually does the work.
         /// </summary>
-        /// <param name="dataAccess">The DA object is used to retrieve from inputs and store in outputs.</param>
+        /// <param name="dataAccess">
+        /// The DA object is used to retrieve from inputs and store in outputs.
+        /// </param>
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
             bool run = false;
@@ -85,7 +82,6 @@ namespace SAM.Analytical.Grasshopper.Topologic
             }
             if (!run)
                 return;
-
 
             List<Panel> panelList = new List<Panel>();
             if (!dataAccess.GetDataList(0, panelList) || panelList == null)
@@ -107,7 +103,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
             }
 
             string reportPath = null;
-            if(dataAccess.GetData(4, ref reportPath))
+            if (dataAccess.GetData(4, ref reportPath))
             {
                 if (System.IO.File.Exists(reportPath))
                     System.IO.File.Delete(reportPath);

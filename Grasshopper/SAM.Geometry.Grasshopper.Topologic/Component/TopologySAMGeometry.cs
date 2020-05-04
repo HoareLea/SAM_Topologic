@@ -1,8 +1,6 @@
-﻿using System;
-
-using Grasshopper.Kernel;
-using Grasshopper.Kernel.Types;
+﻿using Grasshopper.Kernel;
 using SAM.Geometry.Grasshopper.Topologic.Properties;
+using System;
 using Topologic;
 
 namespace SAM.Geometry.Grasshopper.Topologic
@@ -37,7 +35,6 @@ namespace SAM.Geometry.Grasshopper.Topologic
             inputParamManager.AddGenericParameter("_topology", "_topology", "Topologic Geometry", GH_ParamAccess.item);
         }
 
-
         /// <summary>
         /// Registers all the output parameters for this component.
         /// </summary>
@@ -49,7 +46,9 @@ namespace SAM.Geometry.Grasshopper.Topologic
         /// <summary>
         /// This is the method that actually does the work.
         /// </summary>
-        /// <param name="dataAccess">The DA object is used to retrieve from inputs and store in outputs.</param>
+        /// <param name="dataAccess">
+        /// The DA object is used to retrieve from inputs and store in outputs.
+        /// </param>
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
             Topology topology = null;
@@ -60,7 +59,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
             }
 
             Spatial.ISAMGeometry3D sAMGeometry3D = Convert.ToSAM(topology);
-            if(sAMGeometry3D == null)
+            if (sAMGeometry3D == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Cannot convert geometry");
                 return;

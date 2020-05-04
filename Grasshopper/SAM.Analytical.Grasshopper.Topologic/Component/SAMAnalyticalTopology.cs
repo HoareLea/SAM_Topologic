@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-
-using Grasshopper.Kernel;
-using Grasshopper.Kernel.Types;
-
+﻿using Grasshopper.Kernel;
 using SAM.Analytical.Grasshopper.Topologic.Properties;
 using SAM.Core;
+using System;
 
 namespace SAM.Analytical.Grasshopper.Topologic
 {
@@ -50,10 +46,11 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// <summary>
         /// This is the method that actually does the work.
         /// </summary>
-        /// <param name="dataAccess">The DA object is used to retrieve from inputs and store in outputs.</param>
+        /// <param name="dataAccess">
+        /// The DA object is used to retrieve from inputs and store in outputs.
+        /// </param>
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
-
             SAMObject sAMObject = null;
             if (!dataAccess.GetData(0, ref sAMObject))
             {
@@ -61,7 +58,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
                 return;
             }
 
-            if(sAMObject is Panel)
+            if (sAMObject is Panel)
             {
                 dataAccess.SetData(0, Analytical.Topologic.Convert.ToTopologic((Panel)sAMObject));
                 return;

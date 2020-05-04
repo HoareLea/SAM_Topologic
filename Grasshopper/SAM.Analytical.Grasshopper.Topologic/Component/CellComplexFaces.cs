@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-
-using Grasshopper.Kernel;
+﻿using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
-
 using SAM.Analytical.Grasshopper.Topologic.Properties;
+using System;
 using Topologic;
 
 namespace SAM.Analytical.Grasshopper.Topologic
@@ -50,7 +47,9 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// <summary>
         /// This is the method that actually does the work.
         /// </summary>
-        /// <param name="dataAccess">The DA object is used to retrieve from inputs and store in outputs.</param>
+        /// <param name="dataAccess">
+        /// The DA object is used to retrieve from inputs and store in outputs.
+        /// </param>
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
             GH_ObjectWrapper objectWrapper = null;
@@ -62,7 +61,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
             }
 
             CellComplex cellComplex = objectWrapper.Value as CellComplex;
-            if(cellComplex == null)
+            if (cellComplex == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;

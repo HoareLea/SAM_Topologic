@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using Grasshopper;
+﻿using Grasshopper;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Types;
-
 using SAM.Analytical.Grasshopper.Topologic.Properties;
-using Topologic;
+using System;
+using System.Collections.Generic;
 
 namespace SAM.Analytical.Grasshopper.Topologic
 {
@@ -54,7 +52,9 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// <summary>
         /// This is the method that actually does the work.
         /// </summary>
-        /// <param name="dataAccess">The DA object is used to retrieve from inputs and store in outputs.</param>
+        /// <param name="dataAccess">
+        /// The DA object is used to retrieve from inputs and store in outputs.
+        /// </param>
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
             Analytical.Topologic.AdjacencyCluster adjacencyCluster = null;
@@ -143,7 +143,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
                         {
                             double elevation = Query.MaxElevation(panel_New);
 
-                            if(elevation == 0)
+                            if (elevation == 0)
                             {
                                 panelType = PanelType.SlabOnGrade;
 

@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-
-using Rhino.Geometry;
-using Grasshopper.Kernel;
+﻿using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
-
-using SAM.Core.Grasshopper;
-using SAM.Analytical.Topologic;
+using Rhino.Geometry;
 using SAM.Analytical.Grasshopper.Topologic.Properties;
+using SAM.Analytical.Topologic;
+using SAM.Core.Grasshopper;
+using System;
+using System.Collections.Generic;
 
 namespace SAM.Analytical.Grasshopper.Topologic
 {
@@ -16,13 +14,11 @@ namespace SAM.Analytical.Grasshopper.Topologic
         public GooAdjacencyCluster()
             : base()
         {
-
         }
 
         public GooAdjacencyCluster(AdjacencyCluster adjacencyCluster)
             : base(adjacencyCluster)
         {
-
         }
 
         public BoundingBox ClippingBox
@@ -35,7 +31,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
                 List<Geometry.Spatial.BoundingBox3D> boundingBox3Ds = new List<Geometry.Spatial.BoundingBox3D>();
 
                 IEnumerable<Panel> panels = Value.GetPanels();
-                if(panels != null)
+                if (panels != null)
                 {
                     foreach (Panel panel in panels)
                         boundingBox3Ds.Add(panel.GetBoundingBox());
@@ -67,7 +63,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
 
         public void DrawViewportWires(GH_PreviewWireArgs args)
         {
-            foreach(Panel panel in Value.GetPanels())
+            foreach (Panel panel in Value.GetPanels())
             {
                 GooPlanarBoundary3D gooPlanarBoundary3D = new GooPlanarBoundary3D(panel.PlanarBoundary3D);
                 gooPlanarBoundary3D.DrawViewportWires(args);
@@ -120,12 +116,15 @@ namespace SAM.Analytical.Grasshopper.Topologic
         }
 
         #region IGH_PreviewObject
+
         bool IGH_PreviewObject.Hidden { get; set; }
         bool IGH_PreviewObject.IsPreviewCapable => !VolatileData.IsEmpty;
         BoundingBox IGH_PreviewObject.ClippingBox => Preview_ComputeClippingBox();
-        void IGH_PreviewObject.DrawViewportMeshes(IGH_PreviewArgs args) => Preview_DrawMeshes(args);
-        void IGH_PreviewObject.DrawViewportWires(IGH_PreviewArgs args) => Preview_DrawWires(args);
-        #endregion
 
+        void IGH_PreviewObject.DrawViewportMeshes(IGH_PreviewArgs args) => Preview_DrawMeshes(args);
+
+        void IGH_PreviewObject.DrawViewportWires(IGH_PreviewArgs args) => Preview_DrawWires(args);
+
+        #endregion IGH_PreviewObject
     }
 }

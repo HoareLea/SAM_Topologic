@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
-
 namespace SAM.Geometry.Grasshopper.Topologic
 {
     public static partial class Convert
-    { 
+    {
         public static Rhino.Geometry.NurbsSurface ToRhino_NurbsSurface(this global::Topologic.NurbsSurface nurbsSurface)
         {
             int uDegree = nurbsSurface.UDegree;

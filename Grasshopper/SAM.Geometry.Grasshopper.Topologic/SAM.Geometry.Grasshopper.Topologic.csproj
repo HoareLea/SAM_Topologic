@@ -153,5 +153,6 @@ erase "$(TargetPath)"</PostBuildEvent>
     <StartArguments>
     </StartArguments>
     <StartAction>Program</StartAction>
+    <DocumentationFile>..\..\build\SAM.Geometry.Grasshopper.Topologic.xml</DocumentationFile>
   </PropertyGroup>
 </Project>

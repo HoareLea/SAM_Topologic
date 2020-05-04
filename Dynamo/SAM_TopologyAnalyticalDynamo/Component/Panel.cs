@@ -1,11 +1,6 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-
-using Topologic;
-
-using Autodesk.DesignScript.Runtime;
+﻿using Autodesk.DesignScript.Runtime;
 using SAM.Analytical;
+using System.Collections.Generic;
 
 namespace SAMTopologicAnalyticalDynamo
 {
@@ -20,9 +15,7 @@ namespace SAMTopologicAnalyticalDynamo
         /// <param name="panels">SAM Analytical Panels</param>
         /// <param name="spaces">Topologic Topologies</param>
         /// <param name="tolerance">Tolerance</param>
-        /// <search>
-        /// Topologic, SpaceAdjacency, Analytical Panel
-        /// </search>
+        /// <search>Topologic, SpaceAdjacency, Analytical Panel</search>
         [MultiReturn(new[] { "SAMGeometries", "names" })]
         public static Dictionary<string, object> SpaceAdjacency(IEnumerable<SAM.Analytical.Panel> panels, IEnumerable<Space> spaces, double tolerance = SAM.Core.Tolerance.Distance)
         {

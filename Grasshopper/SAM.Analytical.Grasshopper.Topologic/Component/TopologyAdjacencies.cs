@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Grasshopper.Kernel;
-using Grasshopper.Kernel.Types;
-
+﻿using Grasshopper.Kernel;
 using SAM.Analytical.Grasshopper.Topologic.Properties;
 using SAM.Core;
-using Topologic;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SAM.Analytical.Grasshopper.Topologic
 {
@@ -52,7 +49,9 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// <summary>
         /// This is the method that actually does the work.
         /// </summary>
-        /// <param name="dataAccess">The DA object is used to retrieve from inputs and store in outputs.</param>
+        /// <param name="dataAccess">
+        /// The DA object is used to retrieve from inputs and store in outputs.
+        /// </param>
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
             Analytical.Topologic.AdjacencyCluster adjacencyCluster = null;
@@ -82,7 +81,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
                 return;
             }
 
-            if(result.Count() == 0)
+            if (result.Count() == 0)
             {
                 dataAccess.SetDataList(0, result);
                 return;

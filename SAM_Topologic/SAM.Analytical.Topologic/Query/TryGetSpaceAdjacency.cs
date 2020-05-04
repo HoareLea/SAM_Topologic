@@ -1,8 +1,6 @@
-﻿using System.Linq;
-using System.Collections.Generic;
-
+﻿using System.Collections.Generic;
+using System.Linq;
 using Topologic;
-using System;
 
 namespace SAM.Analytical.Topologic
 {
@@ -10,9 +8,8 @@ namespace SAM.Analytical.Topologic
     {
         public static bool TryGetSpaceAdjacency(this IEnumerable<Panel> panels, IEnumerable<Space> spaces, double tolerance, out List<Geometry.Spatial.ISAMGeometry3D> geometryList, out List<List<string>> names)
         {
-
             Geometry.Spatial.BoundingBox3D boundingBox3D = null;
-            
+
             List<Face> faceList = new List<Face>();
             foreach (Panel panel in panels)
             {
@@ -26,7 +23,7 @@ namespace SAM.Analytical.Topologic
                 if (boundingBox3D == null)
                 {
                     boundingBox3D = panel.GetBoundingBox();
-                }               
+                }
                 else
                 {
                     Geometry.Spatial.BoundingBox3D boundingBox3D_Temp = panel.GetBoundingBox();
@@ -104,4 +101,3 @@ namespace SAM.Analytical.Topologic
         }
     }
 }
-

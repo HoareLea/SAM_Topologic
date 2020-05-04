@@ -1,5 +1,4 @@
 ﻿using Rhino.Geometry;
-using System;
 using System.Collections.Generic;
 using Topologic;
 

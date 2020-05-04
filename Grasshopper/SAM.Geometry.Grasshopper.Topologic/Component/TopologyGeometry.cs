@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
-using Grasshopper.Kernel;
-
-using Topologic;
-
+﻿using Grasshopper.Kernel;
 using SAM.Geometry.Grasshopper.Topologic.Properties;
+using System;
+using System.Collections.Generic;
+using Topologic;
 
 namespace SAM.Geometry.Grasshopper.Topologic
 {
@@ -62,7 +59,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
                 return;
 
             List<object> geometries = Convert.ToRhino(topology, tolerance);
-            
+
             DA.SetDataList(0, geometries);
         }
     }

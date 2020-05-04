@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-
+﻿using SAM.Geometry.Spatial;
+using System.Collections.Generic;
 using Topologic;
-
-using SAM.Geometry.Spatial;
-
 
 namespace SAM.Geometry.Topologic
 {
@@ -23,7 +20,7 @@ namespace SAM.Geometry.Topologic
             List<Wire> wires = face.InternalBoundaries;
             if (wires != null && wires.Count > 0)
             {
-                foreach(Wire wire in wires)
+                foreach (Wire wire in wires)
                 {
                     polygon3D = ToSAM_Polygon3D(wire);
                     if (polygon3D == null)

@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-
+﻿using SAM.Geometry.Spatial;
+using System.Collections.Generic;
 using Topologic;
-
-using SAM.Geometry.Spatial;
 
 namespace SAM.Geometry.Topologic
 {
@@ -11,7 +9,7 @@ namespace SAM.Geometry.Topologic
         public static global::Topologic.Face ToTopologic(this Face3D face)
         {
             IClosedPlanar3D closedPlanar3D = face.GetExternalEdge();
-            if(closedPlanar3D is ICurvable3D)
+            if (closedPlanar3D is ICurvable3D)
             {
                 List<Edge> edges = new List<Edge>();
                 foreach (ICurve3D curve3D in ((ICurvable3D)closedPlanar3D).GetCurves())

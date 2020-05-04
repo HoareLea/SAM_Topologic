@@ -1,8 +1,6 @@
-﻿using System;
+﻿using Rhino.Geometry;
+using System;
 using System.Collections.Generic;
-
-using Rhino.Geometry;
-
 using Topologic;
 
 namespace SAM.Geometry.Grasshopper.Topologic
@@ -64,7 +62,6 @@ namespace SAM.Geometry.Grasshopper.Topologic
             }
 
             BrepFace ghBrepFace = ghBrep2.Faces[0];
-
 
             List<Curve> ghInternalCurves = new List<Curve>();
             foreach (Wire internalBoundary in internalBoundaries)

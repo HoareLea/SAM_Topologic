@@ -8,7 +8,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
         {
             Vertex vertex = topology as Vertex;
             if (vertex != null)
-                return  Topologic.Convert.ToSAM(vertex);
+                return Topologic.Convert.ToSAM(vertex);
 
             Edge edge = topology as Edge;
             if (edge != null)
@@ -20,7 +20,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
 
             global::Topologic.Face face = topology as global::Topologic.Face;
             if (face != null)
-               return Geometry.Topologic.Convert.ToSAM(face);               
+                return Geometry.Topologic.Convert.ToSAM(face);
 
             return null;
         }
