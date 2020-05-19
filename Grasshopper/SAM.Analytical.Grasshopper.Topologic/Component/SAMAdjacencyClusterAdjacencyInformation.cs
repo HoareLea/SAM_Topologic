@@ -138,10 +138,10 @@ namespace SAM.Analytical.Grasshopper.Topologic
                     {
                         Geometry.Spatial.Vector3D vector3D_Normal = panel.PlanarBoundary3D?.Normal;
 
-                        PanelType panelType_Normal = Query.PanelType(vector3D_Normal);
+                        PanelType panelType_Normal = Analytical.Query.PanelType(vector3D_Normal);
                         if (panelType_Normal == PanelType.Floor)
                         {
-                            double elevation = Query.MaxElevation(panel_New);
+                            double elevation = Analytical.Query.MaxElevation(panel_New);
 
                             if (elevation == 0)
                             {
