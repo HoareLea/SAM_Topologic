@@ -60,6 +60,8 @@
   <ItemGroup>
     <Compile Include="Classes\AdjacencyCluster.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Create\RelationCluster.cs" />
+    <Compile Include="Query\FindPanel.cs" />
     <Compile Include="Query\TryGetSpaceAdjacency.cs" />
     <Compile Include="Convert\ToTopologic\Panel.cs" />
   </ItemGroup>

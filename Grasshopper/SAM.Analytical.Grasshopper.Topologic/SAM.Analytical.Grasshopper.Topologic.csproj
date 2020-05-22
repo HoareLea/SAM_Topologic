@@ -96,6 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Component\SAMAdjacencyClusterAdjacencyInformation.cs" />
+    <Compile Include="Component\CreateSAMRelationCluster.cs" />
     <Compile Include="Component\TopologyAdjacencies.cs" />
     <Compile Include="Component\TopologyExplode.cs" />
     <Compile Include="Component\TopologyAnalyze.cs" />
