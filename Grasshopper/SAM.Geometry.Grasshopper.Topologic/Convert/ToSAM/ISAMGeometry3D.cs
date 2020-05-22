@@ -8,15 +8,21 @@ namespace SAM.Geometry.Grasshopper.Topologic
         {
             Vertex vertex = topology as Vertex;
             if (vertex != null)
-                return Topologic.Convert.ToSAM(vertex);
+                return Geometry.Topologic.Convert.ToSAM(vertex);
 
             Edge edge = topology as Edge;
             if (edge != null)
-                return Topologic.Convert.ToSAM(edge);
+                return Geometry.Topologic.Convert.ToSAM(edge);
 
             Wire wire = topology as Wire;
             if (wire != null)
-                return Topologic.Convert.ToSAM(wire);
+            {
+                if(wire.IsClosed)
+                    return Geometry.Topologic.Convert.ToSAM_Polygon3D(wire);
+                else
+                    return Geometry.Topologic.Convert.ToSAM(wire);
+            }
+                
 
             global::Topologic.Face face = topology as global::Topologic.Face;
             if (face != null)
