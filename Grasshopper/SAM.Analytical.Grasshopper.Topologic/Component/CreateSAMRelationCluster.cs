@@ -57,7 +57,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
         {
-            outputParamManager.AddParameter(new GooRelationClusterParam(), "RelationCluster", "RelationCluster", "SAM RelationCluster", GH_ParamAccess.item);
+            outputParamManager.AddParameter(new Core.Grasshopper.GooRelationClusterParam(), "RelationCluster", "RelationCluster", "SAM RelationCluster", GH_ParamAccess.item);
             outputParamManager.AddGenericParameter("Topology", "Topology", "Topology", GH_ParamAccess.item);
             outputParamManager.AddParameter(new GooPanelParam(), "Panels", "Panels", "SAM Analytical Panels", GH_ParamAccess.list);
             outputParamManager.AddParameter(new GooSpaceParam(), "Spaces", "Spaces", "SAM Analytical Spaces", GH_ParamAccess.list);
@@ -129,7 +129,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
 
             RelationCluster relationCluster = Analytical.Topologic.Create.RelationCluster(spaces, panels, out topology, minArea, true, tryCellComplexByCells, log);
 
-            dataAccess.SetData(0, new GooRelationCluster(relationCluster));
+            dataAccess.SetData(0, new Core.Grasshopper.GooRelationCluster(relationCluster));
             dataAccess.SetData(1, topology);
             dataAccess.SetDataList(2, relationCluster.GetObjects<Panel>());
             dataAccess.SetDataList(3, relationCluster.GetObjects<Space>());
