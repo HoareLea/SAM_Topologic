@@ -146,7 +146,10 @@ namespace SAM.Analytical.Topologic
                     Space space = new Space("Cell " + index, Geometry.Topologic.Convert.ToSAM(vertex));
                     index++;
 
-                    result.AddObject(space);
+                    if (!result.AddObject(space))
+                        continue;
+
+                    spaces_Temp.Add(space);
 
                     Dictionary<string, object> dictionary = new Dictionary<string, object>();
                     dictionary["Space"] = space.Guid.ToString();

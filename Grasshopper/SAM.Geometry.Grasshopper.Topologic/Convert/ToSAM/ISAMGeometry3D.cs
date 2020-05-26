@@ -28,6 +28,10 @@ namespace SAM.Geometry.Grasshopper.Topologic
             if (face != null)
                 return Geometry.Topologic.Convert.ToSAM(face);
 
+            //Cell cell = topology as Cell;
+            //if(cell != null)
+            //    return Geometry.Topologic.Convert.ToSAM(cell);
+
             return null;
         }
     }
