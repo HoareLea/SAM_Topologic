@@ -54,7 +54,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// </param>
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
-            Analytical.Topologic.AdjacencyCluster adjacencyCluster = null;
+            Analytical.AdjacencyCluster adjacencyCluster = null;
 
             if (!dataAccess.GetData(0, ref adjacencyCluster))
             {
@@ -71,9 +71,9 @@ namespace SAM.Analytical.Grasshopper.Topologic
 
             IEnumerable<SAMObject> result = null;
             if (sAMObject is Space)
-                result = adjacencyCluster.GetSpacePanels(sAMObject.Guid);
+                result = adjacencyCluster.GetPanels((Space)sAMObject);
             else if (sAMObject is Panel)
-                result = adjacencyCluster.GetPanelSpaces(sAMObject.Guid);
+                result = adjacencyCluster.GetSpaces((Panel)sAMObject);
 
             if (result == null)
             {

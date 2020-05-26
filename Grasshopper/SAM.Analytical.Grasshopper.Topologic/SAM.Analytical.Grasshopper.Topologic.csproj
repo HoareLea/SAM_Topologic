@@ -96,14 +96,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Component\SAMAdjacencyClusterAdjacencyInformation.cs" />
-    <Compile Include="Component\CreateSAMRelationCluster.cs" />
+    <Compile Include="Component\CreateSAMAdjacencyCluster.cs" />
     <Compile Include="Component\TopologyAdjacencies.cs" />
     <Compile Include="Component\TopologyExplode.cs" />
     <Compile Include="Component\TopologyAnalyze.cs" />
-    <Compile Include="Component\SAMAnalyticalCreateAdjacencyCluster.cs" />
     <Compile Include="Component\CellComplexFaces.cs" />
     <Compile Include="Component\FacesCellComplex.cs" />
-    <Compile Include="Classes\GooAdjacencyCluster.cs" />
     <Compile Include="Kernel\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -135,6 +133,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\SAM_Topologic.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Classes\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

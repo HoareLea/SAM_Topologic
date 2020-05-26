@@ -7,13 +7,13 @@ namespace SAM.Analytical.Topologic
 {
     public static partial class Create
     {
-        public static RelationCluster RelationCluster(IEnumerable<Space> spaces, IEnumerable<Panel> panels, out Topology topology, double minArea = Tolerance.MacroDistance, bool updatePanels = true, bool tryCellComplexByCells = true, Log log = null, double tolerance = Tolerance.Distance)
+        public static AdjacencyCluster AdjacencyCluster(IEnumerable<Space> spaces, IEnumerable<Panel> panels, out Topology topology, double minArea = Tolerance.MacroDistance, bool updatePanels = true, bool tryCellComplexByCells = true, Log log = null, double tolerance = Tolerance.Distance)
         {
-            Log.Add(log, "Method Name: {0}, Tolerance: {1}, Update Panels: {2}", "SAM.Analytical.Topologic.Create.SAMRelationCluster", tolerance, updatePanels);
+            Log.Add(log, "Method Name: {0}, Tolerance: {1}, Update Panels: {2}", "SAM.Analytical.Topologic.Create.AdjacencyCluster", tolerance, updatePanels);
 
             topology = null;
 
-            RelationCluster result = new RelationCluster();
+            AdjacencyCluster result = new AdjacencyCluster();
             result.AddObjects(spaces);
             result.AddObjects(panels);
 

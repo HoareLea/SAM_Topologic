@@ -1,16 +1,18 @@
 ﻿using Grasshopper.Kernel;
 using SAM.Analytical.Grasshopper.Topologic.Properties;
+using SAM.Core;
 using System;
 using System.Collections.Generic;
+using Topologic;
 
 namespace SAM.Analytical.Grasshopper.Topologic
 {
-    public class SAMAnalyticalCreateAdjacencyCluster : GH_Component
+    public class CreateSAMAdjacencyCluster : GH_Component
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
         /// </summary>
-        public override Guid ComponentGuid => new Guid("2e04adb9-97ab-4634-83cf-67ce76249588");
+        public override Guid ComponentGuid => new Guid("a90bbb0c-ed58-44a0-99d9-4c3505bb282a");
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -20,9 +22,9 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// <summary>
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
-        public SAMAnalyticalCreateAdjacencyCluster()
-          : base("SAMAnalytical.CreateAdjacencyCluster", "SAMAnalytical.CreateAdjacencyCluster",
-              "Convert SAM Analytical Panel To Topologic Cellcomplex and then rerun for each Face list of Adjacent Space Names",
+        public CreateSAMAdjacencyCluster()
+          : base("Create.SAMAdjacencyCluster", "Create.SAMAdjacencyCluster",
+              "Create SAM Adjacency Cluster",
               "SAM", "Topologic")
         {
         }
@@ -42,11 +44,11 @@ namespace SAM.Analytical.Grasshopper.Topologic
             index = inputParamManager.AddParameter(gooSpaceParam, "spaces_", "spaces_", "SAM Analytical Spaces", GH_ParamAccess.list);
             inputParamManager[index].DataMapping = GH_DataMapping.Flatten;
 
-            inputParamManager.AddNumberParameter("tolerance_", "tolerance_", string.Format("Topologic CellComplex default {0}", Core.Tolerance.MacroDistance), GH_ParamAccess.item, Core.Tolerance.MacroDistance);
+            inputParamManager.AddNumberParameter("tolerance_", "tolerance_", string.Format("Topologic CellComplex default {0}", Tolerance.MacroDistance), GH_ParamAccess.item, Tolerance.MacroDistance);
             //inputParamManager.AddBooleanParameter("_run_", "_run_", "Run", GH_ParamAccess.item, false);
             inputParamManager.AddBooleanParameter("tryCellComplexByCells_", "tryCellComplexByCells_", "Try to Create Cell Complex By Cells", GH_ParamAccess.item, false);
             inputParamManager.AddTextParameter("reportPath_", "reportPath_", "Report Path to write each step in text file", GH_ParamAccess.item, string.Empty);
-            inputParamManager.AddNumberParameter("minArea_", "minArea_", "Minimal Acceptable area of Aperture", GH_ParamAccess.item, Core.Tolerance.MacroDistance);
+            inputParamManager.AddNumberParameter("minArea_", "minArea_", "Minimal Acceptable area of Aperture", GH_ParamAccess.item, Tolerance.MacroDistance);
             inputParamManager.AddBooleanParameter("_run_", "_run_", "Run", GH_ParamAccess.item, false);
         }
 
@@ -55,7 +57,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
         {
-            outputParamManager.AddParameter(new GooAdjacencyClusterParam(), "AdjacencyCluster", "AdjacencyCluster", "sAM AdjacencyCluster", GH_ParamAccess.item);
+            outputParamManager.AddParameter(new GooAdjacencyClusterParam(), "AdjacencyCluster", "AdjacencyCluster", "SAM AdjacencyCluster", GH_ParamAccess.item);
             outputParamManager.AddGenericParameter("Topology", "Topology", "Topology", GH_ParamAccess.item);
             outputParamManager.AddParameter(new GooPanelParam(), "Panels", "Panels", "SAM Analytical Panels", GH_ParamAccess.list);
             outputParamManager.AddParameter(new GooSpaceParam(), "Spaces", "Spaces", "SAM Analytical Spaces", GH_ParamAccess.list);
@@ -83,16 +85,16 @@ namespace SAM.Analytical.Grasshopper.Topologic
             if (!run)
                 return;
 
-            List<Panel> panelList = new List<Panel>();
-            if (!dataAccess.GetDataList(0, panelList) || panelList == null)
+            List<Panel> panels = new List<Panel>();
+            if (!dataAccess.GetDataList(0, panels) || panels == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 dataAccess.SetData(2, false);
                 return;
             }
 
-            List<Space> spaceList = new List<Space>();
-            dataAccess.GetDataList(1, spaceList);
+            List<Space> spaces = new List<Space>();
+            dataAccess.GetDataList(1, spaces);
 
             double tolerance = double.NaN;
             if (!dataAccess.GetData(2, ref tolerance) || double.IsNaN(tolerance))
@@ -120,20 +122,21 @@ namespace SAM.Analytical.Grasshopper.Topologic
             double minArea = Core.Tolerance.MacroDistance;
             dataAccess.GetData(5, ref minArea);
 
-            Analytical.Topologic.AdjacencyCluster adjacencyCluster = new Analytical.Topologic.AdjacencyCluster(spaceList, panelList);
-            adjacencyCluster.ReportPath = reportPath;
-            bool result = adjacencyCluster.Calculate(tolerance, tryCellComplexByCells, true, minArea);
+            Topology topology = null;
+            Log log = null;
+            if (!string.IsNullOrEmpty(reportPath))
+                log = new Log();
 
-            //AddRuntimeMessage(GH_RuntimeMessageLevel.Remark, string.Join("\n", adjacencyCluster.Report));
+            AdjacencyCluster adjacencyCluster = Analytical.Topologic.Create.AdjacencyCluster(spaces, panels, out topology, minArea, true, tryCellComplexByCells, log);
 
-            dataAccess.SetData(0, adjacencyCluster);
-            dataAccess.SetData(1, adjacencyCluster.Topology);
+            dataAccess.SetData(0, new GooAdjacencyCluster(adjacencyCluster));
+            dataAccess.SetData(1, topology);
             dataAccess.SetDataList(2, adjacencyCluster.GetPanels());
             dataAccess.SetDataList(3, adjacencyCluster.GetSpaces());
             dataAccess.SetDataList(4, adjacencyCluster.GetInternalPanels());
             dataAccess.SetDataList(5, adjacencyCluster.GetExternalPanels());
             dataAccess.SetDataList(6, adjacencyCluster.GetShadingPanels());
-            dataAccess.SetData(7, result);
+            dataAccess.SetData(7, adjacencyCluster != null);
         }
     }
 }

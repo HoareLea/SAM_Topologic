@@ -57,7 +57,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// </param>
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
-            Analytical.Topologic.AdjacencyCluster adjacencyCluster = null;
+            AdjacencyCluster adjacencyCluster = null;
             if (!dataAccess.GetData(0, ref adjacencyCluster))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
@@ -217,7 +217,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
 
                 GH_Path path = new GH_Path(count);
 
-                List<Space> spaces = adjacencyCluster.GetPanelSpaces(panel.Guid);
+                List<Space> spaces = adjacencyCluster.GetSpaces(panel);
                 if (spaces != null && spaces.Count > 0)
                 {
                     foreach (string name in spaces.ConvertAll(x => x.Name))

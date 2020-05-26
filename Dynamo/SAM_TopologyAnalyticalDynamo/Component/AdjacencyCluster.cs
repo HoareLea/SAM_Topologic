@@ -1,5 +1,6 @@
 ﻿using SAM.Analytical;
 using System.Collections.Generic;
+using Topologic;
 
 namespace SAMTopologicAnalyticalDynamo
 {
@@ -15,11 +16,12 @@ namespace SAMTopologicAnalyticalDynamo
         /// <param name="spaces">The spaces.</param>
         /// <param name="tolerance">The tolerance.</param>
         /// <param name="updatePanels">if set to <c>true</c> [update panels].</param>
-        /// <returns name="adjacencyCluster"><see cref="SAM.Analytical.Topologic.AdjacencyCluster"/></returns>
-        public static SAM.Analytical.Topologic.AdjacencyCluster ByPanelsAndSpaces(IEnumerable<SAM.Analytical.Panel> panels, IEnumerable<Space> spaces, double tolerance = SAM.Core.Tolerance.MacroDistance, bool updatePanels = true)
+        /// <returns name="adjacencyCluster"><see cref="SAM.Analytical.AdjacencyCluster"/></returns>
+        public static SAM.Analytical.AdjacencyCluster ByPanelsAndSpaces(IEnumerable<SAM.Analytical.Panel> panels, IEnumerable<Space> spaces, double tolerance = SAM.Core.Tolerance.MacroDistance, bool updatePanels = true)
         {
-            SAM.Analytical.Topologic.AdjacencyCluster adjacencyModel = new SAM.Analytical.Topologic.AdjacencyCluster(spaces, panels);
-            adjacencyModel.Calculate(tolerance, updatePanels);
+            Topology topology = null;
+
+            SAM.Analytical.AdjacencyCluster adjacencyModel = SAM.Analytical.Topologic.Create.AdjacencyCluster(spaces, panels, out topology, SAM.Core.Tolerance.MacroDistance, updatePanels, true, null, tolerance);
             return adjacencyModel;
         }
 
@@ -29,7 +31,7 @@ namespace SAMTopologicAnalyticalDynamo
         /// <param name="adjacencyCluster">The adjacency cluster.</param>
         /// <returns name="Panels">SAM Panels</returns>
         /// <search>Topologic, getpanels, GetPanels</search>
-        public static IEnumerable<SAM.Analytical.Panel> Panels(SAM.Analytical.Topologic.AdjacencyCluster adjacencyCluster)
+        public static IEnumerable<SAM.Analytical.Panel> Panels(SAM.Analytical.AdjacencyCluster adjacencyCluster)
         {
             return adjacencyCluster.GetPanels();
         }
@@ -40,7 +42,7 @@ namespace SAMTopologicAnalyticalDynamo
         /// <param name="adjacencyCluster">The adjacency cluster.</param>
         /// <returns name="spaces"> SAM Spaces</returns>
         /// <search>Topologic, QuerySpaces</search>
-        public static IEnumerable<SAM.Analytical.Space> Spaces(SAM.Analytical.Topologic.AdjacencyCluster adjacencyCluster)
+        public static IEnumerable<Space> Spaces(SAM.Analytical.AdjacencyCluster adjacencyCluster)
         {
             return adjacencyCluster.GetSpaces();
         }
@@ -53,7 +55,7 @@ namespace SAMTopologicAnalyticalDynamo
         ///   <see cref="IEnumerable{SAM.Analytical.Panel}"/>
         /// </returns>
         /// <search>IntenralPanels, internalpanels</search>
-        public static IEnumerable<SAM.Analytical.Panel> InternalPanels(SAM.Analytical.Topologic.AdjacencyCluster adjacencyCluster)
+        public static IEnumerable<SAM.Analytical.Panel> InternalPanels(SAM.Analytical.AdjacencyCluster adjacencyCluster)
         {
             return adjacencyCluster.GetInternalPanels();
         }
@@ -66,7 +68,7 @@ namespace SAMTopologicAnalyticalDynamo
         ///   <see cref="IEnumerable{SAM.Analytical.Panel}"/>
         /// </returns>
         /// <search>ExternalPanels, externalpanels</search>
-        public static IEnumerable<SAM.Analytical.Panel> ExternalPanels(SAM.Analytical.Topologic.AdjacencyCluster adjacencyCluster)
+        public static IEnumerable<SAM.Analytical.Panel> ExternalPanels(SAM.Analytical.AdjacencyCluster adjacencyCluster)
         {
             return adjacencyCluster.GetExternalPanels();
         }
@@ -79,20 +81,9 @@ namespace SAMTopologicAnalyticalDynamo
         ///   <see cref="IEnumerable{SAM.Analytical.Panel}"/>
         /// </returns>
         /// <search>ShadingPanels, shadingpanels</search>
-        public static IEnumerable<SAM.Analytical.Panel> ShadingPanels(SAM.Analytical.Topologic.AdjacencyCluster adjacencyCluster)
+        public static IEnumerable<SAM.Analytical.Panel> ShadingPanels(SAM.Analytical.AdjacencyCluster adjacencyCluster)
         {
             return adjacencyCluster.GetShadingPanels();
-        }
-
-        /// <summary>
-        /// Query Topologies the specified adjacency cluster.
-        /// </summary>
-        /// <param name="adjacencyCluster">The adjacency cluster.</param>
-        /// <returns name="Topology">Topology objects</returns>
-        /// <search>Topology, topology</search>
-        public static object Topology(SAM.Analytical.Topologic.AdjacencyCluster adjacencyCluster)
-        {
-            return adjacencyCluster.Topology;
         }
 
         /// <summary>
@@ -102,13 +93,13 @@ namespace SAMTopologicAnalyticalDynamo
         /// <param name="sAMObject">The s am object.</param>
         /// <returns name="adjacencies">Adjacencies for Panels</returns>
         /// <search>Adjacencies, adjacencies</search>
-        public static IEnumerable<object> Adjacencies(SAM.Analytical.Topologic.AdjacencyCluster adjacencyCluster, SAM.Core.SAMObject sAMObject)
+        public static IEnumerable<object> Adjacencies(SAM.Analytical.AdjacencyCluster adjacencyCluster, SAM.Core.SAMObject sAMObject)
         {
             if (sAMObject is SAM.Analytical.Panel)
-                return adjacencyCluster.GetPanelSpaces(sAMObject.Guid);
+                return adjacencyCluster.GetSpaces((SAM.Analytical.Panel)sAMObject);
 
             if (sAMObject is Space)
-                return adjacencyCluster.GetSpacePanels(sAMObject.Guid);
+                return adjacencyCluster.GetPanels((Space)sAMObject);
 
             return null;
         }
