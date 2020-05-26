@@ -128,14 +128,18 @@ namespace SAM.Analytical.Grasshopper.Topologic
                 log = new Log();
 
             AdjacencyCluster adjacencyCluster = Analytical.Topologic.Create.AdjacencyCluster(spaces, panels, out topology, minArea, true, tryCellComplexByCells, log);
+            
+            if(adjacencyCluster != null)
+                dataAccess.SetData(0, new GooAdjacencyCluster(adjacencyCluster));
+            else
+                dataAccess.SetData(0, null);
 
-            dataAccess.SetData(0, new GooAdjacencyCluster(adjacencyCluster));
             dataAccess.SetData(1, topology);
-            dataAccess.SetDataList(2, adjacencyCluster.GetPanels());
-            dataAccess.SetDataList(3, adjacencyCluster.GetSpaces());
-            dataAccess.SetDataList(4, adjacencyCluster.GetInternalPanels());
-            dataAccess.SetDataList(5, adjacencyCluster.GetExternalPanels());
-            dataAccess.SetDataList(6, adjacencyCluster.GetShadingPanels());
+            dataAccess.SetDataList(2, adjacencyCluster?.GetPanels());
+            dataAccess.SetDataList(3, adjacencyCluster?.GetSpaces());
+            dataAccess.SetDataList(4, adjacencyCluster?.GetInternalPanels());
+            dataAccess.SetDataList(5, adjacencyCluster?.GetExternalPanels());
+            dataAccess.SetDataList(6, adjacencyCluster?.GetShadingPanels());
             dataAccess.SetData(7, adjacencyCluster != null);
         }
     }
