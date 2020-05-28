@@ -127,7 +127,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
             if (!string.IsNullOrEmpty(reportPath))
                 log = new Log();
 
-            AdjacencyCluster adjacencyCluster = Analytical.Topologic.Create.AdjacencyCluster(spaces, panels, out topology, minArea, true, tryCellComplexByCells, log);
+            AdjacencyCluster adjacencyCluster = Analytical.Topologic.Create.AdjacencyCluster(spaces, panels, out topology, minArea, true, tryCellComplexByCells, log, tolerance);
 
             if (adjacencyCluster != null)
                 dataAccess.SetData(0, new GooAdjacencyCluster(adjacencyCluster));
