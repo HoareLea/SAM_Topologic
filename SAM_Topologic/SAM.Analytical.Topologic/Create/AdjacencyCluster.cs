@@ -241,7 +241,7 @@ namespace SAM.Analytical.Topologic
                     if (space == null)
                         continue;
 
-                    if(result.AddRelation(space, panel_New))
+                    if (result.AddRelation(space, panel_New))
                         Log.Add(log, "Space [{0}] and Panel [{1}] relation added", space.Guid, panel_New.Guid);
                     else
                         Log.Add(log, "Space [{0}] and Panel [{1}] relation could not be added", space.Guid, panel_New.Guid);

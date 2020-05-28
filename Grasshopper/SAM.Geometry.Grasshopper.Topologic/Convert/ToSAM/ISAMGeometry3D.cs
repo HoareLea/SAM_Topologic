@@ -17,12 +17,11 @@ namespace SAM.Geometry.Grasshopper.Topologic
             Wire wire = topology as Wire;
             if (wire != null)
             {
-                if(wire.IsClosed)
+                if (wire.IsClosed)
                     return Geometry.Topologic.Convert.ToSAM_Polygon3D(wire);
                 else
                     return Geometry.Topologic.Convert.ToSAM(wire);
             }
-                
 
             global::Topologic.Face face = topology as global::Topologic.Face;
             if (face != null)
