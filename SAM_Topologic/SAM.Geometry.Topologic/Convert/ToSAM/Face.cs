@@ -1,6 +1,7 @@
 ﻿using SAM.Geometry.Spatial;
 using System.Collections.Generic;
 using Topologic;
+using Topologic.Utilities;
 
 namespace SAM.Geometry.Topologic
 {
@@ -11,7 +12,15 @@ namespace SAM.Geometry.Topologic
             if (face == null)
                 return null;
 
-            Polygon3D polygon3D = ToSAM_Polygon3D(face.ExternalBoundary);
+            Polygon3D polygon3D = null;
+
+            Vector3D normal = new Vector3D(FaceUtility.NormalAtParameters(face, 0.5, 0.5));
+            if (normal != null)
+                polygon3D = Spatial.Create.Polygon3D(normal, face.ExternalBoundary.Vertices.ConvertAll(x => x.ToSAM()));
+
+            if (polygon3D == null)
+                polygon3D = ToSAM_Polygon3D(face.ExternalBoundary);
+
             if (polygon3D == null)
                 return null;
 
@@ -22,7 +31,14 @@ namespace SAM.Geometry.Topologic
             {
                 foreach (Wire wire in wires)
                 {
-                    polygon3D = ToSAM_Polygon3D(wire);
+                    polygon3D = null;
+                    
+                    if(normal != null)
+                        polygon3D = Spatial.Create.Polygon3D(normal, wire.Vertices.ConvertAll(x => x.ToSAM()));
+
+                    if (polygon3D == null)
+                        polygon3D = ToSAM_Polygon3D(wire);
+
                     if (polygon3D == null)
                         continue;
 
