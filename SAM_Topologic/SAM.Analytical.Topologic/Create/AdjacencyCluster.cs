@@ -183,6 +183,9 @@ namespace SAM.Analytical.Topologic
                 Log.Add(log, "Simplifying face");
                 face3D = Geometry.Spatial.Query.SimplifyByNTS_TopologyPreservingSimplifier(face3D, tolerance);
 
+                if (face3D == null || face3D.GetArea() <= minArea)
+                    continue;
+
                 Log.Add(log, "Analyzing face and looking for old Panel");
                 Panel panel_Old = Query.FindPanel(face3D, dictionary_Panel_Face3D);
                 if (panel_Old == null)
