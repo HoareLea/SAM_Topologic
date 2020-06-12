@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace SAM.Analytical.Grasshopper.Topologic
 {
-    public class SAMAdjacencyClusterAdjacencyInformation : GH_Component
+    public class SAMAdjacencyClusterPanelTypeUpdate : GH_Component
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -23,9 +23,9 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// <summary>
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
-        public SAMAdjacencyClusterAdjacencyInformation()
-          : base("SAMAdjacencyCluster.AdjacencyInformation", "SAMAdjacencyCluster.AdjacencyInformation",
-              "Outout Geometry and Ajd names from Panels",
+        public SAMAdjacencyClusterPanelTypeUpdate()
+          : base("SAMAdjacencyCluster.PanelTypeUpdate", "SAMAdjacencyCluster.PanelTypeUpdate",
+              "Updates PanelType for Adjacency Cluster",
               "SAM", "Topologic")
         {
         }
