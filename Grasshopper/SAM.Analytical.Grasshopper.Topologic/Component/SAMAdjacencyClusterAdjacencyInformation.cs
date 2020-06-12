@@ -65,21 +65,29 @@ namespace SAM.Analytical.Grasshopper.Topologic
                 return;
             }
 
-            string wallInternalConstructionPrefix = "Basic Wall: SIM_INT_";
+            //string wallInternalConstructionPrefix = "Basic Wall: SIM_INT_";
+            string wallInternalConstructionPrefix = "SIM_INT_";
             string wallInternalConstructionSufix = "SLD_Partition";
-            string wallExternalConstructionPrefix = "Basic Wall: SIM_EXT_";
+            //string wallExternalConstructionPrefix = "Basic Wall: SIM_EXT_";
+            string wallExternalConstructionPrefix = "SIM_EXT_";
             string wallExternalConstructionSufix = "SLD";
-            string wallShadingConstructionPrefix = "Basic Wall: SIM_EXT_";
+            //string wallShadingConstructionPrefix = "Basic Wall: SIM_EXT_";
+            string wallShadingConstructionPrefix = "SIM_EXT_";
             string wallShadingConstructionSufix = "SLD";
-            string floorInternalConstructionPrefix = "Floor: SIM_INT_";
+            //string floorInternalConstructionPrefix = "Floor: SIM_INT_";
+            string floorInternalConstructionPrefix = "SIM_INT_";
             string floorInternalConstructionSufix = "SLD_FLR FLR02";
-            string floorExternalConstructionPrefix = "Floor: SIM_EXT_GRD_";
+            //string floorExternalConstructionPrefix = "Floor: SIM_EXT_GRD_";
+            string floorExternalConstructionPrefix = "SIM_EXT_GRD_";
             string floorExternalConstructionSufix = "FLR FLR01";
-            string roofExternalConstructionPrefix = "Basic Roof: SIM_EXT_";
+            //string roofExternalConstructionPrefix = "Basic Roof: SIM_EXT_";
+            string roofExternalConstructionPrefix = "SIM_EXT_";
             string roofExternalConstructionSufix = "SLD_Roof DA01";
-            string floorExposedConstructionPrefix = "Floor: SIM_EXT_";
+            //string floorExposedConstructionPrefix = "Floor: SIM_EXT_";
+            string floorExposedConstructionPrefix = "SIM_EXT_";
             string floorExposedConstructionSufix = "SLD_FLR Exposed";
-            string slabOnGradeConstructionPrefix = "Floor: SIM_EXT_";
+            //string slabOnGradeConstructionPrefix = "Floor: SIM_EXT_";
+            string slabOnGradeConstructionPrefix = "SIM_EXT_";
             string slabOnGradeConstructionSufix = "GRD_FLR FLR01";
 
             Dictionary<Panel, PanelType> dictionary = new Dictionary<Panel, PanelType>();
