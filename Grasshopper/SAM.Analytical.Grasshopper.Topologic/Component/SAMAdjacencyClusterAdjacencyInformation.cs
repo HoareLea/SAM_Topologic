@@ -47,6 +47,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
             outputParamManager.AddGenericParameter("PanelTypes", "PanelTypes", "SAM Analytical PanelTypes", GH_ParamAccess.list);
             outputParamManager.AddGeometryParameter("Geometries", "Geometries", "GH Geometries from SAM Analytical Panels", GH_ParamAccess.tree);
             outputParamManager.AddTextParameter("SpaceAdjNames", "SpaceAdjNames", "Space Adjacency Names, to which Space each Panel is connected", GH_ParamAccess.tree);
+            outputParamManager.AddParameter(new GooAdjacencyClusterParam(), "AdjacencyCluster", "AdjacencyCluster", "SAM AdjacencyCluster", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -85,6 +86,8 @@ namespace SAM.Analytical.Grasshopper.Topologic
 
             List<Panel> panelList = null;
 
+            AdjacencyCluster adjacencyCluster_Result = new AdjacencyCluster(adjacencyCluster);
+
             //Internal
             panelList = adjacencyCluster.GetInternalPanels();
             if (panelList != null && panelList.Count != 0)
@@ -114,6 +117,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
                         panel_New = new Panel(panel_New, panelType);
 
                     dictionary[panel_New] = panelType;
+                    adjacencyCluster_Result.AddObject(panel_New);
                 }
             }
 
@@ -178,6 +182,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
                         panel_New = new Panel(panel_New, panelType);
 
                     dictionary[panel_New] = panelType;
+                    adjacencyCluster_Result.AddObject(panel_New);
                 }
             }
 
@@ -203,6 +208,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
                         panel_New = new Panel(panel_New, panelType);
 
                     dictionary[panel_New] = panelType;
+                    adjacencyCluster_Result.AddObject(panel_New);
                 }
             }
 
@@ -233,6 +239,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
             dataAccess.SetDataList(1, dictionary.Values);
             dataAccess.SetDataTree(2, dataTree_GeometricGoos);
             dataAccess.SetDataTree(3, dataTree_Names);
+            dataAccess.SetData(4, new GooAdjacencyCluster(adjacencyCluster_Result));
             return;
         }
     }
