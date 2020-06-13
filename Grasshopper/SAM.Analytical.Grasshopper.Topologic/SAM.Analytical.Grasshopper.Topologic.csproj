@@ -95,7 +95,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Component\SAMAdjacencyClusterPanelTypeUpdate.cs" />
     <Compile Include="Component\CreateSAMAdjacencyCluster.cs" />
     <Compile Include="Component\TopologyAdjacencies.cs" />
     <Compile Include="Component\TopologyExplode.cs" />
