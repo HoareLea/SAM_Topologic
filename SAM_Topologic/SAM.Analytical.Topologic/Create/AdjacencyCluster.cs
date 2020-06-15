@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using Topologic;
+using Topologic.Utilities;
 
 namespace SAM.Analytical.Topologic
 {
@@ -161,7 +162,20 @@ namespace SAM.Analytical.Topologic
             Log.Add(log, "Single CellComplex created");
 
             if (topologyList != null && topologyList.Count > 0)
-                cellComplex = (CellComplex)cellComplex.AddContents(topologyList, 32);
+            {
+                //Issue when adding Contents to cellComplex
+                //cellComplex = (CellComplex)cellComplex.AddContents(topologyList, 32);
+
+                List<Cell> cells = cellComplex.Cells;
+                foreach (Vertex vertex in topologyList)
+                {
+                    Cell cell = cells.Find(x => CellUtility.Contains(x, vertex, true, tolerance));
+                    if (cell == null)
+                        continue;
+
+                    cell.AddContents(new List<Topology>() { vertex }, 32);
+                }
+            }
 
             Log.Add(log, "Dictionaries created");
 
