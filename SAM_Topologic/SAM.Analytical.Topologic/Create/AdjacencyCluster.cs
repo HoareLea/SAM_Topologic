@@ -164,17 +164,17 @@ namespace SAM.Analytical.Topologic
             if (topologyList != null && topologyList.Count > 0)
             {
                 //Issue when adding Contents to cellComplex
-                //cellComplex = (CellComplex)cellComplex.AddContents(topologyList, 32);
+                cellComplex = (CellComplex)cellComplex.AddContents(topologyList, 32);
 
-                List<Cell> cells = cellComplex.Cells;
-                foreach (Vertex vertex in topologyList)
-                {
-                    Cell cell = cells.Find(x => CellUtility.Contains(x, vertex, true, tolerance));
-                    if (cell == null)
-                        continue;
+                //List<Cell> cells = cellComplex.Cells;
+                //foreach (Vertex vertex in topologyList)
+                //{
+                //    Cell cell = cells.Find(x => CellUtility.Contains(x, vertex, true, tolerance));
+                //    if (cell == null)
+                //        continue;
 
-                    cell.AddContents(new List<Topology>() { vertex }, 32);
-                }
+                //    cell.AddContents(new List<Topology>() { vertex }, 32);
+                //}
             }
 
             Log.Add(log, "Dictionaries created");
