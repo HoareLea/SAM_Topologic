@@ -96,27 +96,52 @@ namespace SAM.Analytical.Topologic
 
             Log.Add(log, "Single CellComplex created");
 
-            List<Space> spaces_Temp = new List<Space>();
-            if (spaces != null)
-                spaces_Temp.AddRange(spaces);
 
-            List<Geometry.Spatial.Shell> shells = cellComplex.ToSAM();
-            Log.Add(log, "Single CellComplex converted to shells");
-
-            if (shells == null)
+            List<Cell> cells = cellComplex.Cells;
+            if (cells == null || cells.Count == 0)
                 return null;
+
+            Log.Add(log, "Number of Cells: {0}", cells.Count);
 
             HashSet<Guid> guids_Updated = new HashSet<Guid>();
 
             Dictionary<Panel, Face3D> dictionary_Panel_Face3D = new Dictionary<Panel, Face3D>();
             result.GetObjects<Panel>().ForEach(x => dictionary_Panel_Face3D[x] = x.GetFace3D());
 
+            List<Space> spaces_Temp = new List<Space>();
+            if (spaces != null)
+                spaces_Temp.AddRange(spaces);
+
+            Dictionary<Face, Tuple<Face3D, List<Space>>> dictionary = new Dictionary<Face, Tuple<Face3D, List<Space>>>();
+
             index = 1;
-            List<Point3D> point3Ds_Internal = new List<Point3D>();
-            foreach (Geometry.Spatial.Shell shell in shells)
+            foreach (Cell cell in cells)
             {
-                if (shell == null)
-                    return null;
+                List<Face> faces = cell?.Faces;
+                if (faces == null)
+                    continue;
+
+                List<Tuple<Face3D, List<Space>>> tuples = new List<Tuple<Face3D, List<Space>>>();
+                foreach (Face face in faces)
+                {
+                    Tuple<Face3D, List<Space>> tuple = null;
+                    if (!dictionary.TryGetValue(face, out tuple))
+                    {
+                        Face3D face3D = face.ToSAM();
+                        if (face3D == null)
+                            continue;
+
+                        Face3D face3D_Simplify = face3D.SimplifyByNTS_TopologyPreservingSimplifier(tolerance);
+                        if (face3D_Simplify != null)
+                            face3D = face3D_Simplify;
+
+                        tuple = new Tuple<Face3D, List<Space>>(face3D, new List<Space>());
+                        dictionary[face] = tuple;
+                    }
+                    tuples.Add(tuple);
+                }
+
+                Geometry.Spatial.Shell shell = new Geometry.Spatial.Shell(tuples.ConvertAll(x => x.Item1));
 
                 Log.Add(log, "Simplifying shell");
                 shell.Simplify(tolerance);
@@ -132,7 +157,7 @@ namespace SAM.Analytical.Topologic
                     Log.Add(log, "Existing spaces found: {0}", spaces_Shell.Count);
                     spaces_Temp.RemoveAll(x => spaces_Shell.Contains(x));
                 }
-                    
+
 
                 if (spaces_Shell.Count == 0)
                 {
@@ -154,61 +179,61 @@ namespace SAM.Analytical.Topologic
                 if (spaces_Shell == null || spaces_Shell.Count == 0)
                     continue;
 
-                Log.Add(log, "Upadting Panels");
-                foreach (Face3D face3D in face3Ds)
+                foreach (Tuple<Face3D, List<Space>> tuple in tuples)
+                    tuple.Item2.AddRange(spaces_Shell);
+            }
+
+            Log.Add(log, "Upadting Panels");
+            foreach (Tuple<Face3D, List<Space>> tuple in dictionary.Values)
+            {
+                Face3D face3D = tuple.Item1;
+
+                if (minArea != 0 && face3D.GetArea() <= minArea)
+                    continue;
+
+                Log.Add(log, "Analyzing face and looking for old Panel");
+                Panel panel_Old = Query.FindPanel(face3D, dictionary_Panel_Face3D);
+                if (panel_Old == null)
+                    continue;
+
+                Log.Add(log, "Old Panel found: {0}", panel_Old.Guid);
+
+                Panel panel_New = null;
+
+                if (updatePanels)
                 {
-                    if (point3Ds_Internal.Find(x => face3D.Inside(x, tolerance)) != null)
-                        continue;
-
-                    point3Ds_Internal.Add(face3D.InternalPoint3D(tolerance));
-
-                    if (minArea != 0 && face3D.GetArea() <= minArea)
-                        continue;
-
-                    Log.Add(log, "Analyzing face and looking for old Panel");
-                    Panel panel_Old = Query.FindPanel(face3D, dictionary_Panel_Face3D);
-                    if (panel_Old == null)
-                        continue;
-
-                    Log.Add(log, "Old Panel found: {0}", panel_Old.Guid);
-
-                    Panel panel_New = null;
-
-                    if (updatePanels)
+                    if (guids_Updated.Contains(panel_Old.Guid))
                     {
-                        if (guids_Updated.Contains(panel_Old.Guid))
-                        {
-                            panel_New = new Panel(Guid.NewGuid(), panel_Old, face3D);
-                            Log.Add(log, "Creating new Panel for Old Panel [{0}]. New Panel [{1}]", panel_Old.Guid, panel_New.Guid);
-                        }
-                        else
-                        {
-                            panel_New = new Panel(panel_Old.Guid, panel_Old, face3D);
-                            guids_Updated.Add(panel_Old.Guid);
-                            Log.Add(log, "Updating Panel [{0}] with new geometry", panel_New.Guid);
-                        }
-
-                        result.AddObject(panel_New);
+                        panel_New = new Panel(Guid.NewGuid(), panel_Old, face3D);
+                        Log.Add(log, "Creating new Panel for Old Panel [{0}]. New Panel [{1}]", panel_Old.Guid, panel_New.Guid);
                     }
                     else
                     {
                         panel_New = new Panel(panel_Old.Guid, panel_Old, face3D);
-                        Log.Add(log, "Creating temporary Panel for Panel [{0}]", panel_New.Guid);
+                        guids_Updated.Add(panel_Old.Guid);
+                        Log.Add(log, "Updating Panel [{0}] with new geometry", panel_New.Guid);
                     }
 
-                    if (panel_New == null)
-                        continue;
-
-                    foreach(Space space in spaces_Shell)
-                    {                       
-                        if (result.AddRelation(space, panel_New))
-                            Log.Add(log, "Space [{0}] and Panel [{1}] relation added", space.Guid, panel_New.Guid);
-                        else
-                            Log.Add(log, "Space [{0}] and Panel [{1}] relation could not be added", space.Guid, panel_New.Guid);
-                    }
-
-                    Log.Add(log, "Adding face finished");
+                    result.AddObject(panel_New);
                 }
+                else
+                {
+                    panel_New = new Panel(panel_Old.Guid, panel_Old, face3D);
+                    Log.Add(log, "Creating temporary Panel for Panel [{0}]", panel_New.Guid);
+                }
+
+                if (panel_New == null)
+                    continue;
+
+                foreach (Space space in tuple.Item2)
+                {
+                    if (result.AddRelation(space, panel_New))
+                        Log.Add(log, "Space [{0}] and Panel [{1}] relation added", space.Guid, panel_New.Guid);
+                    else
+                        Log.Add(log, "Space [{0}] and Panel [{1}] relation could not be added", space.Guid, panel_New.Guid);
+                }
+
+                Log.Add(log, "Adding face finished");
             }
 
             Log.Add(log, "Sucesfully completed");

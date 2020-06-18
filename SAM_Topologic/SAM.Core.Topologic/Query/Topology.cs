@@ -18,6 +18,11 @@ namespace SAM.Core.Topologic
             if (string.IsNullOrEmpty(text))
                 return null;
 
+            string filePath = System.IO.Path.GetTempFileName();
+            System.IO.File.WriteAllText(filePath, text);
+
+            global::Topologic.Topology result = global::Topologic.Topology.ByImportedBRep(filePath);
+            
             throw new System.NotImplementedException();
 
             //global::Topologic.Topology.ByImportedBRep()
