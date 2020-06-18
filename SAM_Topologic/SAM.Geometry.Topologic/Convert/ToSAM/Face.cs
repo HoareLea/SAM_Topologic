@@ -41,12 +41,13 @@ namespace SAM.Geometry.Topologic
 
                     if (polygon3D == null)
                         continue;
-
+                    
                     polygon3Ds.Add(polygon3D);
                 }
             }
 
-            return Face3D.Create(polygon3Ds);
+            Face3D result = Face3D.Create(polygon3Ds);
+            return result;
         }
     }
 }

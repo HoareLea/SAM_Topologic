@@ -55,6 +55,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Convert\ToSAM\Shell.cs" />
+    <Compile Include="Convert\ToSAM\Shells.cs" />
     <Compile Include="Convert\ToSAM\Polyline3D.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Convert\ToSAM\Face.cs" />
