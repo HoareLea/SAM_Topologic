@@ -112,6 +112,7 @@ namespace SAM.Analytical.Topologic
             result.GetObjects<Panel>().ForEach(x => dictionary_Panel_Face3D[x] = x.GetFace3D());
 
             index = 1;
+            List<Point3D> point3Ds_Internal = new List<Point3D>();
             foreach (Geometry.Spatial.Shell shell in shells)
             {
                 if (shell == null)
@@ -127,7 +128,11 @@ namespace SAM.Analytical.Topologic
 
                 List<Space> spaces_Shell = spaces_Temp.FindAll(x => shell.On(x.Location, tolerance) || shell.Inside(x.Location, silverSpacing, tolerance));
                 if (spaces_Shell.Count != 0)
+                {
+                    Log.Add(log, "Existing spaces found: {0}", spaces_Shell.Count);
                     spaces_Temp.RemoveAll(x => spaces_Shell.Contains(x));
+                }
+                    
 
                 if (spaces_Shell.Count == 0)
                 {
@@ -152,6 +157,11 @@ namespace SAM.Analytical.Topologic
                 Log.Add(log, "Upadting Panels");
                 foreach (Face3D face3D in face3Ds)
                 {
+                    if (point3Ds_Internal.Find(x => face3D.Inside(x, tolerance)) != null)
+                        continue;
+
+                    point3Ds_Internal.Add(face3D.InternalPoint3D(tolerance));
+
                     if (minArea != 0 && face3D.GetArea() <= minArea)
                         continue;
 
