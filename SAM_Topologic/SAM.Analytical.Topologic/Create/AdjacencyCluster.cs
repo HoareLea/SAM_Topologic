@@ -153,21 +153,6 @@ namespace SAM.Analytical.Topologic
                 Log.Add(log, "Upadting Panels");
                 foreach (Face3D face3D in face3Ds)
                 {
-                    bool exisiting = false;
-                    foreach(Point3D point3D_Internal in point3Ds_Internal)
-                    {
-                        if(face3D.Inside(point3D_Internal, tolerance))
-                        {
-                            exisiting = true;
-                            break;
-                        }
-                    }
-
-                    if (exisiting)
-                        continue;
-
-                    point3Ds_Internal.Add(face3D.InternalPoint3D(tolerance));
-
                     if (minArea != 0 && face3D.GetArea() <= minArea)
                         continue;
 
@@ -177,6 +162,28 @@ namespace SAM.Analytical.Topologic
                         continue;
 
                     Log.Add(log, "Old Panel found: {0}", panel_Old.Guid);
+
+                    bool exisiting = false;
+                    foreach(Point3D point3D_Internal in point3Ds_Internal)
+                    {
+                        if(face3D.Inside(point3D_Internal, tolerance))
+                        {
+                            foreach (Space space in spaces_Shell)
+                            {
+                                if (result.AddRelation(space, panel_Old))
+                                    Log.Add(log, "Space [{0}] and Panel [{1}] relation added", space.Guid, panel_Old.Guid);
+                                else
+                                    Log.Add(log, "Space [{0}] and Panel [{1}] relation could not be added", space.Guid, panel_Old.Guid);
+                            }
+                            exisiting = true;
+                            break;
+                        }
+                    }
+
+                    if (exisiting)
+                        continue;
+
+                    point3Ds_Internal.Add(face3D.InternalPoint3D(tolerance));
 
                     Panel panel_New = null;
 
