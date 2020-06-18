@@ -62,6 +62,7 @@
   <ItemGroup>
     <Folder Include="Convert\ToSAM\" />
     <Folder Include="Convert\ToTopologic\" />
+    <Folder Include="Modify\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

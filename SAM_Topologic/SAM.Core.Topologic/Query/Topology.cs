@@ -22,12 +22,9 @@ namespace SAM.Core.Topologic
             System.IO.File.WriteAllText(filePath, text);
 
             global::Topologic.Topology result = global::Topologic.Topology.ByImportedBRep(filePath);
-            
-            throw new System.NotImplementedException();
+            System.IO.File.Delete(filePath);
 
-            //global::Topologic.Topology.ByImportedBRep()
-
-            //return new ElementId(id);
+            return result;
         }
     }
 }
