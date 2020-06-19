@@ -137,26 +137,68 @@ namespace SAM.Analytical.Grasshopper.Topologic
             if (adjacencyCluster != null)
             {
                 List<Space> spaces_Temp = adjacencyCluster.GetSpaces();
-                if(spaces_Temp == null || spaces_Temp.Count == 0)
+                if (spaces_Temp == null || spaces_Temp.Count == 0)
                 {
                     AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "No spaces have been detected");
                 }
                 else
                 {
                     List<Point3D> locations = spaces_Temp.ConvertAll(x => x.Location);
-                    locations.RemoveAll(x => x == null);
-                    IEnumerable<Guid> guids = adjacencyCluster.GetSpaces(locations)?.FindAll(x => x != null).ConvertAll(x => x.Guid);
-                    if(guids == null || guids.Count() != guids.Distinct().Count())
-                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Number of provided spaces does not match with the topology model");
+
+                    if (locations.RemoveAll(x => x == null) > 0)
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "There are spaces without Location Points");
+
+                    List<Space> spaces_Unbounded = new List<Space>();
+                    List<Space> spaces_Multiple = new List<Space>();
+
+                    HashSet<int> indexes_Multiple = new HashSet<int>();
+                    List<Space> spaces_Locations = adjacencyCluster.GetSpaces(locations);
+                    for (int i = 0; i < spaces_Locations.Count; i++)
+                    {
+                        Space space = spaces_Locations[i];
+                        Point3D point3D_Location = locations[i];
+
+                        if (space == null)
+                        {
+                            spaces_Unbounded.Add(spaces_Temp.Find(x => point3D_Location.AlmostEquals(x.Location)));
+                            continue;
+                        }
+
+                        if (spaces_Locations.FindAll(x => x.Guid == space.Guid).Count > 1)
+                            indexes_Multiple.Add(i);
+                    }
+
+                    foreach (Space space in spaces_Unbounded)
+                    {
+                        string text = "There are unbounded spaces in topology model";
+                        if (!string.IsNullOrWhiteSpace(space.Name))
+                            text += " " + space.Name;
+
+                        text += " " + "Guid: " + space.Guid;
+
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, text);
+                    }
+
+                    foreach (Space space in spaces_Multiple)
+                    {
+                        string text = "There are multiple spaces in topology cell";
+                        if (!string.IsNullOrWhiteSpace(space.Name))
+                            text += " " + space.Name;
+
+                        text += " " + "Guid: " + space.Guid;
+
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, text);
+                    }
+
                 }
 
                 dataAccess.SetData(0, new GooAdjacencyCluster(adjacencyCluster));
-            } 
+            }
             else
             {
                 dataAccess.SetData(0, null);
             }
-                
+
             dataAccess.SetDataList(1, topologies);
             dataAccess.SetDataList(2, adjacencyCluster?.GetPanels());
             dataAccess.SetDataList(3, adjacencyCluster?.GetSpaces());
