@@ -146,7 +146,7 @@ namespace SAM.Analytical.Topologic
                     continue;
                 }
                     
-                List<Space> spaces_Shell = spaces_Temp.FindAll(x => shell.On(x.Location, tolerance) || shell.Inside(x.Location, silverSpacing, tolerance));
+                List<Space> spaces_Shell = spaces_Temp.FindAll(x => shell.InRange(x.Location, tolerance) || shell.Inside(x.Location, silverSpacing, tolerance));
                 if (spaces_Shell.Count != 0)
                     spaces_Temp.RemoveAll(x => spaces_Shell.Contains(x));
 
