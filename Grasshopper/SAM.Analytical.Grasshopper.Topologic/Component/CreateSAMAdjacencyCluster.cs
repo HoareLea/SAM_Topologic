@@ -164,7 +164,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
                             continue;
                         }
 
-                        if (spaces_Locations.FindAll(x => x.Guid == space.Guid).Count > 1)
+                        if (spaces_Locations.FindAll(x => x != null && x.Guid == space.Guid).Count > 1)
                             indexes_Multiple.Add(i);
                     }
 
