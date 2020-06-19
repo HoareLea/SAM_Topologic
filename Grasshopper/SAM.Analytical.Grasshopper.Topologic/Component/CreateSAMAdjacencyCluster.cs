@@ -145,7 +145,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
                 {
                     List<Point3D> locations = spaces_Temp.ConvertAll(x => x.Location);
                     locations.RemoveAll(x => x == null);
-                    IEnumerable<Guid> guids = adjacencyCluster.GetSpaces(locations)?.ConvertAll(x => x.Guid);
+                    IEnumerable<Guid> guids = adjacencyCluster.GetSpaces(locations)?.FindAll(x => x != null).ConvertAll(x => x.Guid);
                     if(guids == null || guids.Count() != guids.Distinct().Count())
                         AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Number of provided spaces does not match with the topology model");
                 }
