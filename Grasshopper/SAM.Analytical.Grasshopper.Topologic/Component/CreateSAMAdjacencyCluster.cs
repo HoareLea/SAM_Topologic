@@ -1,8 +1,10 @@
 ﻿using Grasshopper.Kernel;
 using SAM.Analytical.Grasshopper.Topologic.Properties;
 using SAM.Core;
+using SAM.Geometry.Spatial;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Topologic;
 
 namespace SAM.Analytical.Grasshopper.Topologic
@@ -133,10 +135,28 @@ namespace SAM.Analytical.Grasshopper.Topologic
                 log.Write(reportPath);
 
             if (adjacencyCluster != null)
-                dataAccess.SetData(0, new GooAdjacencyCluster(adjacencyCluster));
-            else
-                dataAccess.SetData(0, null);
+            {
+                List<Space> spaces_Temp = adjacencyCluster.GetSpaces();
+                if(spaces_Temp == null || spaces_Temp.Count == 0)
+                {
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "No spaces have been detected");
+                }
+                else
+                {
+                    List<Point3D> locations = spaces_Temp.ConvertAll(x => x.Location);
+                    locations.RemoveAll(x => x == null);
+                    IEnumerable<Guid> guids = adjacencyCluster.GetSpaces(locations)?.ConvertAll(x => x.Guid);
+                    if(guids == null || guids.Count() != guids.Distinct().Count())
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Number of provided spaces does not match with the topology model");
+                }
 
+                dataAccess.SetData(0, new GooAdjacencyCluster(adjacencyCluster));
+            } 
+            else
+            {
+                dataAccess.SetData(0, null);
+            }
+                
             dataAccess.SetDataList(1, topologies);
             dataAccess.SetDataList(2, adjacencyCluster?.GetPanels());
             dataAccess.SetDataList(3, adjacencyCluster?.GetSpaces());
