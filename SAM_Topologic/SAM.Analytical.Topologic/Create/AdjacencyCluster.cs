@@ -112,7 +112,7 @@ namespace SAM.Analytical.Topologic
             result.GetObjects<Panel>().ForEach(x => dictionary_Panel_Face3D[x] = x.GetFace3D());
 
             index = 1;
-            List<Point3D> point3Ds_Internal = new List<Point3D>();
+            List<Tuple<Panel, Point3D>> tuples_InternalPoint3D = new List<Tuple<Panel, Point3D>>();
             foreach (Geometry.Spatial.Shell shell in shells)
             {
                 if (shell == null)
@@ -156,24 +156,17 @@ namespace SAM.Analytical.Topologic
                     if (minArea != 0 && face3D.GetArea() <= minArea)
                         continue;
 
-                    Log.Add(log, "Analyzing face and looking for old Panel");
-                    Panel panel_Old = Query.FindPanel(face3D, dictionary_Panel_Face3D);
-                    if (panel_Old == null)
-                        continue;
-
-                    Log.Add(log, "Old Panel found: {0}", panel_Old.Guid);
-
                     bool exisiting = false;
-                    foreach(Point3D point3D_Internal in point3Ds_Internal)
+                    foreach(Tuple<Panel, Point3D> tuple_InternalPoint3D in tuples_InternalPoint3D)
                     {
-                        if(face3D.Inside(point3D_Internal, tolerance))
+                        if(face3D.Inside(tuple_InternalPoint3D.Item2, tolerance))
                         {
                             foreach (Space space in spaces_Shell)
                             {
-                                if (result.AddRelation(space, panel_Old))
-                                    Log.Add(log, "Space [{0}] and Panel [{1}] relation added", space.Guid, panel_Old.Guid);
+                                if (result.AddRelation(space, tuple_InternalPoint3D.Item1))
+                                    Log.Add(log, "Space [{0}] and Panel [{1}] relation added", space.Guid, tuple_InternalPoint3D.Item1.Guid);
                                 else
-                                    Log.Add(log, "Space [{0}] and Panel [{1}] relation could not be added", space.Guid, panel_Old.Guid);
+                                    Log.Add(log, "Space [{0}] and Panel [{1}] relation could not be added", space.Guid, tuple_InternalPoint3D.Item1.Guid);
                             }
                             exisiting = true;
                             break;
@@ -183,7 +176,12 @@ namespace SAM.Analytical.Topologic
                     if (exisiting)
                         continue;
 
-                    point3Ds_Internal.Add(face3D.InternalPoint3D(tolerance));
+                    Log.Add(log, "Analyzing face and looking for old Panel");
+                    Panel panel_Old = Query.FindPanel(face3D, dictionary_Panel_Face3D);
+                    if (panel_Old == null)
+                        continue;
+
+                    Log.Add(log, "Old Panel found: {0}", panel_Old.Guid);                  
 
                     Panel panel_New = null;
 
@@ -211,6 +209,8 @@ namespace SAM.Analytical.Topologic
 
                     if (panel_New == null)
                         continue;
+
+                    tuples_InternalPoint3D.Add(new Tuple<Panel, Point3D>(panel_New, face3D.InternalPoint3D(tolerance)));
 
                     foreach (Space space in spaces_Shell)
                     {
