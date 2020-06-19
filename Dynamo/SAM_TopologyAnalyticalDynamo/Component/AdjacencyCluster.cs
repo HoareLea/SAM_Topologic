@@ -19,9 +19,9 @@ namespace SAMTopologicAnalyticalDynamo
         /// <returns name="adjacencyCluster"><see cref="SAM.Analytical.AdjacencyCluster"/></returns>
         public static SAM.Analytical.AdjacencyCluster ByPanelsAndSpaces(IEnumerable<SAM.Analytical.Panel> panels, IEnumerable<Space> spaces, double tolerance = SAM.Core.Tolerance.MacroDistance, bool updatePanels = true)
         {
-            Topology topology = null;
+            List<Topology> topologies = null;
 
-            SAM.Analytical.AdjacencyCluster adjacencyModel = SAM.Analytical.Topologic.Create.AdjacencyCluster(spaces, panels, out topology, SAM.Core.Tolerance.MacroDistance, updatePanels, true, null, tolerance);
+            SAM.Analytical.AdjacencyCluster adjacencyModel = SAM.Analytical.Topologic.Create.AdjacencyCluster(spaces, panels, out topologies, SAM.Core.Tolerance.MacroDistance, updatePanels, true, null, tolerance);
             return adjacencyModel;
         }
 

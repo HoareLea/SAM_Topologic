@@ -58,7 +58,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
         {
             outputParamManager.AddParameter(new GooAdjacencyClusterParam(), "AdjacencyCluster", "AdjacencyCluster", "SAM AdjacencyCluster", GH_ParamAccess.item);
-            outputParamManager.AddGenericParameter("Topology", "Topology", "Topology", GH_ParamAccess.item);
+            outputParamManager.AddGenericParameter("Topologies", "Topologies", "Topologies", GH_ParamAccess.list);
             outputParamManager.AddParameter(new GooPanelParam(), "Panels", "Panels", "SAM Analytical Panels", GH_ParamAccess.list);
             outputParamManager.AddParameter(new GooSpaceParam(), "Spaces", "Spaces", "SAM Analytical Spaces", GH_ParamAccess.list);
             outputParamManager.AddParameter(new GooPanelParam(), "InternalPanels", "InternalPanels", "SAM Analytical Internal Panels", GH_ParamAccess.list);
@@ -122,12 +122,12 @@ namespace SAM.Analytical.Grasshopper.Topologic
             double minArea = Core.Tolerance.MacroDistance;
             dataAccess.GetData(5, ref minArea);
 
-            Topology topology = null;
+            List<Topology> topologies = null;
             Log log = null;
             if (!string.IsNullOrEmpty(reportPath))
                 log = new Log();
 
-            AdjacencyCluster adjacencyCluster = Analytical.Topologic.Create.AdjacencyCluster(spaces, panels, out topology, minArea, true, tryCellComplexByCells, log, tolerance);
+            AdjacencyCluster adjacencyCluster = Analytical.Topologic.Create.AdjacencyCluster(spaces, panels, out topologies, minArea, true, tryCellComplexByCells, log, tolerance);
 
             if (!string.IsNullOrEmpty(reportPath))
                 log.Write(reportPath);
@@ -137,7 +137,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
             else
                 dataAccess.SetData(0, null);
 
-            dataAccess.SetData(1, topology);
+            dataAccess.SetDataList(1, topologies);
             dataAccess.SetDataList(2, adjacencyCluster?.GetPanels());
             dataAccess.SetDataList(3, adjacencyCluster?.GetSpaces());
             dataAccess.SetDataList(4, adjacencyCluster?.GetInternalPanels());

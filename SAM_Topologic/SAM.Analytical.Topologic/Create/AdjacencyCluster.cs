@@ -11,11 +11,11 @@ namespace SAM.Analytical.Topologic
 {
     public static partial class Create
     {
-        public static AdjacencyCluster AdjacencyCluster(IEnumerable<Space> spaces, IEnumerable<Panel> panels, out Topology topology, double minArea = Tolerance.MacroDistance, bool updatePanels = true, bool tryCellComplexByCells = true, Log log = null, double silverSpacing = Tolerance.MacroDistance, double tolerance = Tolerance.Distance)
+        public static AdjacencyCluster AdjacencyCluster(IEnumerable<Space> spaces, IEnumerable<Panel> panels, out List<Topology> topologies, double minArea = Tolerance.MacroDistance, bool updatePanels = true, bool tryCellComplexByCells = true, Log log = null, double silverSpacing = Tolerance.MacroDistance, double tolerance = Tolerance.Distance)
         {
             Log.Add(log, "Method Name: {0}, Tolerance: {1}, Update Panels: {2}", "SAM.Analytical.Topologic.Create.AdjacencyCluster", tolerance, updatePanels);
 
-            topology = null;
+            topologies = null;
 
             AdjacencyCluster result = new AdjacencyCluster();
             result.AddObjects(spaces);
@@ -41,7 +41,8 @@ namespace SAM.Analytical.Topologic
             if (faceList == null || faceList.Count == 0)
                 return null;
 
-            List<CellComplex> cellComplexList = null;
+            topologies = new List<Topology>();
+            List<Cell> cells = null;
             if (tryCellComplexByCells)
             {
                 try
@@ -49,31 +50,52 @@ namespace SAM.Analytical.Topologic
                     Log.Add(log, "Trying to make CellComplex By Cells");
                     Cluster cluster = Cluster.ByTopologies(faceList);
                     Log.Add(log, "Cluster.ByTopologies Done");
-                    topology = cluster.SelfMerge();
+                    Topology topology = cluster.SelfMerge();
                     Log.Add(log, "Cluster SelfMerge Done");
-                    if (topology.Cells == null || topology.Cells.Count == 0)
-                        topology = null;
-                    else
-                        topology = CellComplex.ByCells(topology.Cells);
+                    if (topology.Cells != null && topology.Cells.Count != 0)
+                    {
+                        cells = topology.Cells;
+                        CellComplex cellComplex = null;
+                        try
+                        {
+                            cellComplex = CellComplex.ByCells(cells);
+                        }
+                        catch (Exception exception)
+                        {
+                            Log.Add(log, "Cells could not be taken from CellComplex");
+                            Log.Add(log, "Exception Message: {0}", exception.Message);
+                        }
+                        
+                        if (cellComplex != null && cellComplex.Cells != null && cellComplex.Cells.Count != 0)
+                        {
+                            topologies.Add(cellComplex);
+                            
+                            cells = cellComplex.Cells;
+                        }
+                        else
+                        {
+                            topologies.Add(topology);
+                            Log.Add(log, "Cells taken from Cluster");
+                        }
+                    }
 
-                    cellComplexList = new List<CellComplex>() { (CellComplex)topology };
-                    Log.Add(log, "CellComplex By Cells Created");
                 }
                 catch (Exception exception)
                 {
-                    Log.Add(log, "Cannot create CellComplex By Cells");
+                    Log.Add(log, "Cannot create CellComplex By Cells or Cells form Cluster SelfMerge");
                     Log.Add(log, "Exception Message: {0}", exception.Message);
-                    cellComplexList = null;
+                    cells = null;
                 }
             }
 
-            if (topology == null)
+            if (cells == null)
             {
                 try
                 {
                     Log.Add(log, "Trying to make CellComplex By Faces");
-                    topology = CellComplex.ByFaces(faceList, tolerance);
-                    cellComplexList = new List<CellComplex>() { (CellComplex)topology };
+                    CellComplex cellComplex = CellComplex.ByFaces(faceList, tolerance);
+                    topologies.Add(cellComplex);
+                    cells = cellComplex.Cells;
                     Log.Add(log, "CellComplex By Faces Created");
                 }
                 catch (Exception exception)
@@ -81,26 +103,21 @@ namespace SAM.Analytical.Topologic
                     Log.Add(log, "Cannot create CellComplex By Faces");
                     Log.Add(log, "Exception Message: {0}", exception.Message);
 
-                    cellComplexList = null;
+                    cells = null;
                 }
             }
 
-            if (cellComplexList == null)
+            if (cells == null || cells.Count == 0)
+            {
+                Log.Add(log, "No cells found");
                 return null;
-
-            //Suprisingly good Michal D. Indea
-            if (cellComplexList.Count != 1)
-                return null;
-
-            CellComplex cellComplex = cellComplexList[0];
-
-            Log.Add(log, "Single CellComplex created");
+            }
 
             List<Space> spaces_Temp = new List<Space>();
             if (spaces != null)
                 spaces_Temp.AddRange(spaces);
 
-            List<Geometry.Spatial.Shell> shells = cellComplex.ToSAM();
+            List<Geometry.Spatial.Shell> shells = cells.ToSAM();
             Log.Add(log, "Single CellComplex converted to shells");
 
             if (shells == null)
@@ -164,7 +181,7 @@ namespace SAM.Analytical.Topologic
 
                     Log.Add(log, "Looking for existing Panel");
                     Tuple <Panel, Point3D> tuple_InternalPoint3D = tuples_InternalPoint3D.Find(x => face3D.Inside(x.Item2, tolerance));
-                    if(tuples_InternalPoint3D != null)
+                    if(tuple_InternalPoint3D != null)
                     {
                         Log.Add(log, "Existing Panel found: {0}", tuple_InternalPoint3D.Item1.Guid);
                         foreach (Space space in spaces_Shell)
