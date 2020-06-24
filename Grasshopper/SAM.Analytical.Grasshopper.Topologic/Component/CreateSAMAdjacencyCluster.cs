@@ -152,19 +152,19 @@ namespace SAM.Analytical.Grasshopper.Topologic
                     List<Space> spaces_Multiple = new List<Space>();
 
                     HashSet<int> indexes_Multiple = new HashSet<int>();
-                    List<Space> spaces_Locations = adjacencyCluster.GetSpaces(locations);
-                    for (int i = 0; i < spaces_Locations.Count; i++)
+                    List<List<Space>> spacesList_Locations = adjacencyCluster.GetSpaces(locations);
+                    for (int i = 0; i < spacesList_Locations.Count; i++)
                     {
-                        Space space = spaces_Locations[i];
+                        List<Space> spaces_Locations = spacesList_Locations[i];
                         Point3D point3D_Location = locations[i];
 
-                        if (space == null)
+                        if (spaces_Locations == null)
                         {
                             spaces_Unbounded.Add(spaces_Temp.Find(x => point3D_Location.AlmostEquals(x.Location)));
                             continue;
                         }
 
-                        if (spaces_Locations.FindAll(x => x != null && x.Guid == space.Guid).Count > 1)
+                        if (spacesList_Locations.Count > 2)
                             indexes_Multiple.Add(i);
                     }
 
