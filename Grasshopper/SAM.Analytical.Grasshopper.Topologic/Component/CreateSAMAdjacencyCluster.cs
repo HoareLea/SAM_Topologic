@@ -46,11 +46,12 @@ namespace SAM.Analytical.Grasshopper.Topologic
             index = inputParamManager.AddParameter(gooSpaceParam, "spaces_", "spaces_", "SAM Analytical Spaces", GH_ParamAccess.list);
             inputParamManager[index].DataMapping = GH_DataMapping.Flatten;
 
-            inputParamManager.AddNumberParameter("tolerance_", "tolerance_", string.Format("Topologic CellComplex default {0}", Tolerance.MacroDistance), GH_ParamAccess.item, Tolerance.MacroDistance);
+            inputParamManager.AddNumberParameter("tolerance_", "tolerance_", string.Format("Topologic CellComplex default {0}", 0.0001), GH_ParamAccess.item, 0.0001);
             //inputParamManager.AddBooleanParameter("_run_", "_run_", "Run", GH_ParamAccess.item, false);
             inputParamManager.AddBooleanParameter("tryCellComplexByCells_", "tryCellComplexByCells_", "Try to Create Cell Complex By Cells", GH_ParamAccess.item, false);
             inputParamManager.AddTextParameter("reportPath_", "reportPath_", "Report Path to write each step in text file", GH_ParamAccess.item, string.Empty);
             inputParamManager.AddNumberParameter("minArea_", "minArea_", "Minimal Acceptable area of Aperture", GH_ParamAccess.item, Tolerance.MacroDistance);
+            inputParamManager.AddNumberParameter("silverSpacing_", "silverSpacing_", string.Format("Silver spacing for point in Space calculation {0}", Tolerance.MacroDistance), GH_ParamAccess.item, Tolerance.MacroDistance);
             inputParamManager.AddBooleanParameter("_run_", "_run_", "Run", GH_ParamAccess.item, false);
         }
 
@@ -78,7 +79,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
             bool run = false;
-            if (!dataAccess.GetData(6, ref run))
+            if (!dataAccess.GetData(7, ref run))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 dataAccess.SetData(2, false);
@@ -106,13 +107,6 @@ namespace SAM.Analytical.Grasshopper.Topologic
                 return;
             }
 
-            string reportPath = null;
-            if (dataAccess.GetData(4, ref reportPath))
-            {
-                if (System.IO.File.Exists(reportPath))
-                    System.IO.File.Delete(reportPath);
-            }
-
             bool tryCellComplexByCells = false;
             if (!dataAccess.GetData(3, ref tryCellComplexByCells))
             {
@@ -121,15 +115,25 @@ namespace SAM.Analytical.Grasshopper.Topologic
                 return;
             }
 
-            double minArea = Core.Tolerance.MacroDistance;
+            string reportPath = null;
+            if (dataAccess.GetData(4, ref reportPath))
+            {
+                if (System.IO.File.Exists(reportPath))
+                    System.IO.File.Delete(reportPath);
+            }
+
+            double minArea = Tolerance.MacroDistance;
             dataAccess.GetData(5, ref minArea);
+
+            double silverSpacing = Tolerance.MacroDistance;
+            dataAccess.GetData(6, ref silverSpacing);
 
             List<Topology> topologies = null;
             Log log = null;
             if (!string.IsNullOrEmpty(reportPath))
                 log = new Log();
 
-            AdjacencyCluster adjacencyCluster = Analytical.Topologic.Create.AdjacencyCluster(spaces, panels, out topologies, minArea, true, tryCellComplexByCells, log, tolerance);
+            AdjacencyCluster adjacencyCluster = Analytical.Topologic.Create.AdjacencyCluster(spaces, panels, out topologies, minArea, true, tryCellComplexByCells, log, silverSpacing, tolerance);
 
             if (!string.IsNullOrEmpty(reportPath))
                 log.Write(reportPath);
