@@ -58,6 +58,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Create\Panels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Create\AdjacencyCluster.cs" />
     <Compile Include="Query\FindPanel.cs" />
