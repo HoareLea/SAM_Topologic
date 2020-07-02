@@ -154,9 +154,14 @@ namespace SAM.Analytical.Topologic
                     {
                         Vector3D vector3D = Vector3D.WorldZ * silverSpacing;
                         List<Point3D> point3D_Locations = spaces_Shell.ConvertAll(x => (Point3D)x.Location.GetMoved(vector3D));
-                        List<Space> spaces_Shell_Temp = spaces_Shell.FindAll(x => shell.InRange(x.Location, tolerance) || shell.Inside(x.Location, silverSpacing, tolerance));
-                        if (spaces_Shell_Temp != null && spaces_Shell_Temp.Count != 0)
-                            spaces_Shell = spaces_Shell_Temp;
+                        List<Point3D> point3D_Locations_Temp = point3D_Locations.FindAll(x => shell.InRange(x, tolerance) || shell.Inside(x, silverSpacing, tolerance));
+                        if(point3D_Locations_Temp != null && point3D_Locations_Temp.Count > 0)
+                        {
+                            List<Space> spaces_Shell_Temp = point3D_Locations_Temp.ConvertAll(x => point3D_Locations.IndexOf(x)).ConvertAll(x => spaces_Shell[x]);
+                            if (spaces_Shell_Temp != null && spaces_Shell_Temp.Count != 0)
+                                spaces_Shell = spaces_Shell_Temp;
+                        }
+
                     }
 
                     spaces_Temp.RemoveAll(x => spaces_Shell.Contains(x));
