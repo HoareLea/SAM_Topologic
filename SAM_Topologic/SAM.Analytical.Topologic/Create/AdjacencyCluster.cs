@@ -148,9 +148,20 @@ namespace SAM.Analytical.Topologic
                     
                 List<Space> spaces_Shell = spaces_Temp.FindAll(x => shell.InRange(x.Location, tolerance) || shell.Inside(x.Location, silverSpacing, tolerance));
                 if (spaces_Shell.Count != 0)
-                    spaces_Temp.RemoveAll(x => spaces_Shell.Contains(x));
+                {
+                    //Handling cases where Space Location is on the floor
+                    if(spaces_Shell.Count > 1)
+                    {
+                        Vector3D vector3D = Vector3D.WorldZ * silverSpacing;
+                        List<Point3D> point3D_Locations = spaces_Shell.ConvertAll(x => (Point3D)x.Location.GetMoved(vector3D));
+                        List<Space> spaces_Shell_Temp = spaces_Shell.FindAll(x => shell.InRange(x.Location, tolerance) || shell.Inside(x.Location, silverSpacing, tolerance));
+                        if (spaces_Shell_Temp != null && spaces_Shell_Temp.Count != 0)
+                            spaces_Shell = spaces_Shell_Temp;
+                    }
 
-                if (spaces_Shell.Count == 0)
+                    spaces_Temp.RemoveAll(x => spaces_Shell.Contains(x));
+                }
+                else
                 {
                     Log.Add(log, "Creating new Space");
 
@@ -175,7 +186,7 @@ namespace SAM.Analytical.Topologic
                 {
                     if (minArea != 0 && face3D.GetArea() <= minArea)
                     {
-                        Log.Add(log, "Face3D is too smal");
+                        Log.Add(log, "Face3D is too small");
                         continue;
                     }
 
@@ -484,7 +495,7 @@ namespace SAM.Analytical.Topologic
             result.AddObjects(spaces);
             result.AddObjects(panels);
 
-            Geometry.Spatial.BoundingBox3D boundingBox3D = null;
+            BoundingBox3D boundingBox3D = null;
 
             List<Face> faceList = new List<Face>();
 
@@ -504,9 +515,9 @@ namespace SAM.Analytical.Topologic
                 }
                 else
                 {
-                    Geometry.Spatial.BoundingBox3D boundingBox3D_Temp = panel.GetBoundingBox();
+                    BoundingBox3D boundingBox3D_Temp = panel.GetBoundingBox();
                     if (boundingBox3D_Temp != null)
-                        boundingBox3D = new Geometry.Spatial.BoundingBox3D(new Geometry.Spatial.BoundingBox3D[] { boundingBox3D, boundingBox3D_Temp });
+                        boundingBox3D = new BoundingBox3D(new BoundingBox3D[] { boundingBox3D, boundingBox3D_Temp });
                 }
 
                 faceList.Add(face);
@@ -528,12 +539,12 @@ namespace SAM.Analytical.Topologic
                     if (space == null)
                         continue;
 
-                    Geometry.Spatial.Point3D point3D = space.Location;
+                    Point3D point3D = space.Location;
                     if (point3D.Z - boundingBox3D.Max.Z >= 0)
-                        point3D = (Geometry.Spatial.Point3D)point3D.GetMoved(new Geometry.Spatial.Vector3D(0, 0, (boundingBox3D.Max.Z - boundingBox3D.Min.Z) / 2));
+                        point3D = (Point3D)point3D.GetMoved(new Vector3D(0, 0, (boundingBox3D.Max.Z - boundingBox3D.Min.Z) / 2));
 
                     if (point3D.Z - boundingBox3D.Min.Z <= 0)
-                        point3D = (Geometry.Spatial.Point3D)point3D.GetMoved(new Geometry.Spatial.Vector3D(0, 0, (boundingBox3D.Max.Z - boundingBox3D.Min.Z) / 2));
+                        point3D = (Point3D)point3D.GetMoved(new Vector3D(0, 0, (boundingBox3D.Max.Z - boundingBox3D.Min.Z) / 2));
 
                     Vertex vertex = Geometry.Topologic.Convert.ToTopologic(point3D);
 
@@ -605,7 +616,7 @@ namespace SAM.Analytical.Topologic
 
             if (spaces_Temp.Count == 0)
             {
-                List<Vertex> vertices = cellComplex.Cells.ConvertAll(x => global::Topologic.Utilities.CellUtility.InternalVertex(x, Tolerance.MacroDistance));
+                List<Vertex> vertices = cellComplex.Cells.ConvertAll(x => CellUtility.InternalVertex(x, Tolerance.MacroDistance));
                 index = 1;
 
                 foreach (Vertex vertex in vertices)
@@ -647,16 +658,16 @@ namespace SAM.Analytical.Topologic
 
             HashSet<Guid> guids_Updated = new HashSet<Guid>();
 
-            Dictionary<Panel, Geometry.Spatial.Face3D> dictionary_Panel_Face3D = new Dictionary<Panel, Geometry.Spatial.Face3D>();
+            Dictionary<Panel, Face3D> dictionary_Panel_Face3D = new Dictionary<Panel, Face3D>();
             result.GetObjects<Panel>().ForEach(x => dictionary_Panel_Face3D[x] = x.GetFace3D());
 
             foreach (Face face_New in cellComplex.Faces)
             {
-                if (minArea != 0 && global::Topologic.Utilities.FaceUtility.Area(face_New) <= minArea)
+                if (minArea != 0 && FaceUtility.Area(face_New) <= minArea)
                     continue;
 
                 Log.Add(log, "Converting Topologic face to SAM");
-                Geometry.Spatial.Face3D face3D = Geometry.Topologic.Convert.ToSAM(face_New);
+                Face3D face3D = Geometry.Topologic.Convert.ToSAM(face_New);
                 if (face3D == null)
                     continue;
 
