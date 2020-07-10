@@ -1,13 +1,14 @@
 ﻿using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using SAM.Analytical.Grasshopper.Topologic.Properties;
+using SAM.Core.Grasshopper;
 using System;
 using System.Collections.Generic;
 using Topologic;
 
 namespace SAM.Analytical.Grasshopper.Topologic
 {
-    public class FacesCellComplex : GH_Component
+    public class FacesCellComplex : GH_SAMComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.

@@ -1,11 +1,12 @@
 ﻿using Grasshopper.Kernel;
 using SAM.Analytical.Grasshopper.Topologic.Properties;
 using SAM.Core;
+using SAM.Core.Grasshopper;
 using System;
 
 namespace SAM.Analytical.Grasshopper.Topologic
 {
-    public class SAMAnalyticalTopology : GH_Component
+    public class SAMAnalyticalTopology : GH_SAMComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.

@@ -1,4 +1,5 @@
 ﻿using Grasshopper.Kernel;
+using SAM.Core.Grasshopper;
 using SAM.Geometry.Grasshopper.Topologic.Properties;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using Topologic;
 
 namespace SAM.Geometry.Grasshopper.Topologic
 {
-    public class TopologyGeometry : GH_Component
+    public class TopologyGeometry : GH_SAMComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
