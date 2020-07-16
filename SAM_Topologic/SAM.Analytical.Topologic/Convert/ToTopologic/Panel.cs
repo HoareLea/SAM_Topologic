@@ -14,13 +14,13 @@ namespace SAM.Analytical.Topologic
             if (face3D == null)
                 return null;
 
-            Wire externalWire = Geometry.Topologic.Convert.ToTopologic(face3D.GetExternalEdge() as Geometry.Spatial.ICurvable3D);
+            Wire externalWire = Geometry.Topologic.Convert.ToTopologic(face3D.GetExternalEdge3D() as Geometry.Spatial.ICurvable3D);
             if (externalWire == null)
                 return null;
 
             List<Wire> internalWires = new List<Wire>();
 
-            List<Geometry.Spatial.IClosedPlanar3D> internalClosedPlanar3Ds = face3D.GetInternalEdges();
+            List<Geometry.Spatial.IClosedPlanar3D> internalClosedPlanar3Ds = face3D.GetInternalEdge3Ds();
             if (internalClosedPlanar3Ds != null && internalClosedPlanar3Ds.Count > 0)
             {
                 foreach (Geometry.Spatial.IClosedPlanar3D closedPlanar3D in internalClosedPlanar3Ds)
