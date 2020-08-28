@@ -13,7 +13,7 @@ namespace SAM.Analytical.Topologic
     {
         public static AdjacencyCluster AdjacencyCluster(IEnumerable<Space> spaces, IEnumerable<Panel> panels, out List<Topology> topologies, double minArea = Tolerance.MacroDistance, bool updatePanels = true, bool tryCellComplexByCells = true, Log log = null, double silverSpacing = Tolerance.MacroDistance, double tolerance = Tolerance.Distance)
         {
-            Log.Add(log, "Method Name: {0}, Tolerance: {1}, Update Panels: {2}", "SAM.Analytical.Topologic.Create.AdjacencyCluster", tolerance, updatePanels);
+            Core.Modify.Add(log, "Method Name: {0}, Tolerance: {1}, Update Panels: {2}", "SAM.Analytical.Topologic.Create.AdjacencyCluster", tolerance, updatePanels);
 
             topologies = null;
 
@@ -34,7 +34,7 @@ namespace SAM.Analytical.Topologic
                     continue;
 
                 faceList.Add(face);
-                Log.Add(log, "Face {0:D4} added. Panel [{1}]", index, panel.Guid);
+                Core.Modify.Add(log, "Face {0:D4} added. Panel [{1}]", index, panel.Guid);
                 index++;
             }
 
@@ -47,11 +47,11 @@ namespace SAM.Analytical.Topologic
             {
                 try
                 {
-                    Log.Add(log, "Trying to make CellComplex By Cells");
+                    Core.Modify.Add(log, "Trying to make CellComplex By Cells");
                     Cluster cluster = Cluster.ByTopologies(faceList);
-                    Log.Add(log, "Cluster.ByTopologies Done");
+                    Core.Modify.Add(log, "Cluster.ByTopologies Done");
                     Topology topology = cluster.SelfMerge();
-                    Log.Add(log, "Cluster SelfMerge Done");
+                    Core.Modify.Add(log, "Cluster SelfMerge Done");
                     if (topology.Cells != null && topology.Cells.Count != 0)
                     {
                         cells = topology.Cells;
@@ -62,8 +62,8 @@ namespace SAM.Analytical.Topologic
                         }
                         catch (Exception exception)
                         {
-                            Log.Add(log, "Cells could not be taken from CellComplex");
-                            Log.Add(log, "Exception Message: {0}", exception.Message);
+                            Core.Modify.Add(log, "Cells could not be taken from CellComplex");
+                            Core.Modify.Add(log, "Exception Message: {0}", exception.Message);
                         }
                         
                         if (cellComplex != null && cellComplex.Cells != null && cellComplex.Cells.Count != 0)
@@ -75,15 +75,15 @@ namespace SAM.Analytical.Topologic
                         else
                         {
                             topologies.Add(topology);
-                            Log.Add(log, "Cells taken from Cluster");
+                            Core.Modify.Add(log, "Cells taken from Cluster");
                         }
                     }
 
                 }
                 catch (Exception exception)
                 {
-                    Log.Add(log, "Cannot create CellComplex By Cells or Cells form Cluster SelfMerge");
-                    Log.Add(log, "Exception Message: {0}", exception.Message);
+                    Core.Modify.Add(log, "Cannot create CellComplex By Cells or Cells form Cluster SelfMerge");
+                    Core.Modify.Add(log, "Exception Message: {0}", exception.Message);
                     cells = null;
                 }
             }
@@ -92,16 +92,16 @@ namespace SAM.Analytical.Topologic
             {
                 try
                 {
-                    Log.Add(log, "Trying to make CellComplex By Faces");
+                    Core.Modify.Add(log, "Trying to make CellComplex By Faces");
                     CellComplex cellComplex = CellComplex.ByFaces(faceList, tolerance);
                     topologies.Add(cellComplex);
                     cells = cellComplex.Cells;
-                    Log.Add(log, "CellComplex By Faces Created");
+                    Core.Modify.Add(log, "CellComplex By Faces Created");
                 }
                 catch (Exception exception)
                 {
-                    Log.Add(log, "Cannot create CellComplex By Faces");
-                    Log.Add(log, "Exception Message: {0}", exception.Message);
+                    Core.Modify.Add(log, "Cannot create CellComplex By Faces");
+                    Core.Modify.Add(log, "Exception Message: {0}", exception.Message);
 
                     cells = null;
                 }
@@ -109,7 +109,7 @@ namespace SAM.Analytical.Topologic
 
             if (cells == null || cells.Count == 0)
             {
-                Log.Add(log, "No cells found");
+                Core.Modify.Add(log, "No cells found");
                 return null;
             }
 
@@ -118,7 +118,7 @@ namespace SAM.Analytical.Topologic
                 spaces_Temp.AddRange(spaces);
 
             List<Geometry.Spatial.Shell> shells = cells.ToSAM();
-            Log.Add(log, "Single CellComplex converted to shells");
+            Core.Modify.Add(log, "Single CellComplex converted to shells");
 
             if (shells == null)
                 return null;
@@ -135,14 +135,14 @@ namespace SAM.Analytical.Topologic
                 if (shell == null)
                     return null;
 
-                Log.Add(log, "Simplifying shell");
+                Core.Modify.Add(log, "Simplifying shell");
                 shell.Simplify(tolerance);
 
-                Log.Add(log, "Extracting faces from shell");
+                Core.Modify.Add(log, "Extracting faces from shell");
                 List<Face3D> face3Ds = shell?.Face3Ds;
                 if (face3Ds == null)
                 {
-                    Log.Add(log, "No face2Ds found in Shell");
+                    Core.Modify.Add(log, "No face2Ds found in Shell");
                     continue;
                 }
                     
@@ -168,7 +168,7 @@ namespace SAM.Analytical.Topologic
                 }
                 else
                 {
-                    Log.Add(log, "Creating new Space");
+                    Core.Modify.Add(log, "Creating new Space");
 
                     Point3D location = shell.InternalPoint3D(silverSpacing, tolerance);
                     if (location == null)
@@ -186,34 +186,34 @@ namespace SAM.Analytical.Topologic
                 if (spaces_Shell == null || spaces_Shell.Count == 0)
                     continue;
 
-                Log.Add(log, "Upadting Panels");
+                Core.Modify.Add(log, "Upadting Panels");
                 foreach (Face3D face3D in face3Ds)
                 {
                     if (minArea != 0 && face3D.GetArea() <= minArea)
                     {
-                        Log.Add(log, "Face3D is too small");
+                        Core.Modify.Add(log, "Face3D is too small");
                         continue;
                     }
 
-                    Log.Add(log, "Looking for existing Panel");
+                    Core.Modify.Add(log, "Looking for existing Panel");
                     Tuple <Panel, Point3D> tuple_InternalPoint3D = tuples_InternalPoint3D.Find(x => face3D.Inside(x.Item2, tolerance));
                     if(tuple_InternalPoint3D != null)
                     {
-                        Log.Add(log, "Existing Panel found: {0}", tuple_InternalPoint3D.Item1.Guid);
+                        Core.Modify.Add(log, "Existing Panel found: {0}", tuple_InternalPoint3D.Item1.Guid);
                         foreach (Space space in spaces_Shell)
                         {
                             if (result.AddRelation(space, tuple_InternalPoint3D.Item1))
-                                Log.Add(log, "Space [{0}] and Panel [{1}] relation added", space.Guid, tuple_InternalPoint3D.Item1.Guid);
+                                Core.Modify.Add(log, "Space [{0}] and Panel [{1}] relation added", space.Guid, tuple_InternalPoint3D.Item1.Guid);
                         }
                         continue;
                     }
 
-                    Log.Add(log, "Looking for old Panel");
+                    Core.Modify.Add(log, "Looking for old Panel");
                     Panel panel_Old = Query.FindPanel(face3D, dictionary_Panel_Face3D);
                     if (panel_Old == null)
                         continue;
 
-                    Log.Add(log, "Old Panel found: {0}", panel_Old.Guid);                  
+                    Core.Modify.Add(log, "Old Panel found: {0}", panel_Old.Guid);                  
 
                     Panel panel_New = null;
 
@@ -222,13 +222,13 @@ namespace SAM.Analytical.Topologic
                         if (guids_Updated.Contains(panel_Old.Guid))
                         {
                             panel_New = new Panel(Guid.NewGuid(), panel_Old, face3D);
-                            Log.Add(log, "Creating new Panel for Old Panel [{0}]. New Panel [{1}]", panel_Old.Guid, panel_New.Guid);
+                            Core.Modify.Add(log, "Creating new Panel for Old Panel [{0}]. New Panel [{1}]", panel_Old.Guid, panel_New.Guid);
                         }
                         else
                         {
                             panel_New = new Panel(panel_Old.Guid, panel_Old, face3D);
                             guids_Updated.Add(panel_Old.Guid);
-                            Log.Add(log, "Updating Panel [{0}] with new geometry", panel_New.Guid);
+                            Core.Modify.Add(log, "Updating Panel [{0}] with new geometry", panel_New.Guid);
                         }
 
                         result.AddObject(panel_New);
@@ -236,7 +236,7 @@ namespace SAM.Analytical.Topologic
                     else
                     {
                         panel_New = new Panel(panel_Old.Guid, panel_Old, face3D);
-                        Log.Add(log, "Creating temporary Panel for Panel [{0}]", panel_New.Guid);
+                        Core.Modify.Add(log, "Creating temporary Panel for Panel [{0}]", panel_New.Guid);
                     }
 
                     if (panel_New == null)
@@ -247,20 +247,20 @@ namespace SAM.Analytical.Topologic
                     foreach (Space space in spaces_Shell)
                     {
                         if (result.AddRelation(space, panel_New))
-                            Log.Add(log, "Space [{0}] and Panel [{1}] relation added", space.Guid, panel_New.Guid);
+                            Core.Modify.Add(log, "Space [{0}] and Panel [{1}] relation added", space.Guid, panel_New.Guid);
                     }
 
-                    Log.Add(log, "Adding face finished");
+                    Core.Modify.Add(log, "Adding face finished");
                 }
             }
 
-            Log.Add(log, "Sucesfully completed");
+            Core.Modify.Add(log, "Sucesfully completed");
             return result;
         }
 
         public static AdjacencyCluster AdjacencyCluster_Depreciated_2(IEnumerable<Space> spaces, IEnumerable<Panel> panels, out Topology topology, double minArea = Tolerance.MacroDistance, bool updatePanels = true, bool tryCellComplexByCells = true, Log log = null, double silverSpacing = Tolerance.MacroDistance, double tolerance = Tolerance.Distance)
         {
-            Log.Add(log, "Method Name: {0}, Tolerance: {1}, Update Panels: {2}", "SAM.Analytical.Topologic.Create.AdjacencyCluster", tolerance, updatePanels);
+            Core.Modify.Add(log, "Method Name: {0}, Tolerance: {1}, Update Panels: {2}", "SAM.Analytical.Topologic.Create.AdjacencyCluster", tolerance, updatePanels);
 
             topology = null;
 
@@ -285,7 +285,7 @@ namespace SAM.Analytical.Topologic
                 face = (Face)face.SetDictionary(dictionary_Temp);
 
                 faceList.Add(face);
-                Log.Add(log, "Face {0:D4} added. Panel [{1}]", index, panel.Guid);
+                Core.Modify.Add(log, "Face {0:D4} added. Panel [{1}]", index, panel.Guid);
                 index++;
             }
 
@@ -297,23 +297,23 @@ namespace SAM.Analytical.Topologic
             {
                 try
                 {
-                    Log.Add(log, "Trying to make CellComplex By Cells");
+                    Core.Modify.Add(log, "Trying to make CellComplex By Cells");
                     Cluster cluster = Cluster.ByTopologies(faceList);
-                    Log.Add(log, "Cluster.ByTopologies Done");
+                    Core.Modify.Add(log, "Cluster.ByTopologies Done");
                     topology = cluster.SelfMerge();
-                    Log.Add(log, "Cluster SelfMerge Done");
+                    Core.Modify.Add(log, "Cluster SelfMerge Done");
                     if (topology.Cells == null || topology.Cells.Count == 0)
                         topology = null;
                     else
                         topology = CellComplex.ByCells(topology.Cells);
 
                     cellComplexList = new List<CellComplex>() { (CellComplex)topology };
-                    Log.Add(log, "CellComplex By Cells Created");
+                    Core.Modify.Add(log, "CellComplex By Cells Created");
                 }
                 catch (Exception exception)
                 {
-                    Log.Add(log, "Cannot create CellComplex By Cells");
-                    Log.Add(log, "Exception Message: {0}", exception.Message);
+                    Core.Modify.Add(log, "Cannot create CellComplex By Cells");
+                    Core.Modify.Add(log, "Exception Message: {0}", exception.Message);
                     cellComplexList = null;
                 }
             }
@@ -322,15 +322,15 @@ namespace SAM.Analytical.Topologic
             {
                 try
                 {
-                    Log.Add(log, "Trying to make CellComplex By Faces");
+                    Core.Modify.Add(log, "Trying to make CellComplex By Faces");
                     topology = CellComplex.ByFaces(faceList, tolerance);
                     cellComplexList = new List<CellComplex>() { (CellComplex)topology };
-                    Log.Add(log, "CellComplex By Faces Created");
+                    Core.Modify.Add(log, "CellComplex By Faces Created");
                 }
                 catch (Exception exception)
                 {
-                    Log.Add(log, "Cannot create CellComplex By Faces");
-                    Log.Add(log, "Exception Message: {0}", exception.Message);
+                    Core.Modify.Add(log, "Cannot create CellComplex By Faces");
+                    Core.Modify.Add(log, "Exception Message: {0}", exception.Message);
 
                     cellComplexList = null;
                 }
@@ -345,13 +345,13 @@ namespace SAM.Analytical.Topologic
 
             CellComplex cellComplex = cellComplexList[0];
 
-            Log.Add(log, "Single CellComplex created");           
+            Core.Modify.Add(log, "Single CellComplex created");           
             
             List<Cell> cells = cellComplex.Cells;
             if (cells == null || cells.Count == 0)
                 return null;
 
-            Log.Add(log, "Number of Cells: {0}", cells.Count);
+            Core.Modify.Add(log, "Number of Cells: {0}", cells.Count);
 
             HashSet<Guid> guids_Updated = new HashSet<Guid>();
 
@@ -393,10 +393,10 @@ namespace SAM.Analytical.Topologic
 
                 Geometry.Spatial.Shell shell = new Geometry.Spatial.Shell(tuples.ConvertAll(x => x.Item1));
 
-                Log.Add(log, "Simplifying shell");
+                Core.Modify.Add(log, "Simplifying shell");
                 shell.Simplify(tolerance);
 
-                Log.Add(log, "Extracting faces from shell");
+                Core.Modify.Add(log, "Extracting faces from shell");
                 List<Face3D> face3Ds = shell?.Face3Ds;
                 if (face3Ds == null)
                     continue;
@@ -404,14 +404,14 @@ namespace SAM.Analytical.Topologic
                 List<Space> spaces_Shell = spaces_Temp.FindAll(x => shell.On(x.Location, tolerance) || shell.Inside(x.Location, silverSpacing, tolerance));
                 if (spaces_Shell.Count != 0)
                 {
-                    Log.Add(log, "Existing spaces found: {0}", spaces_Shell.Count);
+                    Core.Modify.Add(log, "Existing spaces found: {0}", spaces_Shell.Count);
                     spaces_Temp.RemoveAll(x => spaces_Shell.Contains(x));
                 }
 
 
                 if (spaces_Shell.Count == 0)
                 {
-                    Log.Add(log, "Creating new Space");
+                    Core.Modify.Add(log, "Creating new Space");
 
                     Point3D location = shell.InternalPoint3D(silverSpacing, tolerance);
                     if (location == null)
@@ -433,7 +433,7 @@ namespace SAM.Analytical.Topologic
                     tuple.Item2.AddRange(spaces_Shell);
             }
 
-            Log.Add(log, "Upadting Panels");
+            Core.Modify.Add(log, "Upadting Panels");
             foreach (Tuple<Face3D, List<Space>> tuple in dictionary.Values)
             {
                 Face3D face3D = tuple.Item1;
@@ -441,12 +441,12 @@ namespace SAM.Analytical.Topologic
                 if (minArea != 0 && face3D.GetArea() <= minArea)
                     continue;
 
-                Log.Add(log, "Analyzing face and looking for old Panel");
+                Core.Modify.Add(log, "Analyzing face and looking for old Panel");
                 Panel panel_Old = Query.FindPanel(face3D, dictionary_Panel_Face3D);
                 if (panel_Old == null)
                     continue;
 
-                Log.Add(log, "Old Panel found: {0}", panel_Old.Guid);
+                Core.Modify.Add(log, "Old Panel found: {0}", panel_Old.Guid);
 
                 Panel panel_New = null;
 
@@ -455,13 +455,13 @@ namespace SAM.Analytical.Topologic
                     if (guids_Updated.Contains(panel_Old.Guid))
                     {
                         panel_New = new Panel(Guid.NewGuid(), panel_Old, face3D);
-                        Log.Add(log, "Creating new Panel for Old Panel [{0}]. New Panel [{1}]", panel_Old.Guid, panel_New.Guid);
+                        Core.Modify.Add(log, "Creating new Panel for Old Panel [{0}]. New Panel [{1}]", panel_Old.Guid, panel_New.Guid);
                     }
                     else
                     {
                         panel_New = new Panel(panel_Old.Guid, panel_Old, face3D);
                         guids_Updated.Add(panel_Old.Guid);
-                        Log.Add(log, "Updating Panel [{0}] with new geometry", panel_New.Guid);
+                        Core.Modify.Add(log, "Updating Panel [{0}] with new geometry", panel_New.Guid);
                     }
 
                     result.AddObject(panel_New);
@@ -469,7 +469,7 @@ namespace SAM.Analytical.Topologic
                 else
                 {
                     panel_New = new Panel(panel_Old.Guid, panel_Old, face3D);
-                    Log.Add(log, "Creating temporary Panel for Panel [{0}]", panel_New.Guid);
+                    Core.Modify.Add(log, "Creating temporary Panel for Panel [{0}]", panel_New.Guid);
                 }
 
                 if (panel_New == null)
@@ -478,21 +478,21 @@ namespace SAM.Analytical.Topologic
                 foreach (Space space in tuple.Item2)
                 {
                     if (result.AddRelation(space, panel_New))
-                        Log.Add(log, "Space [{0}] and Panel [{1}] relation added", space.Guid, panel_New.Guid);
+                        Core.Modify.Add(log, "Space [{0}] and Panel [{1}] relation added", space.Guid, panel_New.Guid);
                     else
-                        Log.Add(log, "Space [{0}] and Panel [{1}] relation could not be added", space.Guid, panel_New.Guid);
+                        Core.Modify.Add(log, "Space [{0}] and Panel [{1}] relation could not be added", space.Guid, panel_New.Guid);
                 }
 
-                Log.Add(log, "Adding face finished");
+                Core.Modify.Add(log, "Adding face finished");
             }
 
-            Log.Add(log, "Sucesfully completed");
+            Core.Modify.Add(log, "Sucesfully completed");
             return result;
         }
         
         public static AdjacencyCluster AdjacencyCluster_Depreciated(IEnumerable<Space> spaces, IEnumerable<Panel> panels, out Topology topology, double minArea = Tolerance.MacroDistance, bool updatePanels = true, bool tryCellComplexByCells = true, Log log = null, double tolerance = Tolerance.Distance)
         {
-            Log.Add(log, "Method Name: {0}, Tolerance: {1}, Update Panels: {2}", "SAM.Analytical.Topologic.Create.AdjacencyCluster", tolerance, updatePanels);
+            Core.Modify.Add(log, "Method Name: {0}, Tolerance: {1}, Update Panels: {2}", "SAM.Analytical.Topologic.Create.AdjacencyCluster", tolerance, updatePanels);
 
             topology = null;
 
@@ -526,7 +526,7 @@ namespace SAM.Analytical.Topologic
                 }
 
                 faceList.Add(face);
-                Log.Add(log, "Face {0:D4} added. Panel [{1}]", index, panel.Guid);
+                Core.Modify.Add(log, "Face {0:D4} added. Panel [{1}]", index, panel.Guid);
                 index++;
             }
 
@@ -558,7 +558,7 @@ namespace SAM.Analytical.Topologic
                     vertex = (Vertex)vertex.SetDictionary(dictionary);
                     topologyList.Add(vertex);
 
-                    Log.Add(log, "Vertex added. Space {0:D4} [{1}] {2}", index, space.Guid, point3D.ToString());
+                    Core.Modify.Add(log, "Vertex added. Space {0:D4} [{1}] {2}", index, space.Guid, point3D.ToString());
                     index++;
                 }
             }
@@ -571,23 +571,23 @@ namespace SAM.Analytical.Topologic
             {
                 try
                 {
-                    Log.Add(log, "Trying to make CellComplex By Cells");
+                    Core.Modify.Add(log, "Trying to make CellComplex By Cells");
                     Cluster cluster = Cluster.ByTopologies(faceList);
-                    Log.Add(log, "Cluster.ByTopologies Done");
+                    Core.Modify.Add(log, "Cluster.ByTopologies Done");
                     topology = cluster.SelfMerge();
-                    Log.Add(log, "Cluster SelfMerge Done");
+                    Core.Modify.Add(log, "Cluster SelfMerge Done");
                     if (topology.Cells == null || topology.Cells.Count == 0)
                         topology = null;
                     else
                         topology = CellComplex.ByCells(topology.Cells);
 
                     cellComplexList = new List<CellComplex>() { (CellComplex)topology };
-                    Log.Add(log, "CellComplex By Cells Created");
+                    Core.Modify.Add(log, "CellComplex By Cells Created");
                 }
                 catch (Exception exception)
                 {
-                    Log.Add(log, "Cannot create CellComplex By Cells");
-                    Log.Add(log, "Exception Message: {0}", exception.Message);
+                    Core.Modify.Add(log, "Cannot create CellComplex By Cells");
+                    Core.Modify.Add(log, "Exception Message: {0}", exception.Message);
                     cellComplexList = null;
                 }
             }
@@ -596,15 +596,15 @@ namespace SAM.Analytical.Topologic
             {
                 try
                 {
-                    Log.Add(log, "Trying to make CellComplex By Faces");
+                    Core.Modify.Add(log, "Trying to make CellComplex By Faces");
                     topology = CellComplex.ByFaces(faceList, tolerance);
                     cellComplexList = new List<CellComplex>() { (CellComplex)topology };
-                    Log.Add(log, "CellComplex By Faces Created");
+                    Core.Modify.Add(log, "CellComplex By Faces Created");
                 }
                 catch (Exception exception)
                 {
-                    Log.Add(log, "Cannot create CellComplex By Faces");
-                    Log.Add(log, "Exception Message: {0}", exception.Message);
+                    Core.Modify.Add(log, "Cannot create CellComplex By Faces");
+                    Core.Modify.Add(log, "Exception Message: {0}", exception.Message);
 
                     cellComplexList = null;
                 }
@@ -641,7 +641,7 @@ namespace SAM.Analytical.Topologic
                 }
             }
 
-            Log.Add(log, "Single CellComplex created");
+            Core.Modify.Add(log, "Single CellComplex created");
 
             if (topologyList != null && topologyList.Count > 0)
             {
@@ -659,7 +659,7 @@ namespace SAM.Analytical.Topologic
                 //}
             }
 
-            Log.Add(log, "Dictionaries created");
+            Core.Modify.Add(log, "Dictionaries created");
 
             HashSet<Guid> guids_Updated = new HashSet<Guid>();
 
@@ -671,23 +671,23 @@ namespace SAM.Analytical.Topologic
                 if (minArea != 0 && FaceUtility.Area(face_New) <= minArea)
                     continue;
 
-                Log.Add(log, "Converting Topologic face to SAM");
+                Core.Modify.Add(log, "Converting Topologic face to SAM");
                 Face3D face3D = Geometry.Topologic.Convert.ToSAM(face_New);
                 if (face3D == null)
                     continue;
 
-                Log.Add(log, "Simplifying face");
+                Core.Modify.Add(log, "Simplifying face");
                 face3D = Geometry.Spatial.Query.SimplifyByNTS_TopologyPreservingSimplifier(face3D, tolerance);
 
                 if (face3D == null || face3D.GetArea() <= minArea)
                     continue;
 
-                Log.Add(log, "Analyzing face and looking for old Panel");
+                Core.Modify.Add(log, "Analyzing face and looking for old Panel");
                 Panel panel_Old = Query.FindPanel(face3D, dictionary_Panel_Face3D);
                 if (panel_Old == null)
                     continue;
 
-                Log.Add(log, "Old Panel found: {0}", panel_Old.Guid);
+                Core.Modify.Add(log, "Old Panel found: {0}", panel_Old.Guid);
 
                 Panel panel_New = null;
 
@@ -696,13 +696,13 @@ namespace SAM.Analytical.Topologic
                     if (guids_Updated.Contains(panel_Old.Guid))
                     {
                         panel_New = new Panel(Guid.NewGuid(), panel_Old, face3D);
-                        Log.Add(log, "Creating new Panel for Old Panel [{0}]. New Panel [{1}]", panel_Old.Guid, panel_New.Guid);
+                        Core.Modify.Add(log, "Creating new Panel for Old Panel [{0}]. New Panel [{1}]", panel_Old.Guid, panel_New.Guid);
                     }
                     else
                     {
                         panel_New = new Panel(panel_Old.Guid, panel_Old, face3D);
                         guids_Updated.Add(panel_Old.Guid);
-                        Log.Add(log, "Updating Panel [{0}] with new geometry", panel_New.Guid);
+                        Core.Modify.Add(log, "Updating Panel [{0}] with new geometry", panel_New.Guid);
                     }
 
                     result.AddObject(panel_New);
@@ -710,7 +710,7 @@ namespace SAM.Analytical.Topologic
                 else
                 {
                     panel_New = new Panel(panel_Old.Guid, panel_Old, face3D);
-                    Log.Add(log, "Creating temporary Panel for Panel [{0}]", panel_New.Guid);
+                    Core.Modify.Add(log, "Creating temporary Panel for Panel [{0}]", panel_New.Guid);
                 }
 
                 if (spaces_Temp.Count == 0)
@@ -718,7 +718,7 @@ namespace SAM.Analytical.Topologic
 
                 foreach (Cell cell in face_New.Cells)
                 {
-                    Log.Add(log, "Analyzing Cell");
+                    Core.Modify.Add(log, "Analyzing Cell");
 
                     Space space = null;
 
@@ -741,15 +741,15 @@ namespace SAM.Analytical.Topologic
                         continue;
 
                     if (result.AddRelation(space, panel_New))
-                        Log.Add(log, "Space [{0}] and Panel [{1}] relation added", space.Guid, panel_New.Guid);
+                        Core.Modify.Add(log, "Space [{0}] and Panel [{1}] relation added", space.Guid, panel_New.Guid);
                     else
-                        Log.Add(log, "Space [{0}] and Panel [{1}] relation could not be added", space.Guid, panel_New.Guid);
+                        Core.Modify.Add(log, "Space [{0}] and Panel [{1}] relation could not be added", space.Guid, panel_New.Guid);
                 }
 
-                Log.Add(log, "Face finished");
+                Core.Modify.Add(log, "Face finished");
             }
 
-            Log.Add(log, "Sucesfully completed");
+            Core.Modify.Add(log, "Sucesfully completed");
 
             return result;
         }
