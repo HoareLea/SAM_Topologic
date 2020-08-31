@@ -79,7 +79,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
             bool run = false;
-            if (!dataAccess.GetData(7, ref run))
+            if (!dataAccess.GetData(6, ref run))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 dataAccess.SetData(2, false);
