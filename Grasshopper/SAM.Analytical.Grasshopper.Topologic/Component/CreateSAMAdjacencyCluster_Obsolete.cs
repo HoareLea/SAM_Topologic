@@ -18,6 +18,8 @@ namespace SAM.Analytical.Grasshopper.Topologic.Obsolete
         /// </summary>
         public override Guid ComponentGuid => new Guid("a90bbb0c-ed58-44a0-99d9-4c3505bb282a");
 
+        public override GH_Exposure Exposure => GH_Exposure.tertiary | GH_Exposure.hidden;
+
         /// <summary>
         /// Provides an Icon for the component.
         /// </summary>
