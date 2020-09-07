@@ -1,5 +1,6 @@
 ﻿using SAM.Geometry.Spatial;
 using System.Collections.Generic;
+using System.Linq;
 using Topologic;
 using Topologic.Utilities;
 
@@ -16,7 +17,7 @@ namespace SAM.Geometry.Topologic
 
             Vector3D normal = new Vector3D(FaceUtility.NormalAtParameters(face, 0.5, 0.5));
             if (normal != null)
-                polygon3D = Spatial.Create.Polygon3D(normal, face.ExternalBoundary.Vertices.ConvertAll(x => x.ToSAM()));
+                polygon3D = Spatial.Create.Polygon3D(normal, face.ExternalBoundary.Vertices?.ToList().ConvertAll(x => x.ToSAM()));
 
             if (polygon3D == null)
                 polygon3D = ToSAM_Polygon3D(face.ExternalBoundary);
@@ -26,7 +27,7 @@ namespace SAM.Geometry.Topologic
 
             List<Polygon3D> polygon3Ds = new List<Polygon3D>() { polygon3D };
 
-            List<Wire> wires = face.InternalBoundaries;
+            IList<Wire> wires = face.InternalBoundaries;
             if (wires != null && wires.Count > 0)
             {
                 foreach (Wire wire in wires)
@@ -34,7 +35,7 @@ namespace SAM.Geometry.Topologic
                     polygon3D = null;
                     
                     if(normal != null)
-                        polygon3D = Spatial.Create.Polygon3D(normal, wire.Vertices.ConvertAll(x => x.ToSAM()));
+                        polygon3D = Spatial.Create.Polygon3D(normal, wire.Vertices?.ToList().ConvertAll(x => x.ToSAM()));
 
                     if (polygon3D == null)
                         polygon3D = ToSAM_Polygon3D(wire);

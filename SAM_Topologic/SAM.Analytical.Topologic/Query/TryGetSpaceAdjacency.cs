@@ -58,7 +58,7 @@ namespace SAM.Analytical.Topologic
             return TryGetSpaceAdjacency(faceList, topologyList, tolerance, out geometryList, out names);
         }
 
-        private static bool TryGetSpaceAdjacency(this IEnumerable<Face> faces, IEnumerable<Topology> topologies, double tolerance, out List<Geometry.Spatial.ISAMGeometry3D> sAMGeometryList, out List<List<string>> names)
+        private static bool TryGetSpaceAdjacency(this IList<Face> faces, IEnumerable<Topology> topologies, double tolerance, out List<Geometry.Spatial.ISAMGeometry3D> sAMGeometryList, out List<List<string>> names)
         {
             CellComplex cellComplex = CellComplex.ByFaces(faces, tolerance);
             if (cellComplex == null)

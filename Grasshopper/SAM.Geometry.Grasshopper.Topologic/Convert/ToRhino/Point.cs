@@ -8,7 +8,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
     {
         public static Point3d ToRhino(this Vertex vertex)
         {
-            List<double> coordinates = vertex.Coordinates;
+            IList<double> coordinates = vertex.Coordinates;
             return new Point3d(coordinates[0], coordinates[1], coordinates[2]);
         }
     }

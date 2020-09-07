@@ -9,7 +9,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
     {
         public static List<Brep> ToRhino_Breps(Topology topology, double tolerance = Core.Tolerance.Distance)
         {
-            List<global::Topologic.Face> faces = topology.Faces;
+            IList<global::Topologic.Face> faces = topology.Faces;
             List<Brep> ghBrepSurfaces = new List<Brep>();
             foreach (global::Topologic.Face face in faces)
             {
@@ -31,7 +31,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
 
         public static List<Brep> ToRhino_Breps(CellComplex cellComplex, double tolerance)
         {
-            List<Cell> cells = cellComplex.Cells;
+            IList<Cell> cells = cellComplex.Cells;
             List<Brep> ghBreps = new List<Brep>();
             foreach (Cell cell in cells)
             {

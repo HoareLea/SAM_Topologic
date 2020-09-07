@@ -12,7 +12,7 @@ namespace SAM.Geometry.Topologic
             if (cell == null)
                 return null;
 
-            List<global::Topologic.Face> faces = cell.Faces;
+            IList<global::Topologic.Face> faces = cell.Faces;
             if (faces == null || faces.Count == 0)
                 return null;
 

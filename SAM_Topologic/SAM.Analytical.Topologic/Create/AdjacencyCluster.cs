@@ -48,13 +48,13 @@ namespace SAM.Analytical.Topologic
                 try
                 {
                     Core.Modify.Add(log, "Trying to make CellComplex By Cells");
-                    Cluster cluster = Cluster.ByTopologies(faceList);
+                    Cluster cluster = Cluster.ByTopologies(faceList as IList<Topology>);
                     Core.Modify.Add(log, "Cluster.ByTopologies Done");
                     Topology topology = cluster.SelfMerge();
                     Core.Modify.Add(log, "Cluster SelfMerge Done");
                     if (topology.Cells != null && topology.Cells.Count != 0)
                     {
-                        cells = topology.Cells;
+                        cells = topology.Cells?.ToList();
                         CellComplex cellComplex = null;
                         try
                         {
@@ -69,8 +69,8 @@ namespace SAM.Analytical.Topologic
                         if (cellComplex != null && cellComplex.Cells != null && cellComplex.Cells.Count != 0)
                         {
                             topologies.Add(cellComplex);
-                            
-                            cells = cellComplex.Cells;
+
+                            cells = cellComplex.Cells?.ToList();
                         }
                         else
                         {
@@ -95,7 +95,7 @@ namespace SAM.Analytical.Topologic
                     Core.Modify.Add(log, "Trying to make CellComplex By Faces");
                     CellComplex cellComplex = CellComplex.ByFaces(faceList, tolerance);
                     topologies.Add(cellComplex);
-                    cells = cellComplex.Cells;
+                    cells = cellComplex.Cells?.ToList();
                     Core.Modify.Add(log, "CellComplex By Faces Created");
                 }
                 catch (Exception exception)

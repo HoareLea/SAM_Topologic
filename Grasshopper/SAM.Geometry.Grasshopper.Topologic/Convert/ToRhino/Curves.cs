@@ -11,7 +11,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
     {
         public static List<Curve> ToRhino(this Wire wire)
         {
-            List<Edge> edges = wire.Edges;
+            IList<Edge> edges = wire.Edges;
             List<Curve> ghOriginalCurves = new List<Curve>();
             foreach (Edge edge in edges)
             {

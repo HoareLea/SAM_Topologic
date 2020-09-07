@@ -26,7 +26,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
 
             List<GeometryBase> ghGeometryBases = new List<GeometryBase>();
 
-            List<Edge> outerEdges = face.ExternalBoundary.Edges;
+            IList<Edge> outerEdges = face.ExternalBoundary.Edges;
             List<Curve> ghCurves = new List<Curve>();
             foreach (Edge edge in outerEdges)
             {
@@ -55,7 +55,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
                 return null;
             }
 
-            List<Wire> internalBoundaries = face.InternalBoundaries;
+            IList<Wire> internalBoundaries = face.InternalBoundaries;
             if (internalBoundaries.Count == 0)
             {
                 return ghBrep2;

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace SAM_TopologicCoreDynamo
 {
@@ -26,12 +27,12 @@ namespace SAM_TopologicCoreDynamo
 
         public static List<global::Topologic.Wire> ToWires(Topologic.Topology topology)
         {
-            return topology.Wires;
+            return topology?.Wires?.ToList();
         }
 
         public static List<global::Topologic.Vertex> ToVertices(Topologic.Topology topology)
         {
-            return topology.Vertices;
+            return topology?.Vertices?.ToList();
         }
     }
 }
