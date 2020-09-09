@@ -48,7 +48,9 @@ namespace SAM.Analytical.Topologic
                 return new List<Panel>() { tuples.First().Item1 };
 
             tuples.Sort((x, y) => x.Item2.CompareTo(y.Item2));
-            List<Panel> result = tuples.FindAll(x => x.Item2 < distanceTolerance).ConvertAll(x => x.Item1);
+
+            double areatolerance = distanceTolerance * 10; 
+            List<Panel> result = tuples.FindAll(x => x.Item2 < areatolerance).ConvertAll(x => x.Item1);
             if (result != null && result.Count > 0)
                 return result;
 
