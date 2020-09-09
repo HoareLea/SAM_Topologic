@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using SAM.Core;
+using System.Collections.Generic;
 
 namespace SAM.Analytical.Topologic
 {
     public static partial class Query
     {
-        public static Panel FindPanel(this Geometry.Spatial.Face3D face3D, Dictionary<Panel, Geometry.Spatial.Face3D> panelsDictionary, double distanceTolerance = Core.Tolerance.MacroDistance, double coplanarTolerance = Core.Tolerance.MacroDistance)
+        public static Panel SimilarPanel(this Geometry.Spatial.Face3D face3D, Dictionary<Panel, Geometry.Spatial.Face3D> panelsDictionary, double distanceTolerance = Core.Tolerance.MacroDistance, double coplanarTolerance = Core.Tolerance.MacroDistance)
         {
             if (face3D == null || panelsDictionary == null)
                 return null;

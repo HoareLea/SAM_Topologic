@@ -62,7 +62,8 @@
     <Compile Include="Create\Panels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Create\AdjacencyCluster.cs" />
-    <Compile Include="Query\FindPanel.cs" />
+    <Compile Include="Query\SimilarPanels.cs" />
+    <Compile Include="Query\SimilarPanel.cs" />
     <Compile Include="Query\TryGetSpaceAdjacency.cs" />
     <Compile Include="Convert\ToTopologic\Panel.cs" />
   </ItemGroup>

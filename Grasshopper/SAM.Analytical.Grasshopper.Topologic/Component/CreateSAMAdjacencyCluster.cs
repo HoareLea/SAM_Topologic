@@ -66,6 +66,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
             outputParamManager.AddParameter(new GooPanelParam(), "InternalPanels", "InternalPanels", "SAM Analytical Internal Panels", GH_ParamAccess.list);
             outputParamManager.AddParameter(new GooPanelParam(), "ExternalPanels", "ExternalPanels", "SAM Analytical External Panels", GH_ParamAccess.list);
             outputParamManager.AddParameter(new GooPanelParam(), "ShadingPanels", "ShadingPanels", "SAM Analytical Shading Panels", GH_ParamAccess.list);
+            outputParamManager.AddParameter(new GooPanelParam(), "RedundantPanels", "RedundantPanels", "SAM Analytical Redundant Panels", GH_ParamAccess.list);
             outputParamManager.AddParameter(new GooLogParam(), "Log", "Log", "Log", GH_ParamAccess.item);
             outputParamManager.AddBooleanParameter("Sucessfull", "Sucessfull", "Run successfully?", GH_ParamAccess.item);
         }
@@ -131,7 +132,8 @@ namespace SAM.Analytical.Grasshopper.Topologic
             List<Topology> topologies = null;
             Log log = new Log();
 
-            AdjacencyCluster adjacencyCluster = Analytical.Topologic.Create.AdjacencyCluster(spaces, panels, out topologies, minArea, true, tryCellComplexByCells, log, silverSpacing, tolerance);
+            List<Panel> panels_Redundant = null;
+            AdjacencyCluster adjacencyCluster = Analytical.Topologic.Create.AdjacencyCluster(spaces, panels, out topologies, out panels_Redundant, minArea, true, tryCellComplexByCells, log, silverSpacing, tolerance);
 
             if (adjacencyCluster != null)
             {
@@ -204,8 +206,9 @@ namespace SAM.Analytical.Grasshopper.Topologic
             dataAccess.SetDataList(4, adjacencyCluster?.GetInternalPanels());
             dataAccess.SetDataList(5, adjacencyCluster?.GetExternalPanels());
             dataAccess.SetDataList(6, adjacencyCluster?.GetShadingPanels());
-            dataAccess.SetData(7, new GooLog(log));
-            dataAccess.SetData(8, adjacencyCluster != null);
+            dataAccess.SetDataList(7, panels_Redundant);
+            dataAccess.SetData(8, new GooLog(log));
+            dataAccess.SetData(9, adjacencyCluster != null);
         }
     }
 }

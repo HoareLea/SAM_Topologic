@@ -11,11 +11,12 @@ namespace SAM.Analytical.Topologic
 {
     public static partial class Create
     {
-        public static AdjacencyCluster AdjacencyCluster(IEnumerable<Space> spaces, IEnumerable<Panel> panels, out List<Topology> topologies, double minArea = Tolerance.MacroDistance, bool updatePanels = true, bool tryCellComplexByCells = true, Log log = null, double silverSpacing = Tolerance.MacroDistance, double tolerance = Tolerance.Distance)
+        public static AdjacencyCluster AdjacencyCluster(IEnumerable<Space> spaces, IEnumerable<Panel> panels, out List<Topology> topologies, out List<Panel> redundantPanels, double minArea = Tolerance.MacroDistance, bool updatePanels = true, bool tryCellComplexByCells = true, Log log = null, double silverSpacing = Tolerance.MacroDistance, double tolerance = Tolerance.Distance)
         {
             Core.Modify.Add(log, "Method Name: {0}, Tolerance: {1}, Update Panels: {2}", "SAM.Analytical.Topologic.Create.AdjacencyCluster", tolerance, updatePanels);
 
             topologies = null;
+            redundantPanels = null;
 
             AdjacencyCluster result = new AdjacencyCluster();
             result.AddObjects(spaces);
@@ -228,9 +229,23 @@ namespace SAM.Analytical.Topologic
                     }
 
                     Core.Modify.Add(log, "Looking for old Panel");
-                    Panel panel_Old = Query.FindPanel(face3D, dictionary_Panel_Face3D);
-                    if (panel_Old == null)
+                    //Panel panel_Old = Query.SimilarPanel(face3D, dictionary_Panel_Face3D);
+                    //if (panel_Old == null)
+                    //    continue;
+
+                    List<Panel> panels_Old = Query.SimilarPanels(face3D, dictionary_Panel_Face3D);
+                    if (panels_Old == null || panels_Old.Count == 0)
                         continue;
+
+                    Panel panel_Old = panels_Old.First();
+                    if(panels_Old.Count > 1)
+                    {
+                        if (redundantPanels == null)
+                            redundantPanels = new List<Panel>();
+
+                        panels_Old.RemoveAt(0);
+                        redundantPanels.AddRange(panels_Old);
+                    }
 
                     Core.Modify.Add(log, "Old Panel found: {0}", panel_Old.Guid);                  
 
@@ -271,6 +286,13 @@ namespace SAM.Analytical.Topologic
 
                     Core.Modify.Add(log, "Adding face finished");
                 }
+            }
+
+            if(redundantPanels != null && redundantPanels.Count != 0)
+            {
+                Core.Modify.Add(log, "Solving Redundant Panels");
+                foreach(Panel panel in redundantPanels)
+                    result.RemoveObject<Panel>(panel.Guid);
             }
 
             Core.Modify.Add(log, "AdjacencyCluster verification");

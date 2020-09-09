@@ -71,6 +71,7 @@ namespace SAM.Analytical.Grasshopper.Topologic.Obsolete
             outputParamManager.AddParameter(new GooPanelParam(), "InternalPanels", "InternalPanels", "SAM Analytical Internal Panels", GH_ParamAccess.list);
             outputParamManager.AddParameter(new GooPanelParam(), "ExternalPanels", "ExternalPanels", "SAM Analytical External Panels", GH_ParamAccess.list);
             outputParamManager.AddParameter(new GooPanelParam(), "ShadingPanels", "ShadingPanels", "SAM Analytical Shading Panels", GH_ParamAccess.list);
+            outputParamManager.AddParameter(new GooPanelParam(), "RedundantPanels", "RedundantPanels", "SAM Analytical Redundant Panels", GH_ParamAccess.list);
             outputParamManager.AddBooleanParameter("Sucessfull", "Sucessfull", "Run successfully?", GH_ParamAccess.item);
         }
 
@@ -137,7 +138,9 @@ namespace SAM.Analytical.Grasshopper.Topologic.Obsolete
             if (!string.IsNullOrEmpty(reportPath))
                 log = new Log();
 
-            AdjacencyCluster adjacencyCluster = Analytical.Topologic.Create.AdjacencyCluster(spaces, panels, out topologies, minArea, true, tryCellComplexByCells, log, silverSpacing, tolerance);
+            List<Panel> panels_Redundant;
+
+            AdjacencyCluster adjacencyCluster = Analytical.Topologic.Create.AdjacencyCluster(spaces, panels, out topologies, out panels_Redundant, minArea, true, tryCellComplexByCells, log, silverSpacing, tolerance);
 
             if (!string.IsNullOrEmpty(reportPath))
                 log.Write(reportPath);
@@ -213,7 +216,8 @@ namespace SAM.Analytical.Grasshopper.Topologic.Obsolete
             dataAccess.SetDataList(4, adjacencyCluster?.GetInternalPanels());
             dataAccess.SetDataList(5, adjacencyCluster?.GetExternalPanels());
             dataAccess.SetDataList(6, adjacencyCluster?.GetShadingPanels());
-            dataAccess.SetData(7, adjacencyCluster != null);
+            dataAccess.SetDataList(7, panels_Redundant);
+            dataAccess.SetData(8, adjacencyCluster != null);
         }
     }
 }
