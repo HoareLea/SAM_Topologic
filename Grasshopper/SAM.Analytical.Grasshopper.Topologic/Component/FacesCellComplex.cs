@@ -16,6 +16,11 @@ namespace SAM.Analytical.Grasshopper.Topologic
         public override Guid ComponentGuid => new Guid("6ce7b31d-ba55-4e37-9ef8-967f2040e11a");
 
         /// <summary>
+        /// The latest version of this component
+        /// </summary>
+        public override string LatestComponentVersion => "1.0.0";
+
+        /// <summary>
         /// Provides an Icon for the component.
         /// </summary>
         protected override System.Drawing.Bitmap Icon => Resources.SAM_Topologic;
