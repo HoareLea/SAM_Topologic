@@ -142,7 +142,8 @@ namespace SAM.Analytical.Topologic
                     return null;
 
                 Core.Modify.Add(log, "Simplifying shell");
-                shell.Simplify(tolerance);
+                //shell.Simplify(tolerance); // Low tolerance cause of rounding issues
+                shell.Simplify();
 
                 Core.Modify.Add(log, "Extracting faces from shell");
                 List<Face3D> face3Ds = shell?.Face3Ds;
