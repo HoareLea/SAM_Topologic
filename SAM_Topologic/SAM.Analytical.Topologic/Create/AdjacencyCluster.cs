@@ -132,8 +132,6 @@ namespace SAM.Analytical.Topologic
             index = 1;
             List<Tuple<Panel, Point3D>> tuples_InternalPoint3D = new List<Tuple<Panel, Point3D>>();
 
-            string parameterName_Volume = Analytical.Query.ParameterName_Volume();
-
             for (int i=0; i < shells.Count; i++)
             //foreach (Geometry.Spatial.Shell shell in shells)
             {
@@ -200,11 +198,7 @@ namespace SAM.Analytical.Topologic
                     volume = CellUtility.Volume(cells[i]);
 
                     foreach (Space space_Shell in spaces_Shell)
-                    {
-                        ParameterSet parameterSet_Space = new ParameterSet(typeof(Space).Assembly);
-                        parameterSet_Space.Add(parameterName_Volume, volume);
-                        space_Shell.Add(parameterSet_Space);
-                    }
+                        space_Shell.SetValue(SpaceParameter.Volume, volume);
                 }
 
                 Core.Modify.Add(log, "Upadting Panels");
