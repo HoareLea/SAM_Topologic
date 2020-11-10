@@ -67,6 +67,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>Copy /Y "$(SolutionDir)references\TopologicCore.dll" "$(SolutionDir)build\TopologicCore.dll"
-Copy /Y "$(SolutionDir)references\TK*.dll" "$(SolutionDir)build\TK*.dll"</PostBuildEvent>
+Copy /Y "$(SolutionDir)references\TK*.dll" "$(SolutionDir)build\TK*.dll"
+Copy /Y "$(SolutionDir)references\tbb*.dll" "$(SolutionDir)build\tbb*.dll"</PostBuildEvent>
   </PropertyGroup>
 </Project>
