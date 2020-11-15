@@ -56,12 +56,12 @@ namespace SAM.Analytical.Grasshopper.Topologic.Obsolete
             inputParamManager[index].DataMapping = GH_DataMapping.Flatten;
 
             inputParamManager.AddNumberParameter("tolerance_", "tolerance_", string.Format("Topologic CellComplex default {0}", 0.0001), GH_ParamAccess.item, 0.0001);
-            //inputParamManager.AddBooleanParameter("_run_", "_run_", "Run", GH_ParamAccess.item, false);
+            //inputParamManager.AddBooleanParameter("_run", "_run", "Run", GH_ParamAccess.item, false);
             inputParamManager.AddBooleanParameter("tryCellComplexByCells_", "tryCellComplexByCells_", "Try to Create Cell Complex By Cells", GH_ParamAccess.item, false);
             inputParamManager.AddTextParameter("reportPath_", "reportPath_", "Report Path to write each step in text file", GH_ParamAccess.item, string.Empty);
             inputParamManager.AddNumberParameter("minArea_", "minArea_", "Minimal Acceptable area of Aperture", GH_ParamAccess.item, Tolerance.MacroDistance);
             inputParamManager.AddNumberParameter("silverSpacing_", "silverSpacing_", string.Format("Silver spacing for point in Space calculation {0}", Tolerance.MacroDistance), GH_ParamAccess.item, Tolerance.MacroDistance);
-            inputParamManager.AddBooleanParameter("_run_", "_run_", "Run", GH_ParamAccess.item, false);
+            inputParamManager.AddBooleanParameter("_run", "_run", "Run", GH_ParamAccess.item, false);
         }
 
         /// <summary>
