@@ -7,7 +7,21 @@ namespace SAM.Geometry.Topologic
     {
         public static Edge ToTopologic(this ICurve3D curve3D)
         {
-            return Edge.ByStartVertexEndVertex(ToTopologic(curve3D.GetStart()), ToTopologic(curve3D.GetEnd()));
+            if (curve3D == null)
+                return null;
+
+            Point3D point3D_1 = curve3D.GetStart();
+            if (point3D_1 == null)
+                return null;
+
+            Point3D point3D_2 = curve3D.GetEnd();
+            if (point3D_2 == null)
+                return null;
+
+            if (point3D_1 == point3D_2)
+                return null;
+
+            return Edge.ByStartVertexEndVertex(ToTopologic(point3D_1), ToTopologic(point3D_2));
         }
     }
 }

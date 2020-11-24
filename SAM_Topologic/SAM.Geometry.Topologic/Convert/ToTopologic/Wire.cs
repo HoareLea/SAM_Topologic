@@ -11,7 +11,11 @@ namespace SAM.Geometry.Topologic
             List<Edge> edges = new List<Edge>();
 
             foreach (ICurve3D curve3D in curvable3D.GetCurves())
-                edges.Add(curve3D.ToTopologic());
+            {
+                if (curve3D.GetStart() != curve3D.GetEnd())
+                    edges.Add(curve3D.ToTopologic());
+            }
+                
 
             return Wire.ByEdges(edges);
         }
@@ -21,7 +25,8 @@ namespace SAM.Geometry.Topologic
             List<Edge> edges = new List<Edge>();
 
             foreach (ICurve3D curve3D in polygon3D.GetSegments())
-                edges.Add(curve3D.ToTopologic());
+                if (curve3D.GetStart() != curve3D.GetEnd())
+                    edges.Add(curve3D.ToTopologic());
 
             return Wire.ByEdges(edges);
         }
