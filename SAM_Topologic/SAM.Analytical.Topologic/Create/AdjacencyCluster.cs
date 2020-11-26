@@ -152,6 +152,9 @@ namespace SAM.Analytical.Topologic
                 }
                     
                 List<Space> spaces_Shell = spaces_Temp.FindAll(x => shell.InRange(x.Location, tolerance) || shell.Inside(x.Location, silverSpacing, tolerance));
+                if (spaces_Shell.Count > 1)
+                    spaces_Shell = spaces_Shell.FindAll(x => shell.InRange(x.Location.GetMoved(Vector3D.WorldZ * silverSpacing) as Point3D, tolerance));
+
                 if (spaces_Shell.Count != 0)
                 {
                     //Handling cases where Space Location is on the floor
