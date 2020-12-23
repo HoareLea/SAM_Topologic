@@ -15,11 +15,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{B8F0EE34-A776-4518-ADA2-E047E468B47B}</ProjectGuid>
+    <ProjectGuid>{E31E5F4E-EAC1-4E48-A5F9-E4560896C2B3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SAM.Geometry.Grasshopper.Topologic</RootNamespace>
-    <AssemblyName>SAM.Geometry.Grasshopper.Topologic</AssemblyName>
+    <RootNamespace>SAM.Analytical.Grasshopper.Topologic</RootNamespace>
+    <AssemblyName>SAM.Analytical.Grasshopper.Topologic</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>false</IsWebBootstrapper>
@@ -43,6 +43,30 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Eto, Version=2.5.0.0, Culture=neutral, PublicKeyToken=552281e97c755530, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\RhinoCommon.6.32.20340.21001\lib\net45\Eto.dll</HintPath>
+    </Reference>
+    <Reference Include="GH_IO, Version=6.32.20340.21000, Culture=neutral, PublicKeyToken=6a29997d2e6b4f97, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Grasshopper.6.32.20340.21001\lib\net45\GH_IO.dll</HintPath>
+    </Reference>
+    <Reference Include="Grasshopper, Version=6.32.20340.21000, Culture=neutral, PublicKeyToken=dda4f5ec2cd80803, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Grasshopper.6.32.20340.21001\lib\net45\Grasshopper.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Rhino.UI, Version=6.32.20340.21000, Culture=neutral, PublicKeyToken=552281e97c755530, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\RhinoCommon.6.32.20340.21001\lib\net45\Rhino.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="RhinoCommon, Version=6.32.20340.21000, Culture=neutral, PublicKeyToken=552281e97c755530, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\RhinoCommon.6.32.20340.21001\lib\net45\RhinoCommon.dll</HintPath>
+    </Reference>
+    <Reference Include="SAM.Analytical">
+      <HintPath>..\..\..\SAM\build\SAM.Analytical.dll</HintPath>
+    </Reference>
+    <Reference Include="SAM.Analytical.Grasshopper">
+      <HintPath>..\..\..\SAM\build\SAM.Analytical.Grasshopper.dll</HintPath>
+    </Reference>
     <Reference Include="SAM.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\SAM\build\SAM.Core.dll</HintPath>
@@ -54,8 +78,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\SAM\build\SAM.Geometry.dll</HintPath>
     </Reference>
-    <Reference Include="SAM.Geometry.Grasshopper, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="SAM.Geometry.Grasshopper">
       <HintPath>..\..\..\SAM\build\SAM.Geometry.Grasshopper.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -72,17 +95,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Component\TopologyGeometry.cs" />
-    <Compile Include="Convert\ToRhino\Breps.cs" />
-    <Compile Include="Convert\ToRhino\Curves.cs" />
-    <Compile Include="Convert\ToRhino\NurbsSurface.cs" />
-    <Compile Include="Convert\ToRhino\LineCurve.cs" />
-    <Compile Include="Convert\ToRhino\Curve.cs" />
-    <Compile Include="Convert\ToRhino\Brep.cs" />
-    <Compile Include="Convert\ToRhino\PlaneSurface.cs" />
-    <Compile Include="Convert\ToRhino\Objects.cs" />
-    <Compile Include="Convert\ToRhino\Surface.cs" />
-    <Compile Include="Convert\ToRhino\Point.cs" />
+    <Compile Include="Component\CreateSAMAdjacencyCluster_Obsolete.cs" />
+    <Compile Include="Component\CreateSAMAdjacencyCluster.cs" />
+    <Compile Include="Component\TopologyAdjacencies.cs" />
+    <Compile Include="Component\TopologyExplode.cs" />
+    <Compile Include="Component\TopologyAnalyze.cs" />
+    <Compile Include="Component\CellComplexFaces.cs" />
+    <Compile Include="Component\FacesCellComplex.cs" />
     <Compile Include="Kernel\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -90,9 +109,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Component\SAMGeometryTopology.cs" />
-    <Compile Include="Component\TopologySAMGeometry.cs" />
-    <Compile Include="Convert\ToSAM\ISAMGeometry3D.cs" />
+    <Compile Include="Component\SAMAnalyticalTopology.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -102,9 +119,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="packages.config" />
     <None Include="Resources\SAM_Small.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\SAM_Topologic\SAM.Analytical.Topologic\SAM.Analytical.Topologic.csproj">
+      <Project>{577724ca-7f73-473a-8c32-8ef0250f247e}</Project>
+      <Name>SAM.Analytical.Topologic</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\SAM_Topologic\SAM.Geometry.Topologic\SAM.Geometry.Topologic.csproj">
       <Project>{f50bd61e-abe4-4867-b815-e9f701968031}</Project>
       <Name>SAM.Geometry.Topologic</Name>
@@ -114,12 +136,7 @@
     <None Include="Resources\SAM_Topologic.png" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Grasshopper">
-      <Version>6.32.20340.21001</Version>
-    </PackageReference>
-    <PackageReference Include="Newtonsoft.Json">
-      <Version>12.0.3</Version>
-    </PackageReference>
+    <Folder Include="Classes\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -149,6 +166,15 @@ copy "%25SAM_DIR%25\$(ProjectName).dll" "%25SAM_DIR%25\$(ProjectName).gha"
     <StartArguments>
     </StartArguments>
     <StartAction>Program</StartAction>
-    <DocumentationFile>..\..\build\SAM.Geometry.Grasshopper.Topologic.xml</DocumentationFile>
+    <DocumentationFile>..\..\build\SAM.Analytical.Grasshopper.Topologic.xml</DocumentationFile>
   </PropertyGroup>
+  <Import Project="..\..\packages\RhinoCommon.6.32.20340.21001\build\net45\RhinoCommon.targets" Condition="Exists('..\..\packages\RhinoCommon.6.32.20340.21001\build\net45\RhinoCommon.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\RhinoCommon.6.32.20340.21001\build\net45\RhinoCommon.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\RhinoCommon.6.32.20340.21001\build\net45\RhinoCommon.targets'))" />
+    <Error Condition="!Exists('..\..\packages\Grasshopper.6.32.20340.21001\build\net45\Grasshopper.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Grasshopper.6.32.20340.21001\build\net45\Grasshopper.targets'))" />
+  </Target>
+  <Import Project="..\..\packages\Grasshopper.6.32.20340.21001\build\net45\Grasshopper.targets" Condition="Exists('..\..\packages\Grasshopper.6.32.20340.21001\build\net45\Grasshopper.targets')" />
 </Project>

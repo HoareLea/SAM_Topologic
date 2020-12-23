@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{31847A71-1B4C-4E40-A202-391922B39876}</ProjectGuid>
+    <ProjectGuid>{577724CA-7F73-473A-8C32-8EF0250F247E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SAMTopologicGeometryDynamo</RootNamespace>
-    <AssemblyName>SAMTopologicGeometryDynamo</AssemblyName>
+    <RootNamespace>SAM.Analytical.Topologic</RootNamespace>
+    <AssemblyName>SAM.Analytical.Topologic</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>False</Deterministic>
@@ -21,18 +21,27 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\build\SAMTopologicGeometryDynamo.xml</DocumentationFile>
+    <DocumentationFile>..\..\build\SAM.Analytical.Topologic.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\build\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\build\SAMTopologicGeometryDynamo.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="SAM.Analytical">
+      <HintPath>..\..\..\SAM\build\SAM.Analytical.dll</HintPath>
+    </Reference>
+    <Reference Include="SAM.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\SAM\build\SAM.Core.dll</HintPath>
+    </Reference>
     <Reference Include="SAM.Geometry">
       <HintPath>..\..\..\SAM\build\SAM.Geometry.dll</HintPath>
     </Reference>
@@ -45,38 +54,36 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="TopologicNET, Version=0.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="TopologicNET">
       <HintPath>..\..\references\TopologicNET.dll</HintPath>
-      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Component\ISAMGeometry3D.cs" />
+    <Compile Include="Create\Panels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Create\AdjacencyCluster.cs" />
+    <Compile Include="Query\SimilarPanels.cs" />
+    <Compile Include="Query\SimilarPanel.cs" />
+    <Compile Include="Query\TryGetSpaceAdjacency.cs" />
+    <Compile Include="Convert\ToTopologic\Panel.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="SAMTopologicGeometryDynamo_DynamoCustomization.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Folder Include="Classes\" />
+    <Folder Include="Convert\ToSAM\" />
+    <Folder Include="Modify\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\SAM_Topologic\SAM.Geometry.Topologic\SAM.Geometry.Topologic.csproj">
+    <ProjectReference Include="..\SAM.Geometry.Topologic\SAM.Geometry.Topologic.csproj">
       <Project>{f50bd61e-abe4-4867-b815-e9f701968031}</Project>
       <Name>SAM.Geometry.Topologic</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DynamoVisualProgramming.ZeroTouchLibrary">
-      <Version>2.6.1.8786</Version>
-    </PackageReference>
-    <PackageReference Include="Newtonsoft.Json">
-      <Version>12.0.3</Version>
-    </PackageReference>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
+    <PostBuildEvent>Copy /Y "$(SolutionDir)references\TopologicCore.dll" "$(SolutionDir)build\TopologicCore.dll"
+Copy /Y "$(SolutionDir)references\TK*.dll" "$(SolutionDir)build\TK*.dll"</PostBuildEvent>
   </PropertyGroup>
 </Project>
