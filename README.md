@@ -3,6 +3,8 @@
 # SAM_Topologic
 [![Build Status](https://hldigitalinnovation.visualstudio.com/HLApps/_apis/build/status/SAM/SAM-deploy-SAM_Topologic?branchName=master)](https://hldigitalinnovation.visualstudio.com/HLApps/_build/latest?definitionId=23&branchName=master)
 
+To install SAM from .exe just download and run latest installer https://github.com/HoareLea/SAM_Deploy/releases
+
 Topologic
 
 ## Welcome to SAM_Topologic
