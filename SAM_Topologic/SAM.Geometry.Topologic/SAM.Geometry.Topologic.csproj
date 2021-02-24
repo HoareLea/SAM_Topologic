@@ -65,6 +65,7 @@
     <Compile Include="Convert\ToTopologic\Wire.cs" />
     <Compile Include="Convert\ToTopologic\Edge.cs" />
     <Compile Include="Convert\ToTopologic\Vertex.cs" />
+    <Compile Include="Query\TrySplit.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json">

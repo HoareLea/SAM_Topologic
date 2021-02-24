@@ -22,7 +22,7 @@ namespace SAM.Analytical.Topologic
             result.AddObjects(spaces);
             result.AddObjects(panels);
 
-            List<Face> faceList = new List<Face>();
+            List<Face> faces = new List<Face>();
 
             int index = 1;
             foreach (Panel panel in result.GetObjects<Panel>())
@@ -34,12 +34,12 @@ namespace SAM.Analytical.Topologic
                 if (face == null)
                     continue;
 
-                faceList.Add(face);
+                faces.Add(face);
                 Core.Modify.Add(log, "Face {0:D4} added. Panel [{1}]", index, panel.Guid);
                 index++;
             }
 
-            if (faceList == null || faceList.Count == 0)
+            if (faces == null || faces.Count == 0)
                 return null;
 
             topologies = new List<Topology>();
@@ -49,7 +49,7 @@ namespace SAM.Analytical.Topologic
                 try
                 {
                     Core.Modify.Add(log, "Trying to make CellComplex By Cells");
-                    Cluster cluster = Cluster.ByTopologies(faceList as IList<Topology>);
+                    Cluster cluster = Cluster.ByTopologies(faces as IList<Topology>);
                     Core.Modify.Add(log, "Cluster.ByTopologies Done");
                     Topology topology = cluster.SelfMerge();
                     Core.Modify.Add(log, "Cluster SelfMerge Done");
@@ -94,7 +94,7 @@ namespace SAM.Analytical.Topologic
                 try
                 {
                     Core.Modify.Add(log, "Trying to make CellComplex By Faces");
-                    CellComplex cellComplex = CellComplex.ByFaces(faceList, tolerance);
+                    CellComplex cellComplex = CellComplex.ByFaces(faces, tolerance);
                     topologies.Add(cellComplex);
                     cells = cellComplex.Cells?.ToList();
                     Core.Modify.Add(log, "CellComplex By Faces Created");

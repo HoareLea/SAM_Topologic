@@ -1,12 +1,12 @@
 ﻿using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
-using SAM.Analytical.Grasshopper.Topologic.Properties;
+using SAM.Geometry.Grasshopper.Topologic.Properties;
 using SAM.Core.Grasshopper;
 using System;
 using System.Collections.Generic;
 using Topologic;
 
-namespace SAM.Analytical.Grasshopper.Topologic
+namespace SAM.Geometry.Grasshopper.Topologic
 {
     public class FacesCellComplex : GH_SAMComponent
     {
@@ -18,7 +18,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.0";
+        public override string LatestComponentVersion => "1.0.1";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -82,7 +82,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
                 return;
             }
 
-            CellComplex cellComplex = CellComplex.ByFaces(objectWrapperList.ConvertAll(x => x.Value as Face), gHNumber.Value);
+            CellComplex cellComplex = CellComplex.ByFaces(objectWrapperList.ConvertAll(x => x.Value as global::Topologic.Face), gHNumber.Value);
 
             dataAccess.SetData(0, cellComplex);
         }
