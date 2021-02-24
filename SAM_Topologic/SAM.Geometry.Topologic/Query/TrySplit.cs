@@ -27,6 +27,8 @@ namespace SAM.Geometry.Topologic
                 foreach(Face3D face3D in face3Ds)
                 {
                     global::Topologic.Face face = Convert.ToTopologic(face3D);
+                    if (face != null)
+                        faces.Add(face);
                 }
             }
 
