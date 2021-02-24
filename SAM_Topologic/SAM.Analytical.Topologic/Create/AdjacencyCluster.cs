@@ -116,7 +116,16 @@ namespace SAM.Analytical.Topologic
 
             List<Space> spaces_Temp = new List<Space>();
             if (spaces != null)
-                spaces_Temp.AddRange(spaces);
+            {
+                foreach(Space space in spaces)
+                {
+                    if (space == null || space.Location == null || !space.IsPlaced())
+                        continue;
+
+                    spaces_Temp.Add(space);
+                }
+            }
+                
 
             List<Geometry.Spatial.Shell> shells = cells.ToSAM();
             Core.Modify.Add(log, "Single CellComplex converted to shells");
