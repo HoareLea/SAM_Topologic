@@ -53,6 +53,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
                 result.Add(new GH_SAMParam(genericObject, ParamVisibility.Binding));
 
                 global::Grasshopper.Kernel.Parameters.Param_Boolean paramBoolean;
+
                 paramBoolean = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "tryCellComplexByCells_", NickName = "tryCellComplexByCells_", Description = "Try Cell Complex By Cells", Access = GH_ParamAccess.item };
                 paramBoolean.SetPersistentData(true);
                 result.Add(new GH_SAMParam(paramBoolean, ParamVisibility.Voluntary));
