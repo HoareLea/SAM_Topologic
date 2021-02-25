@@ -6,7 +6,7 @@ using Topologic;
 
 namespace SAM.Geometry.Grasshopper.Topologic
 {
-    public class TopologyExplode : GH_SAMComponent
+    public class TopologyInspect : GH_SAMComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -16,7 +16,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.1";
+        public override string LatestComponentVersion => "1.0.2";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -26,9 +26,9 @@ namespace SAM.Geometry.Grasshopper.Topologic
         /// <summary>
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
-        public TopologyExplode()
-          : base("Topology.Explode", "Topologic.Explode",
-              "Explode Topology into CellComplex, Cells, Faces, Wired and Vertices",
+        public TopologyInspect()
+          : base("Topology.Inspect", "Topologic.Inspect",
+              "Inspect Topology and try to get CellComplex, Cells, Faces, Wired and Vertices",
               "SAM", "Topologic")
         {
         }
@@ -38,7 +38,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
-            inputParamManager.AddGenericParameter("_topology", "_topology", "Topology Explode into CellComplex, Cells, Faces, Wired and Vertices", GH_ParamAccess.item);
+            inputParamManager.AddGenericParameter("_topology", "_topology", "Topology Inspect into CellComplex, Cells, Faces, Wired and Vertices", GH_ParamAccess.item);
         }
 
         /// <summary>
