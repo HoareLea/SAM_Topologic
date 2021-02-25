@@ -49,6 +49,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
                 global::Grasshopper.Kernel.Parameters.Param_GenericObject genericObject;
 
                 genericObject = new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "shells_", NickName = "shells_", Description = "SAM Geometry Shells", Access = GH_ParamAccess.list };
+                genericObject.DataMapping = GH_DataMapping.Flatten;
                 result.Add(new GH_SAMParam(genericObject, ParamVisibility.Binding));
 
                 global::Grasshopper.Kernel.Parameters.Param_Boolean paramBoolean;
