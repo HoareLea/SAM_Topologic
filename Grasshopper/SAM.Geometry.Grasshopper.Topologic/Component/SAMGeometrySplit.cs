@@ -92,15 +92,15 @@ namespace SAM.Geometry.Grasshopper.Topologic
         /// </param>
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
+            int index_Sucessfull = Params.IndexOfOutputParam("Sucessfull");
+            if (index_Sucessfull != -1)
+                dataAccess.SetData(index_Sucessfull, false);
+
             int index;
             index = Params.IndexOfInputParam("run_");
             bool run = false;
-            if (index == -1)
+            if (index != -1)
                 dataAccess.GetData(index, ref run);
-
-            int index_Sucessfull = Params.IndexOfOutputParam("Sucessfull");
-            if(index_Sucessfull != -1)
-                dataAccess.SetData(index_Sucessfull, false);
 
             if (!run)
                 return;
