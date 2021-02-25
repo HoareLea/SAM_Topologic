@@ -73,7 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Component\FacesCellComplex.cs" />
-    <Compile Include="Component\SAMGeometrySplit.cs" />
+    <Compile Include="Component\SAMShellsSplit.cs" />
     <Compile Include="Component\TopologyExplode.cs" />
     <Compile Include="Component\TopologyGeometry.cs" />
     <Compile Include="Convert\ToRhino\Breps.cs" />

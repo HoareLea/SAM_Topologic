@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace SAM.Geometry.Grasshopper.Topologic
 {
-    public class SAMGeometrySplit : GH_SAMVariableOutputParameterComponent
+    public class SAMShellsSplit : GH_SAMVariableOutputParameterComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -30,9 +30,9 @@ namespace SAM.Geometry.Grasshopper.Topologic
         /// <summary>
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
-        public SAMGeometrySplit()
-          : base("SAMGeometry.Split", "SAMGeometry.Split",
-              "Split Shells to Closed Cells",
+        public SAMShellsSplit()
+          : base("SAMShells.Split", "SAMShells.Split",
+              "Split SAM Shells to Closed Cells using CellComplex by Cells method",
               "SAM", "Topologic")
         {
         }
