@@ -6,9 +6,9 @@ namespace SAM.Geometry.Topologic
 {
     public static partial class Convert
     {
-        public static global::Topologic.Face ToTopologic(this Face3D face)
+        public static global::Topologic.Face ToTopologic(this Face3D face3D)
         {
-            IClosedPlanar3D closedPlanar3D = face.GetExternalEdge3D();
+            IClosedPlanar3D closedPlanar3D = face3D.GetExternalEdge3D();
             if (closedPlanar3D is ICurvable3D)
             {
                 List<Edge> edges = new List<Edge>();

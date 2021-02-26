@@ -28,5 +28,27 @@ namespace SAM.Geometry.Topologic
 
             return new Spatial.Shell(face3Ds);
         }
+
+        public static Spatial.Shell ToSAM(this global::Topologic.Shell shell)
+        {
+            if (shell == null)
+                return null;
+
+            IList<global::Topologic.Face> faces = shell.Faces;
+            if (faces == null || faces.Count == 0)
+                return null;
+
+            List<Face3D> face3Ds = new List<Face3D>();
+            foreach (global::Topologic.Face face in faces)
+            {
+                Face3D face3D = face.ToSAM();
+                if (face3D == null)
+                    continue;
+
+                face3Ds.Add(face3D);
+            }
+
+            return new Spatial.Shell(face3Ds);
+        }
     }
 }

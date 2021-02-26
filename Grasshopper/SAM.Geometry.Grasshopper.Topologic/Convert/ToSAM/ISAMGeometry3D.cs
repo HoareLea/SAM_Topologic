@@ -27,9 +27,13 @@ namespace SAM.Geometry.Grasshopper.Topologic
             if (face != null)
                 return Geometry.Topologic.Convert.ToSAM(face);
 
-            //Cell cell = topology as Cell;
-            //if(cell != null)
-            //    return Geometry.Topologic.Convert.ToSAM(cell);
+            Cell cell = topology as Cell;
+            if (cell != null)
+                return Geometry.Topologic.Convert.ToSAM(cell);
+
+            Shell shell = topology as Shell;
+            if (shell != null)
+                return Geometry.Topologic.Convert.ToSAM(shell);
 
             return null;
         }

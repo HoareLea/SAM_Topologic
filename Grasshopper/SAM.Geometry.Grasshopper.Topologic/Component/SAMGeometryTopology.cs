@@ -92,6 +92,13 @@ namespace SAM.Geometry.Grasshopper.Topologic
                 return;
             }
 
+            Shell shell = sAMGeometry as Shell;
+            if (shell != null)
+            {
+                dataAccess.SetData(0, Geometry.Topologic.Convert.ToTopologic((ISAMGeometry3D)shell));
+                return;
+            }
+
             AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Cannot convert geometry");
         }
     }
