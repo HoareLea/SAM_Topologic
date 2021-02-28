@@ -204,7 +204,7 @@ namespace SAM.Analytical.Topologic
                 {
                     Core.Modify.Add(log, "Creating new Space");
 
-                    Point3D location = shell.InternalPoint3D(silverSpacing, tolerance);
+                    Point3D location = shell.CalculatedInternalPoint3D(silverSpacing, tolerance);
                     if (location == null)
                         continue;
 
