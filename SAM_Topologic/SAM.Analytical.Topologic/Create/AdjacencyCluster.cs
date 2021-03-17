@@ -271,7 +271,7 @@ namespace SAM.Analytical.Topologic
                         redundantPanels.AddRange(panels_Old);
                     }
 
-                    Core.Modify.Add(log, "Old Panel found: {0}", panel_Old.Guid);                  
+                    Core.Modify.Add(log, "Old Panel found: {0}", panel_Old.Guid);
 
                     Panel panel_New = null;
 
@@ -317,6 +317,13 @@ namespace SAM.Analytical.Topologic
                 Core.Modify.Add(log, "Solving Redundant Panels");
                 foreach(Panel panel in redundantPanels)
                     result.RemoveObject<Panel>(panel.Guid);
+            }
+
+            List<Panel> panels_Shading = Analytical.Query.CutShading(result.GetPanels(), panels, tolerance);
+            if(panels_Shading != null || panels_Shading.Count != 0)
+            {
+                foreach (Panel panel_Shading in panels_Shading)
+                    result.AddObject(panel_Shading);
             }
 
             Core.Modify.Add(log, "AdjacencyCluster verification");
