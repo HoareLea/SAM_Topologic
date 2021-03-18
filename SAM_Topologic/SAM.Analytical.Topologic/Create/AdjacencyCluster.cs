@@ -114,24 +114,36 @@ namespace SAM.Analytical.Topologic
                 return null;
             }
 
-            List<Space> spaces_Temp = new List<Space>();
-            if (spaces != null)
-            {
-                foreach(Space space in spaces)
-                {
-                    if (space == null || space.Location == null || !space.IsPlaced())
-                        continue;
-
-                    spaces_Temp.Add(space);
-                }
-            }
-                
-
             List<Geometry.Spatial.Shell> shells = cells.ToSAM();
             Core.Modify.Add(log, "Single CellComplex converted to shells");
 
             if (shells == null)
                 return null;
+
+            //Matching spaces with shells
+            Dictionary<Geometry.Spatial.Shell, List<Space>> dictionary_Spaces = new Dictionary<Geometry.Spatial.Shell, List<Space>>();
+            if (spaces != null)
+            {
+                foreach (Space space in spaces)
+                {
+                    if (space == null || space.Location == null || !space.IsPlaced())
+                        continue;
+
+                    List<Geometry.Spatial.Shell> shells_Temp = Analytical.Query.SpaceShells(shells, space.Location, silverSpacing, tolerance);
+                    if (shells_Temp == null || shells_Temp.Count == 0)
+                        continue;
+
+                    foreach(Geometry.Spatial.Shell shell in shells_Temp)
+                    {
+                        if(!dictionary_Spaces.TryGetValue(shell, out List<Space> spaces_Shell))
+                        {
+                            spaces_Shell = new List<Space>();
+                            dictionary_Spaces[shell] = spaces_Shell;
+                        }
+                        spaces_Shell.Add(space);
+                    }
+                }
+            }
 
             HashSet<Guid> guids_Updated = new HashSet<Guid>();
 
@@ -142,7 +154,6 @@ namespace SAM.Analytical.Topologic
             List<Tuple<Panel, Point3D>> tuples_InternalPoint3D = new List<Tuple<Panel, Point3D>>();
 
             for (int i=0; i < shells.Count; i++)
-            //foreach (Geometry.Spatial.Shell shell in shells)
             {
                 Geometry.Spatial.Shell shell = shells[i];
                 if (shell == null)
@@ -159,48 +170,10 @@ namespace SAM.Analytical.Topologic
                     Core.Modify.Add(log, "No face2Ds found in Shell");
                     continue;
                 }
-                    
-                List<Space> spaces_Shell = spaces_Temp.FindAll(x => shell.InRange(x.Location, tolerance) || shell.Inside(x.Location, silverSpacing, tolerance));
 
-                //Handling cases where Space Location is on the floor
-                if (spaces_Shell.Count > 1)
-                {
-                    List<Space> spaces_Shell_Temp = new List<Space>();
-                    foreach(Space space_Shell in spaces_Shell)
-                    {
-                        Point3D point3D = space_Shell.Location.GetMoved(Vector3D.WorldZ * silverSpacing) as Point3D;
-                        if (point3D == null)
-                            continue;
+                dictionary_Spaces.TryGetValue(shell, out List<Space> spaces_Shell);
 
-                        if (!shell.InRange(point3D, tolerance) && !shell.Inside(point3D, tolerance))
-                            continue;
-
-                        spaces_Shell_Temp.Add(space_Shell);
-                    }
-
-                    spaces_Shell = spaces_Shell_Temp;
-                }
-
-                if (spaces_Shell.Count != 0)
-                {
-                    //Handling cases where Space Location is on the floor
-                    if(spaces_Shell.Count > 1)
-                    {
-                        Vector3D vector3D = Vector3D.WorldZ * silverSpacing;
-                        List<Point3D> point3D_Locations = spaces_Shell.ConvertAll(x => (Point3D)x.Location.GetMoved(vector3D));
-                        List<Point3D> point3D_Locations_Temp = point3D_Locations.FindAll(x => shell.InRange(x, tolerance) || shell.Inside(x, silverSpacing, tolerance));
-                        if(point3D_Locations_Temp != null && point3D_Locations_Temp.Count > 0)
-                        {
-                            List<Space> spaces_Shell_Temp = point3D_Locations_Temp.ConvertAll(x => point3D_Locations.IndexOf(x)).ConvertAll(x => spaces_Shell[x]);
-                            if (spaces_Shell_Temp != null && spaces_Shell_Temp.Count != 0)
-                                spaces_Shell = spaces_Shell_Temp;
-                        }
-
-                    }
-
-                    spaces_Temp.RemoveAll(x => spaces_Shell.Contains(x));
-                }
-                else
+                if (spaces_Shell == null || spaces_Shell.Count == 0)
                 {
                     Core.Modify.Add(log, "Creating new Space");
 
@@ -215,6 +188,7 @@ namespace SAM.Analytical.Topologic
                         continue;
 
                     spaces_Shell = new List<Space>() { space };
+                    dictionary_Spaces[shell] = spaces_Shell;
                 }
 
                 if (spaces_Shell == null || spaces_Shell.Count == 0)
