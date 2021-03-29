@@ -13,7 +13,7 @@ namespace SAM.Analytical.Topologic
             Geometry.Spatial.Plane plane = face3D.GetPlane();
             double area = face3D.GetArea();
 
-            Geometry.Planar.IClosed2D closed2D_1 = plane.Convert(face3D.GetExternalEdge3D());
+            Geometry.Planar.IClosed2D closed2D_1 = Geometry.Spatial.Query.Convert(plane, face3D.GetExternalEdge3D());
             Geometry.Planar.Point2D point2D_Internal = closed2D_1.GetInternalPoint2D();
 
             double areaDifferece_Min = double.MaxValue;
@@ -35,11 +35,11 @@ namespace SAM.Analytical.Topologic
                     continue;
 
                 Geometry.Spatial.Point3D point3D_Origin = plane_Temp.Origin;
-                Geometry.Spatial.Point3D point3D_Project = plane.Project(point3D_Origin);
+                Geometry.Spatial.Point3D point3D_Project = Geometry.Spatial.Query.Project(plane, point3D_Origin);
                 if (point3D_Origin.Distance(point3D_Project) > distanceTolerance)
                     continue;
 
-                Geometry.Planar.IClosed2D closed2D_2 = plane.Convert(face3D_Temp.GetExternalEdge3D());
+                Geometry.Planar.IClosed2D closed2D_2 = Geometry.Spatial.Query.Convert(plane, face3D_Temp.GetExternalEdge3D());
                 if (closed2D_2.Inside(point2D_Internal))
                 {
                     result = keyValuePair.Key;
