@@ -33,8 +33,14 @@ namespace SAM.Geometry.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterInputParams(GH_InputParamManager manager)
         {
-            manager.AddGenericParameter("_cell", "_cell", "Cell", GH_ParamAccess.item);
-            manager.AddGenericParameter("_vertex", "_vertex", "Vertex", GH_ParamAccess.item);
+            int index = -1;
+
+            index = manager.AddGenericParameter("_cell", "_cell", "Cell", GH_ParamAccess.item);
+            manager[index].DataMapping = GH_DataMapping.Flatten;
+
+            index = manager.AddGenericParameter("_vertex", "_vertex", "Vertex", GH_ParamAccess.item);
+            manager[index].DataMapping = GH_DataMapping.Graft;
+
             manager.AddBooleanParameter("_allowOnBoundary", "_allowOnBoundary", "Allow On Boundary", GH_ParamAccess.item);
             manager.AddNumberParameter("_tolerance_", "_tolerance_", "Tolerance", GH_ParamAccess.item, SAM.Core.Tolerance.MacroDistance);
         }
