@@ -73,9 +73,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Component\FacesCellComplex.cs" />
+    <Compile Include="Component\GeometryTopology.cs" />
     <Compile Include="Component\SAMShellsSplit.cs" />
+    <Compile Include="Component\TopologySlice.cs" />
     <Compile Include="Component\TopologyInspect.cs" />
     <Compile Include="Component\TopologyGeometry.cs" />
+    <Compile Include="Component\TopologyCreateCluster.cs" />
     <Compile Include="Convert\ToRhino\Breps.cs" />
     <Compile Include="Convert\ToRhino\Curves.cs" />
     <Compile Include="Convert\ToRhino\NurbsSurface.cs" />
@@ -86,6 +89,11 @@
     <Compile Include="Convert\ToRhino\Objects.cs" />
     <Compile Include="Convert\ToRhino\Surface.cs" />
     <Compile Include="Convert\ToRhino\Point.cs" />
+    <Compile Include="Convert\ToTopologic\Wire.cs" />
+    <Compile Include="Convert\ToTopologic\Vertex.cs" />
+    <Compile Include="Convert\ToTopologic\Edge.cs" />
+    <Compile Include="Convert\ToTopologic\Face.cs" />
+    <Compile Include="Convert\ToTopologic\Topology.cs" />
     <Compile Include="Kernel\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
