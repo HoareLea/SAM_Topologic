@@ -75,6 +75,7 @@
     <Compile Include="Component\FacesCellComplex.cs" />
     <Compile Include="Component\GeometryTopology.cs" />
     <Compile Include="Component\SAMShellsSplit.cs" />
+    <Compile Include="Component\TopologyCellContains.cs" />
     <Compile Include="Component\TopologySlice.cs" />
     <Compile Include="Component\TopologyInspect.cs" />
     <Compile Include="Component\TopologyGeometry.cs" />
