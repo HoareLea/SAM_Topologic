@@ -9,7 +9,7 @@ namespace SAM.Geometry.Topologic
 {
     public static partial class Query
     {
-        public static bool TrySplit(this IEnumerable<Spatial.Shell> shells_In, out List<Spatial.Shell> shells_Out, out List<Topology> topologies, bool tryCellComplexByCells = true, double tolerance = Core.Tolerance.Distance)
+        public static bool TrySplit_Obsolete(this IEnumerable<Spatial.Shell> shells_In, out List<Spatial.Shell> shells_Out, out List<Topology> topologies, bool tryCellComplexByCells = true, double tolerance = Core.Tolerance.Distance)
         {
             shells_Out = null;
             topologies = null;
@@ -18,13 +18,13 @@ namespace SAM.Geometry.Topologic
                 return false;
 
             List<global::Topologic.Face> faces = new List<global::Topologic.Face>();
-            foreach(Spatial.Shell shell in shells_In)
+            foreach (Spatial.Shell shell in shells_In)
             {
                 List<Face3D> face3Ds = shell?.Face3Ds;
                 if (face3Ds == null || face3Ds.Count == 0)
                     continue;
-                
-                foreach(Face3D face3D in face3Ds)
+
+                foreach (Face3D face3D in face3Ds)
                 {
                     global::Topologic.Face face = Convert.ToTopologic(face3D);
                     if (face != null)
@@ -85,6 +85,51 @@ namespace SAM.Geometry.Topologic
                     cells = null;
                 }
             }
+
+            if (cells == null || cells.Count == 0)
+                return false;
+
+            shells_Out = cells.ToSAM();
+            return shells_Out != null;
+        }
+
+        public static bool TrySplit(this IEnumerable<Spatial.Shell> shells_In, out List<Spatial.Shell> shells_Out, out List<Topology> topologies, double tolerance = Core.Tolerance.Distance)
+        {
+            shells_Out = null;
+            topologies = null;
+
+            if (shells_In == null)
+                return false;
+
+            List<Cell> cells = new List<Cell>();
+            foreach(Spatial.Shell shell in shells_In)
+            {
+                Cell cell = shell?.ToTopologic_Cell(tolerance);
+                if (cell == null)
+                    continue;
+
+                cells.Add(cell);
+            }
+
+            if (cells == null)
+                return false;
+
+            CellComplex cellComplex = null;
+            try
+            {
+                cellComplex = CellComplex.ByCells(cells);
+            }
+            catch (Exception exception)
+            {
+
+            }
+
+            if (cellComplex == null)
+                return false;
+
+            topologies = new List<Topology>() { cellComplex };
+
+            cells = cellComplex.Cells?.ToList();
 
             if (cells == null || cells.Count == 0)
                 return false;

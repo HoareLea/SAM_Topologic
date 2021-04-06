@@ -18,7 +18,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.0";
+        public override string LatestComponentVersion => "1.0.1";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -54,9 +54,9 @@ namespace SAM.Geometry.Grasshopper.Topologic
 
                 global::Grasshopper.Kernel.Parameters.Param_Boolean paramBoolean;
 
-                paramBoolean = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "tryCellComplexByCells_", NickName = "tryCellComplexByCells_", Description = "Try Cell Complex By Cells", Access = GH_ParamAccess.item };
-                paramBoolean.SetPersistentData(true);
-                result.Add(new GH_SAMParam(paramBoolean, ParamVisibility.Voluntary));
+                //paramBoolean = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "tryCellComplexByCells_", NickName = "tryCellComplexByCells_", Description = "Try Cell Complex By Cells", Access = GH_ParamAccess.item };
+                //paramBoolean.SetPersistentData(true);
+                //result.Add(new GH_SAMParam(paramBoolean, ParamVisibility.Voluntary));
 
                 global::Grasshopper.Kernel.Parameters.Param_Number paramNumber;
                 paramNumber = new global::Grasshopper.Kernel.Parameters.Param_Number() { Name = "tolerance_", NickName = "tolerance_", Description = "Tolerance", Access = GH_ParamAccess.item };
@@ -121,17 +121,17 @@ namespace SAM.Geometry.Grasshopper.Topologic
                 if (Query.TryGetSAMGeometries(objectWrapper, out List<Shell> shells_Temp) && shells_Temp != null)
                     shells.AddRange(shells_Temp);
 
-            index = Params.IndexOfInputParam("tryCellComplexByCells_");
-            bool tryCellComplexByCells = true;
-            if (index != -1)
-                dataAccess.GetData(index, ref tryCellComplexByCells);
+            //index = Params.IndexOfInputParam("tryCellComplexByCells_");
+            //bool tryCellComplexByCells = true;
+            //if (index != -1)
+            //    dataAccess.GetData(index, ref tryCellComplexByCells);
 
             index = Params.IndexOfInputParam("tolerance_");
             double tolerance = Core.Tolerance.Distance;
             if (index != -1)
                 dataAccess.GetData(index, ref tolerance);
 
-            bool result = Geometry.Topologic.Query.TrySplit(shells, out List<Shell> shells_Result, out List<global::Topologic.Topology> topologies, tryCellComplexByCells, tolerance);
+            bool result = Geometry.Topologic.Query.TrySplit(shells, out List<Shell> shells_Result, out List<global::Topologic.Topology> topologies, tolerance);
 
             index = Params.IndexOfOutputParam("Shells");
             if (index != -1)
