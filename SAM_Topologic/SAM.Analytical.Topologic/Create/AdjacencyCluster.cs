@@ -253,12 +253,12 @@ namespace SAM.Analytical.Topologic
                     {
                         if (guids_Updated.Contains(panel_Old.Guid))
                         {
-                            panel_New = new Panel(Guid.NewGuid(), panel_Old, face3D);
+                            panel_New = Analytical.Create.Panel(Guid.NewGuid(), panel_Old, face3D);
                             Core.Modify.Add(log, "Creating new Panel for Old Panel [{0}]. New Panel [{1}]", panel_Old.Guid, panel_New.Guid);
                         }
                         else
                         {
-                            panel_New = new Panel(panel_Old.Guid, panel_Old, face3D);
+                            panel_New = Analytical.Create.Panel(panel_Old.Guid, panel_Old, face3D);
                             guids_Updated.Add(panel_Old.Guid);
                             Core.Modify.Add(log, "Updating Panel [{0}] with new geometry", panel_New.Guid);
                         }
@@ -267,7 +267,7 @@ namespace SAM.Analytical.Topologic
                     }
                     else
                     {
-                        panel_New = new Panel(panel_Old.Guid, panel_Old, face3D);
+                        panel_New = Analytical.Create.Panel(panel_Old.Guid, panel_Old, face3D);
                         Core.Modify.Add(log, "Creating temporary Panel for Panel [{0}]", panel_New.Guid);
                     }
 
