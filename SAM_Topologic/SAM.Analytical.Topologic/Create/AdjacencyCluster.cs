@@ -24,8 +24,14 @@ namespace SAM.Analytical.Topologic
 
             List<Face> faces = new List<Face>();
 
+            List<Panel> panels_Temp = result.GetObjects<Panel>();
+            if(panels_Temp == null || panels_Temp.Count == 0)
+            {
+                return result;
+            }
+
             int index = 1;
-            foreach (Panel panel in result.GetObjects<Panel>())
+            foreach (Panel panel in panels_Temp)
             {
                 if (panel == null)
                     continue;
