@@ -2,7 +2,6 @@
 using Grasshopper.Kernel.Types;
 using SAM.Core.Grasshopper;
 using SAM.Geometry.Grasshopper.Topologic.Properties;
-using SAM.Geometry.Spatial;
 using System;
 
 namespace SAM.Geometry.Grasshopper.Topologic

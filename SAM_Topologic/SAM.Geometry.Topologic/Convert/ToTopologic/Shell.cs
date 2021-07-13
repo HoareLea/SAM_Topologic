@@ -1,6 +1,5 @@
 ﻿using SAM.Geometry.Spatial;
 using System.Collections.Generic;
-using Topologic;
 
 namespace SAM.Geometry.Topologic
 {
