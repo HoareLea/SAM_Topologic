@@ -41,7 +41,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
             inputParamManager.AddParameter(new GooAdjacencyClusterParam(), "_adjacencyCluster", "_adjacencyCluster", "SAM AdjacencyCluster", GH_ParamAccess.item);
-            inputParamManager.AddParameter(new Core.Grasshopper.GooSAMObjectParam<SAMObject>(), "_SAMAnalytical", "_SAMAnalytical", "SAM Analytical Object", GH_ParamAccess.item);
+            inputParamManager.AddParameter(new GooSAMObjectParam<SAMObject>(), "_SAMAnalytical", "_SAMAnalytical", "SAM Analytical Object", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
         {
-            outputParamManager.AddParameter(new Core.Grasshopper.GooSAMObjectParam<SAMObject>(), "AdjacenciesList", "AdjacenciesList", "AdjacenciesList", GH_ParamAccess.list);
+            outputParamManager.AddParameter(new GooSAMObjectParam<SAMObject>(), "AdjacenciesList", "AdjacenciesList", "AdjacenciesList", GH_ParamAccess.list);
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// </param>
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
-            Analytical.AdjacencyCluster adjacencyCluster = null;
+            AdjacencyCluster adjacencyCluster = null;
 
             if (!dataAccess.GetData(0, ref adjacencyCluster))
             {
@@ -93,7 +93,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
                 return;
             }
 
-            dataAccess.SetDataList(0, result.ToList().ConvertAll(x => new Core.Grasshopper.GooSAMObject<SAMObject>(x)));
+            dataAccess.SetDataList(0, result.ToList().ConvertAll(x => new GooSAMObject<SAMObject>(x)));
         }
     }
 }

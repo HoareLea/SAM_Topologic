@@ -36,7 +36,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
             else
             {
 
-                global::Topologic.Shell shell = global::Topologic.Shell.ByFaces(faces, tolerance);
+                Shell shell = global::Topologic.Shell.ByFaces(faces, tolerance);
                 if (brep.IsSolid)
                 {
                     Cell cell = Cell.ByShell(shell);

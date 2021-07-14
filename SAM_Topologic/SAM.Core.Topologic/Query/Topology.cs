@@ -21,7 +21,7 @@ namespace SAM.Core.Topologic
             string filePath = System.IO.Path.GetTempFileName();
             System.IO.File.WriteAllText(filePath, text);
 
-            global::Topologic.Topology result = global::Topologic.Topology.ByImportedBRep(filePath);
+            Topology result = global::Topologic.Topology.ByImportedBRep(filePath);
             System.IO.File.Delete(filePath);
 
             return result;

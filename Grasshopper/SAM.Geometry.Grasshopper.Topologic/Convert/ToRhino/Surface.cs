@@ -5,7 +5,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
 {
     public static partial class Convert
     {
-        public static Rhino.Geometry.Surface ToRhino(global::Topologic.Face face)
+        public static Surface ToRhino(global::Topologic.Face face)
         {
             Object faceGeometry = face.BasicGeometry;
 

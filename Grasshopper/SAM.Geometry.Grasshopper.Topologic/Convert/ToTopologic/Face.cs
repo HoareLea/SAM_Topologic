@@ -90,7 +90,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
                 return planeSurface.ToTopologic();
             }
 
-            Rhino.Geometry.Extrusion ghExtrusion = surface as Rhino.Geometry.Extrusion;
+            Extrusion ghExtrusion = surface as Extrusion;
             if (ghExtrusion != null)
             {
                 return ghExtrusion.ToTopologic();
@@ -166,7 +166,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
             return ghNurbsSurface?.ToTopologic();
         }
 
-        public static global::Topologic.Face ToTopologic(Rhino.Geometry.Extrusion extrusion)
+        public static global::Topologic.Face ToTopologic(Extrusion extrusion)
         {
             Rhino.Geometry.NurbsSurface ghNurbsSurface = extrusion?.ToNurbsSurface();
             return ghNurbsSurface?.ToTopologic();

@@ -25,12 +25,12 @@ namespace SAM_TopologicCoreDynamo
             return ((Topologic.Topology)topology).Faces;
         }
 
-        public static List<global::Topologic.Wire> ToWires(Topologic.Topology topology)
+        public static List<Topologic.Wire> ToWires(Topologic.Topology topology)
         {
             return topology?.Wires?.ToList();
         }
 
-        public static List<global::Topologic.Vertex> ToVertices(Topologic.Topology topology)
+        public static List<Topologic.Vertex> ToVertices(Topologic.Topology topology)
         {
             return topology?.Vertices?.ToList();
         }

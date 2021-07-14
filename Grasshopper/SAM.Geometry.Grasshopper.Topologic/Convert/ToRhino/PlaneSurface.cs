@@ -18,7 +18,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
             Vertex faceCenterOfMass = face.CenterOfMass;
             Point3d ghFaceCenterOfMass = ToRhino(faceCenterOfMass);
 
-            Rhino.Geometry.Plane ghPlane = new Rhino.Geometry.Plane(a, b, c, d);
+            Plane ghPlane = new Plane(a, b, c, d);
 
             double occtXMin = planarSurface.XMin;
             double occtXMax = planarSurface.XMax;
