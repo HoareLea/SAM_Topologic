@@ -1,4 +1,5 @@
 ﻿using Grasshopper.Kernel;
+using Rhino.Geometry;
 using SAM.Core.Grasshopper;
 using SAM.Geometry.Grasshopper.Topologic.Properties;
 using SAM.Geometry.Spatial;
@@ -95,8 +96,12 @@ namespace SAM.Geometry.Grasshopper.Topologic
             Shell shell = sAMGeometry as Shell;
             if (shell != null)
             {
-                dataAccess.SetData(0, Geometry.Topologic.Convert.ToTopologic((ISAMGeometry3D)shell));
-                return;
+                Brep brep = shell.ToRhino();
+                if(brep != null)
+                {
+                    dataAccess.SetData(0, brep.ToTopologic(Core.Tolerance.MacroDistance));
+                    return;
+                }
             }
 
             AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Cannot convert geometry");

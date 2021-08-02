@@ -90,6 +90,7 @@
     <Folder Include="Classes\" />
     <Folder Include="Component\" />
     <Folder Include="Convert\" />
+    <Folder Include="Create\" />
     <Folder Include="Interfaces\" />
     <Folder Include="Query\" />
   </ItemGroup>
