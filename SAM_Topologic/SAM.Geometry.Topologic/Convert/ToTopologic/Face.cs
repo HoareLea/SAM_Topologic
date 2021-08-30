@@ -14,7 +14,14 @@ namespace SAM.Geometry.Topologic
                 List<Edge> edges = new List<Edge>();
                 foreach (ICurve3D curve3D in ((ICurvable3D)closedPlanar3D).GetCurves())
                 {
-                    Edge edge = Edge.ByStartVertexEndVertex(ToTopologic(curve3D.GetStart()), ToTopologic(curve3D.GetEnd()));
+                    Point3D point3D_1 = curve3D.GetStart();
+                    Point3D point3D_2 = curve3D.GetEnd();
+                    if(point3D_1 == point3D_2)
+                    {
+                        continue;
+                    }
+
+                    Edge edge = Edge.ByStartVertexEndVertex(ToTopologic(point3D_1), ToTopologic(point3D_2));
                     edges.Add(edge);
                 }
 

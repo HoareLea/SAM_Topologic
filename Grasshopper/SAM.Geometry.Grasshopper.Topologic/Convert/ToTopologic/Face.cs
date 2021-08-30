@@ -34,6 +34,10 @@ namespace SAM.Geometry.Grasshopper.Topologic
                     }
 
                     Topology topology = ghEdge.DuplicateCurve().ToTopologic();
+                    if(topology == null)
+                    {
+                        continue;
+                    }
 
                     // Edge or Wire?
                     Edge trimmingEdge = topology as Edge;

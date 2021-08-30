@@ -11,15 +11,33 @@ namespace SAM.Geometry.Grasshopper.Topologic
         public static Edge ToTopologic(this Rhino.Geometry.Line line)
         {
             if (line == null)
+            {
                 return null;
-            
+            }
+
             Vertex vertex_1 = line.From.ToTopologic();
             if (vertex_1 == null)
+            {
                 return null;
+            }
 
             Vertex vertex_2 = line.To.ToTopologic();
             if (vertex_2 == null)
+            {
                 return null;
+            }
+                
+            if(vertex_1 == vertex_2)
+            {
+                return null;
+            }
+
+            if(vertex_1.Coordinates[0] == vertex_2.Coordinates[0] && 
+                vertex_1.Coordinates[1] == vertex_2.Coordinates[1] && 
+                vertex_1.Coordinates[2] == vertex_2.Coordinates[2])
+            {
+                return null;
+            }
 
             return Edge.ByStartVertexEndVertex(vertex_1, vertex_2);
         }
