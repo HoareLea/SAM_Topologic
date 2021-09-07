@@ -200,14 +200,22 @@ namespace SAM.Analytical.Topologic
                 if (spaces_Shell == null || spaces_Shell.Count == 0)
                     continue;
 
-                double volume = double.NaN;
                 if(cells[i] != null)
                 {
                     Core.Modify.Add(log, "Calculating Volume");
-                    volume = CellUtility.Volume(cells[i]);
+                    double volume = CellUtility.Volume(cells[i]);
 
                     foreach (Space space_Shell in spaces_Shell)
+                    {
                         space_Shell.SetValue(SpaceParameter.Volume, volume);
+                    }
+
+                    Core.Modify.Add(log, "Calculating Area");
+                    double area = shell.Area(silverSpacing, tolerance_Distance: tolerance, tolerance_Snap: silverSpacing);
+                    foreach (Space space_Shell in spaces_Shell)
+                    {
+                        space_Shell.SetValue(SpaceParameter.Area, area);
+                    }
                 }
 
                 Core.Modify.Add(log, "Upadting Panels");
