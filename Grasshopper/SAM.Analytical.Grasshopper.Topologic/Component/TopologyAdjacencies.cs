@@ -18,7 +18,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.0";
+        public override string LatestComponentVersion => "1.0.1";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -41,7 +41,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
             inputParamManager.AddParameter(new GooAdjacencyClusterParam(), "_adjacencyCluster", "_adjacencyCluster", "SAM AdjacencyCluster", GH_ParamAccess.item);
-            inputParamManager.AddParameter(new GooSAMObjectParam<SAMObject>(), "_SAMAnalytical", "_SAMAnalytical", "SAM Analytical Object", GH_ParamAccess.item);
+            inputParamManager.AddParameter(new GooJSAMObjectParam<SAMObject>(), "_SAMAnalytical", "_SAMAnalytical", "SAM Analytical Object", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
         {
-            outputParamManager.AddParameter(new GooSAMObjectParam<SAMObject>(), "AdjacenciesList", "AdjacenciesList", "AdjacenciesList", GH_ParamAccess.list);
+            outputParamManager.AddParameter(new GooJSAMObjectParam<SAMObject>(), "AdjacenciesList", "AdjacenciesList", "AdjacenciesList", GH_ParamAccess.list);
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
                 return;
             }
 
-            dataAccess.SetDataList(0, result.ToList().ConvertAll(x => new GooSAMObject<SAMObject>(x)));
+            dataAccess.SetDataList(0, result.ToList().ConvertAll(x => new GooJSAMObject<SAMObject>(x)));
         }
     }
 }
