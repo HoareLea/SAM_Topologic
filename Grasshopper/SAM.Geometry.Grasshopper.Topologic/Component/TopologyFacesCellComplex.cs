@@ -8,7 +8,7 @@ using Topologic;
 
 namespace SAM.Geometry.Grasshopper.Topologic
 {
-    public class FacesCellComplex : GH_SAMComponent
+    public class TopologyFacesCellComplex : GH_SAMComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -18,7 +18,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.1";
+        public override string LatestComponentVersion => "1.0.2";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -28,8 +28,8 @@ namespace SAM.Geometry.Grasshopper.Topologic
         /// <summary>
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
-        public FacesCellComplex()
-          : base("Faces.CellComplex", "Faces.CellComplex",
+        public TopologyFacesCellComplex()
+          : base("Topology.FacesCellComplex", "Topology.FacesCellComplex",
               "Create Topologic CellComplex by Topologic Face",
               "SAM", "Topologic")
         {

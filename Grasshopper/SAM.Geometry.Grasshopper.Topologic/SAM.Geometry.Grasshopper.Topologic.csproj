@@ -72,9 +72,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Component\FacesCellComplex.cs" />
+    <Compile Include="Component\SAMGeometryCreateShells.cs" />
+    <Compile Include="Component\TopologyFacesCellComplex.cs" />
     <Compile Include="Component\GeometryTopology.cs" />
-    <Compile Include="Component\SAMShellsSplit.cs" />
+    <Compile Include="Component\SAMGeometryShellsSplit.cs" />
     <Compile Include="Component\TopologyCellContains.cs" />
     <Compile Include="Component\TopologyCenterOfMass.cs" />
     <Compile Include="Component\TopologyCentroid.cs" />
