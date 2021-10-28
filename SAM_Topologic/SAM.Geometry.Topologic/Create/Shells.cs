@@ -86,5 +86,17 @@ namespace SAM.Geometry.Topologic
 
             return cells?.ToSAM();
         }
+
+        public static List<Spatial.Shell> Shells<T>(IEnumerable<T> face3DObjects, out List<Topology> topologies, bool tryCellComplexByCells = true, double tolerance = Tolerance.Distance) where T :IFace3DObject
+        {
+            topologies = null;
+
+            if (face3DObjects == null)
+            {
+                return null;
+            }
+
+            return Shells(face3DObjects.ToList().ConvertAll(x => x?.Face3D), out topologies, tryCellComplexByCells, tolerance);
+        }
     }
 }
