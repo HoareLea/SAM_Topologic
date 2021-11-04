@@ -58,7 +58,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
                 return lineCurve.Line.ToTopologic();
             }
 
-            Rhino.Geometry.NurbsCurve nurbsCurve = curve as Rhino.Geometry.NurbsCurve;
+            global::Rhino.Geometry.NurbsCurve nurbsCurve = curve as global::Rhino.Geometry.NurbsCurve;
             if (nurbsCurve != null)
             {
                 return nurbsCurve.ToTopologic();

@@ -5,7 +5,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
 {
     public static partial class Convert
     {
-        public static Rhino.Geometry.NurbsSurface ToRhino_NurbsSurface(this global::Topologic.NurbsSurface nurbsSurface)
+        public static global::Rhino.Geometry.NurbsSurface ToRhino_NurbsSurface(this global::Topologic.NurbsSurface nurbsSurface)
         {
             int uDegree = nurbsSurface.UDegree;
             int vDegree = nurbsSurface.VDegree;
@@ -13,7 +13,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
             int uCount = nurbsSurface.NumOfUControlVertices;
             int vCount = nurbsSurface.NumOfVControlVertices;
 
-            Rhino.Geometry.NurbsSurface ghNurbsSurface = Rhino.Geometry.NurbsSurface.Create(
+            global::Rhino.Geometry.NurbsSurface ghNurbsSurface = global::Rhino.Geometry.NurbsSurface.Create(
                 3,
                 isRational,
                 uDegree + 1,

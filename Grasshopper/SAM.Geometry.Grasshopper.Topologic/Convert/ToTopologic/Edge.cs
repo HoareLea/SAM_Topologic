@@ -8,7 +8,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
 {
     public static partial class Convert
     {
-        public static Edge ToTopologic(this Rhino.Geometry.Line line)
+        public static Edge ToTopologic(this global::Rhino.Geometry.Line line)
         {
             if (line == null)
             {
@@ -42,7 +42,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
             return Edge.ByStartVertexEndVertex(vertex_1, vertex_2);
         }
 
-        public static Edge ToTopologic(this Rhino.Geometry.NurbsCurve nurbsCurve)
+        public static Edge ToTopologic(this global::Rhino.Geometry.NurbsCurve nurbsCurve)
         {
             if (nurbsCurve == null)
                 return null;
@@ -71,8 +71,8 @@ namespace SAM.Geometry.Grasshopper.Topologic
         {
             if (arcCurve == null)
                 return null;
-            
-            Rhino.Geometry.NurbsCurve nurbsCurve = arcCurve.ToNurbsCurve();
+
+            global::Rhino.Geometry.NurbsCurve nurbsCurve = arcCurve.ToNurbsCurve();
             return ToTopologic(nurbsCurve);
         }
 
@@ -80,8 +80,8 @@ namespace SAM.Geometry.Grasshopper.Topologic
         {
             if (brepEdge == null)
                 return null;
-            
-            Rhino.Geometry.NurbsCurve nurbsCurve = brepEdge.ToNurbsCurve();
+
+            global::Rhino.Geometry.NurbsCurve nurbsCurve = brepEdge.ToNurbsCurve();
             return ToTopologic(nurbsCurve);
         }
     }

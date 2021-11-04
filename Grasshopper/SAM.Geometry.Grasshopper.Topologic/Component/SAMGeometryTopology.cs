@@ -96,7 +96,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
             Shell shell = sAMGeometry as Shell;
             if (shell != null)
             {
-                Brep brep = shell.ToRhino();
+                Brep brep = Rhino.Convert.ToRhino(shell);
                 if(brep != null)
                 {
                     dataAccess.SetData(0, brep.ToTopologic(Core.Tolerance.MacroDistance));

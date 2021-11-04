@@ -43,7 +43,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
                 ghYMax);
 
             PlaneSurface ghPlaneSurface = new PlaneSurface(ghPlane, xExtents, yExtents);
-            Point3d ghCentroid = Rhino.Geometry.AreaMassProperties.Compute(ghPlaneSurface).Centroid;
+            Point3d ghCentroid = AreaMassProperties.Compute(ghPlaneSurface).Centroid;
             Vector3d ghTranslationVector = ghFaceCenterOfMass - ghCentroid;
             ghPlaneSurface.Translate(ghTranslationVector);
             if (!ghPlaneSurface.IsValid)

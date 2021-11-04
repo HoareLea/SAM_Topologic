@@ -15,7 +15,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
             List<Vertex> controlVertices = nurbsCurve.ControlVertices;
             List<Point3d> ghControlPoints = new List<Point3d>();
 
-            Rhino.Geometry.NurbsCurve ghNurbsCurve = new Rhino.Geometry.NurbsCurve(3, isRational, degree + 1, controlVertices.Count);
+            global::Rhino.Geometry.NurbsCurve ghNurbsCurve = new global::Rhino.Geometry.NurbsCurve(3, isRational, degree + 1, controlVertices.Count);
 
             int i = 0;
             foreach (Vertex controlVertex in controlVertices)

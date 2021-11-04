@@ -10,7 +10,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
     {
         public static global::Topologic.Face ToTopologic(this BrepFace brepFace)
         {
-            Rhino.Geometry.Surface ghSurface = brepFace?.UnderlyingSurface();
+            global::Rhino.Geometry.Surface ghSurface = brepFace?.UnderlyingSurface();
             if (ghSurface == null)
                 return null;
 
@@ -71,7 +71,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
             return finalFace;
         }
 
-        public static global::Topologic.Face ToTopologic(this Rhino.Geometry.Surface surface)
+        public static global::Topologic.Face ToTopologic(this global::Rhino.Geometry.Surface surface)
         {
             if (surface == null)
                 return null;
@@ -100,7 +100,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
                 return ghExtrusion.ToTopologic();
             }
 
-            Rhino.Geometry.NurbsSurface ghNurbsSurface = surface as Rhino.Geometry.NurbsSurface;
+            global::Rhino.Geometry.NurbsSurface ghNurbsSurface = surface as global::Rhino.Geometry.NurbsSurface;
             if (ghNurbsSurface != null)
             {
                 return ghNurbsSurface.ToTopologic();
@@ -112,11 +112,11 @@ namespace SAM.Geometry.Grasshopper.Topologic
 
         public static global::Topologic.Face ToTopologic(this SumSurface sumSurface)
         {
-            Rhino.Geometry.NurbsSurface ghNurbsSurface = sumSurface?.ToNurbsSurface();
+            global::Rhino.Geometry.NurbsSurface ghNurbsSurface = sumSurface?.ToNurbsSurface();
             return ghNurbsSurface?.ToTopologic();
         }
 
-        public static global::Topologic.Face ToTopologic(this Rhino.Geometry.NurbsSurface nurbsSurface)
+        public static global::Topologic.Face ToTopologic(this global::Rhino.Geometry.NurbsSurface nurbsSurface)
         {
             if (nurbsSurface == null)
                 return null;
@@ -160,19 +160,19 @@ namespace SAM.Geometry.Grasshopper.Topologic
 
         public static global::Topologic.Face ToTopologic(this RevSurface revSurface)
         {
-            Rhino.Geometry.NurbsSurface ghNurbsSurface = revSurface?.ToNurbsSurface();
+            global::Rhino.Geometry.NurbsSurface ghNurbsSurface = revSurface?.ToNurbsSurface();
             return ghNurbsSurface?.ToTopologic();
         }
 
         public static global::Topologic.Face ToTopologic(this PlaneSurface planeSurface)
         {
-            Rhino.Geometry.NurbsSurface ghNurbsSurface = planeSurface?.ToNurbsSurface();
+            global::Rhino.Geometry.NurbsSurface ghNurbsSurface = planeSurface?.ToNurbsSurface();
             return ghNurbsSurface?.ToTopologic();
         }
 
         public static global::Topologic.Face ToTopologic(Extrusion extrusion)
         {
-            Rhino.Geometry.NurbsSurface ghNurbsSurface = extrusion?.ToNurbsSurface();
+            global::Rhino.Geometry.NurbsSurface ghNurbsSurface = extrusion?.ToNurbsSurface();
             return ghNurbsSurface?.ToTopologic();
         }
     }

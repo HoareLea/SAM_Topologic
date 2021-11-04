@@ -9,7 +9,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
     {
         public static Brep ToRhino(global::Topologic.Face face, double tolerance = Core.Tolerance.Distance)
         {
-            Rhino.Geometry.Surface ghSurface = ToRhino(face);
+            global::Rhino.Geometry.Surface ghSurface = ToRhino(face);
 
             double width = 0.0, height = 0.0;
             bool canGetSurfaceSize = ghSurface.GetSurfaceSize(out width, out height);
