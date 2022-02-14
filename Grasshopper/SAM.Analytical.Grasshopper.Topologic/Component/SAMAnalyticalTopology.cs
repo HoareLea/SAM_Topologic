@@ -3,6 +3,7 @@ using SAM.Analytical.Grasshopper.Topologic.Properties;
 using SAM.Core;
 using SAM.Core.Grasshopper;
 using System;
+using System.Collections.Generic;
 
 namespace SAM.Analytical.Grasshopper.Topologic
 {
@@ -16,7 +17,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.1";
+        public override string LatestComponentVersion => "1.0.2";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -46,7 +47,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
         {
-            outputParamManager.AddGenericParameter("Topology", "Topology", "Topologic Geometry", GH_ParamAccess.item);
+            outputParamManager.AddGenericParameter("Topology", "Topology", "Topologic Geometry", GH_ParamAccess.list);
         }
 
         /// <summary>
@@ -66,7 +67,33 @@ namespace SAM.Analytical.Grasshopper.Topologic
 
             if (sAMObject is Panel)
             {
-                dataAccess.SetData(0, Analytical.Topologic.Convert.ToTopologic((Panel)sAMObject));
+                dataAccess.SetDataList(0, new List<global::Topologic.Face> { Analytical.Topologic.Convert.ToTopologic((Panel)sAMObject) });
+                return;
+            }
+            else if(sAMObject is AdjacencyCluster)
+            {
+                dataAccess.SetDataList(0, null);
+
+                AdjacencyCluster adjacencyCluster = sAMObject as AdjacencyCluster;
+                List<Geometry.Spatial.Shell> shells = adjacencyCluster.GetShells();
+                if(shells != null)
+                {
+                    dataAccess.SetDataList(0, shells.ConvertAll(x => Geometry.Topologic.Convert.ToTopologic_Cell(x)));
+                }
+
+                return;
+            }
+            else if (sAMObject is AnalyticalModel)
+            {
+                dataAccess.SetDataList(0, null);
+
+                AdjacencyCluster adjacencyCluster = (sAMObject as AnalyticalModel).AdjacencyCluster;
+                List<Geometry.Spatial.Shell> shells = adjacencyCluster.GetShells();
+                if (shells != null)
+                {
+                    dataAccess.SetDataList(0, shells.ConvertAll(x => Geometry.Topologic.Convert.ToTopologic_Cell(x)));
+                }
+
                 return;
             }
 
