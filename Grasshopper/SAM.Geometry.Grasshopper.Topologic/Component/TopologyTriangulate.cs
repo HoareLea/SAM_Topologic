@@ -12,7 +12,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
         /// </summary>
-        public override Guid ComponentGuid => new Guid("d6480664-06b2-4e0c-839c-d21f8da9fa3c");
+        public override Guid ComponentGuid => new Guid("6f863686-1a99-46f7-af45-7bca77137366");
 
         /// <summary>
         /// The latest version of this component
@@ -34,7 +34,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterInputParams(GH_InputParamManager manager)
         {
-            manager.AddGenericParameter("_topology", "_topology", "Topology will be silced", GH_ParamAccess.item);
+            manager.AddGenericParameter("_topology", "_topology", "Topology to be triangulated \nCurrently works on Faces", GH_ParamAccess.item);
             manager.AddNumberParameter("_tolerance_", "_tolerance_", "Tolerance", GH_ParamAccess.item, Core.Tolerance.MacroDistance);
         }
 

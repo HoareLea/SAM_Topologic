@@ -33,7 +33,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterInputParams(GH_InputParamManager manager)
         {
-            manager.AddGenericParameter("_topology", "_topology", "Topology will be silced", GH_ParamAccess.item);
+            manager.AddGenericParameter("_topology", "_topology", "Topology will be sliced", GH_ParamAccess.item);
             manager.AddGenericParameter("_sliceTopology", "_sliceTopology", "Slice Topology", GH_ParamAccess.item);
             manager[1].Optional = false;
             manager.AddBooleanParameter("_transferDictionary_", "_transferDictionary_", "Transfer Dictionary", GH_ParamAccess.item, false);
