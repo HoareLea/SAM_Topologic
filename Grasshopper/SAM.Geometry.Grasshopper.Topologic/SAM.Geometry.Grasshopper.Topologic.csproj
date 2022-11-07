@@ -82,6 +82,7 @@
     <Compile Include="Component\TopologyCellContains.cs" />
     <Compile Include="Component\TopologyCenterOfMass.cs" />
     <Compile Include="Component\TopologyCentroid.cs" />
+    <Compile Include="Component\TopologyTriangulate.cs" />
     <Compile Include="Component\TopologySlice.cs" />
     <Compile Include="Component\TopologyInspect.cs" />
     <Compile Include="Component\TopologyGeometry.cs" />
