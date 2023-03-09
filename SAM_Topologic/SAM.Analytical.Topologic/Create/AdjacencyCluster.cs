@@ -322,5 +322,128 @@ namespace SAM.Analytical.Topologic
             Core.Modify.Add(log, "Process completed");
             return result;
         }
+
+        public static AdjacencyCluster AdjacencyCluster(CellComplex cellComplex, double elevationGround = 0, double silverSpacing = Tolerance.MacroDistance, double tolerance = Tolerance.Distance)
+        {
+            if(cellComplex == null)
+            {
+                return null;
+            }
+
+            AdjacencyCluster result = new AdjacencyCluster();
+
+            IEnumerable<Cell> cells = cellComplex.Cells;
+            if(cells == null || cells.Count() == 0)
+            {
+                return result;
+            }
+
+            List<Geometry.Spatial.Shell> shells = cells.ToSAM();
+            if(shells == null || shells.Count == 0)
+            {
+                return result;
+            }
+
+            ConstructionLibrary constructionLibrary = ActiveSetting.Setting.GetValue<ConstructionLibrary>(AnalyticalSettingParameter.DefaultConstructionLibrary);
+
+            List<Tuple<Geometry.Spatial.Shell, List<Panel>>> tuples = new List<Tuple<Geometry.Spatial.Shell, List<Panel>>>();
+            foreach(Geometry.Spatial.Shell shell in shells)
+            {
+                List<Face3D> face3Ds = shell?.Face3Ds;
+                if(face3Ds == null || face3Ds.Count == 0)
+                {
+                    continue;
+                }
+
+                Tuple<Geometry.Spatial.Shell, List<Panel>> tuple = new Tuple<Geometry.Spatial.Shell, List<Panel>>(shell, new List<Panel>());
+
+
+                Func<Face3D, Panel> func = new Func<Face3D, Panel>(x => 
+                {
+                    Point3D point3D = x?.InternalPoint3D(tolerance);
+                    if(point3D == null)
+                    {
+                        return null;
+                    }
+
+                    foreach(Tuple<Geometry.Spatial.Shell, List<Panel>> tuple_Temp in tuples)
+                    {
+                        if(tuple_Temp.Item2 == null)
+                        {
+                            continue;
+                        }
+
+                        foreach(Panel panel in tuple_Temp.Item2)
+                        {
+                            Face3D face3D_Temp = panel?.Face3D;
+                            if(face3D_Temp == null)
+                            {
+                                continue;
+                            }
+
+                            if(face3D_Temp.InRange(point3D, silverSpacing))
+                            {
+                                return panel;
+                            }
+                        }
+                    }
+
+                    return null; 
+                });
+
+                foreach(Face3D face3D in face3Ds)
+                {
+                    if(face3D == null)
+                    {
+                        continue;
+                    }
+
+                    Panel panel = func.Invoke(face3D);
+                    if(panel == null)
+                    {
+                        PanelType panelType = Analytical.Query.PanelType(face3D.GetPlane().Normal);
+                        Construction construction = null;
+                        if (panelType != PanelType.Undefined && constructionLibrary != null)
+                        {
+                            construction = constructionLibrary.GetConstructions(panelType).FirstOrDefault();
+                            if (construction == null)
+                                construction = constructionLibrary.GetConstructions(panelType.PanelGroup()).FirstOrDefault();
+                        }
+
+                        panel = Analytical.Create.Panel(construction, panelType, face3D);
+                    }
+
+                    if(panel == null)
+                    {
+                        continue;
+                    }
+
+                    tuple.Item2.Add(panel);
+                }
+
+                tuples.Add(tuple);
+            }
+
+            int index = 1;
+            foreach(Tuple<Geometry.Spatial.Shell, List<Panel>> tuple in tuples)
+            {
+                Point3D location = tuple.Item1.CalculatedInternalPoint3D(silverSpacing, tolerance);
+                if (location == null)
+                    continue;
+
+                Space space = new Space("Cell " + index, location);
+                index++;
+
+                result.AddSpace(space, tuple.Item2);
+            }
+
+            result.Cut(elevationGround, null, tolerance);
+            result = result.UpdateNormals(false, true, false, Tolerance.MacroDistance, tolerance);
+            result.Normalize(false);
+            result.UpdatePanelTypes(elevationGround);
+            result.SetDefaultConstructionByPanelType();
+
+            return result;
+        }
     }
 }

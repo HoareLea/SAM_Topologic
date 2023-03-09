@@ -77,6 +77,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Component\CreateSAMAdjacencyClusterByComplexCell.cs" />
     <Compile Include="Component\CreateSAMAdjacencyCluster_Obsolete.cs" />
     <Compile Include="Component\CreateSAMAdjacencyCluster.cs" />
     <Compile Include="Component\TopologyAdjacencies.cs" />
