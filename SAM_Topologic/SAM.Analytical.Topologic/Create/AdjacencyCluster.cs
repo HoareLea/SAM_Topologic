@@ -346,7 +346,7 @@ namespace SAM.Analytical.Topologic
 
             ConstructionLibrary constructionLibrary = ActiveSetting.Setting.GetValue<ConstructionLibrary>(AnalyticalSettingParameter.DefaultConstructionLibrary);
 
-            List<Tuple<Geometry.Spatial.Shell, List<Panel>>> tuples = new List<Tuple<Geometry.Spatial.Shell, List<Panel>>>();
+            List<Tuple<Geometry.Spatial.Shell, List<Panel>, double>> tuples = new List<Tuple<Geometry.Spatial.Shell, List<Panel>, double>>();
             foreach(Geometry.Spatial.Shell shell in shells)
             {
                 List<Face3D> face3Ds = shell?.Face3Ds;
@@ -355,7 +355,14 @@ namespace SAM.Analytical.Topologic
                     continue;
                 }
 
-                Tuple<Geometry.Spatial.Shell, List<Panel>> tuple = new Tuple<Geometry.Spatial.Shell, List<Panel>>(shell, new List<Panel>());
+                double elevation = double.NaN;
+                BoundingBox3D boundingBox3D = shell.GetBoundingBox();
+                if(boundingBox3D != null)
+                {
+                    elevation = Core.Query.Round(boundingBox3D.Min.Z, Tolerance.MacroDistance);
+                }
+
+                Tuple<Geometry.Spatial.Shell, List<Panel>, double> tuple = new Tuple<Geometry.Spatial.Shell, List<Panel>, double>(shell, new List<Panel>(), elevation);
 
 
                 Func<Face3D, Panel> func = new Func<Face3D, Panel>(x => 
@@ -366,7 +373,7 @@ namespace SAM.Analytical.Topologic
                         return null;
                     }
 
-                    foreach(Tuple<Geometry.Spatial.Shell, List<Panel>> tuple_Temp in tuples)
+                    foreach(Tuple<Geometry.Spatial.Shell, List<Panel>, double> tuple_Temp in tuples)
                     {
                         if(tuple_Temp.Item2 == null)
                         {
@@ -424,15 +431,40 @@ namespace SAM.Analytical.Topologic
                 tuples.Add(tuple);
             }
 
+            List<double> elevations = tuples.ConvertAll(x => x.Item3).Distinct().ToList();
+            elevations.Sort();
+
+            List<Architectural.Level> levels = elevations.ConvertAll(x => Architectural.Create.Level(x));
+
             int index = 1;
-            foreach(Tuple<Geometry.Spatial.Shell, List<Panel>> tuple in tuples)
+            foreach(Tuple<Geometry.Spatial.Shell, List<Panel>, double> tuple in tuples)
             {
+                Geometry.Spatial.Shell shell = tuple.Item1;
+
                 Point3D location = tuple.Item1.CalculatedInternalPoint3D(silverSpacing, tolerance);
                 if (location == null)
                     continue;
 
                 Space space = new Space("Cell " + index, location);
                 index++;
+
+                double area = shell.Area(0.01);
+                if(!double.IsNaN(area))
+                {
+                    space.SetValue(SpaceParameter.Area, area);
+                }
+
+                double volume = shell.Volume(silverSpacing, tolerance);
+                if(!double.IsNaN(volume))
+                {
+                    space.SetValue(SpaceParameter.Volume, volume);
+                }
+
+                Architectural.Level level = levels.Find(x => Core.Query.AlmostEqual(x.Elevation, tuple.Item3));
+                if(level != null)
+                {
+                    space.SetValue(SpaceParameter.LevelName, level.Name);
+                }
 
                 result.AddSpace(space, tuple.Item2);
             }
