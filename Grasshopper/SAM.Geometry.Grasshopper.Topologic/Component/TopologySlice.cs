@@ -21,7 +21,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
         /// <summary>
         /// Provides an Icon for the component.
         /// </summary>
-        protected override System.Drawing.Bitmap Icon => Resources.SAM_Topologic;
+        protected override System.Drawing.Bitmap Icon => Resources.SAM_Topologic3a;
 
         public TopologySlice()
           : base("Topology.Slice", "Topology.Slice", "Slices the input Topology with another Topology", "SAM", "Topologic")
