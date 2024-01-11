@@ -7,7 +7,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
     {
         public static Surface ToRhino(global::Topologic.Face face)
         {
-            Object faceGeometry = face.BasicGeometry;
+            System.Object faceGeometry = face.BasicGeometry;
 
             // 1. Compute the base surface Based on https://developer.rhino3d.com/api/RhinoCommon/html/M_Rhino_Geometry_NurbsSurface_Create.htm
             global::Topologic.NurbsSurface nurbsSurface = faceGeometry as global::Topologic.NurbsSurface;

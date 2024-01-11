@@ -14,7 +14,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
                 return null;
             }
 
-            List<Object> geometries = new List<Object>();
+            List<System.Object> geometries = new List<System.Object>();
             Vertex vertex = topology as Vertex;
             if (vertex != null)
             {
