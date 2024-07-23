@@ -1,29 +1,21 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29519.87
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35027.167
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAM.Geometry.Topologic", "SAM_Topologic\SAM.Geometry.Topologic\SAM.Geometry.Topologic.csproj", "{F50BD61E-ABE4-4867-B815-E9F701968031}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SAM.Geometry.Topologic", "SAM_Topologic\SAM.Geometry.Topologic\SAM.Geometry.Topologic.csproj", "{F50BD61E-ABE4-4867-B815-E9F701968031}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SAM_Topologic", "SAM_Topologic", "{BADE2121-2C37-49A8-87AA-731543A8E39B}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dynamo", "Dynamo", "{6C323826-91AF-47F7-AE3D-051EECF342DE}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Grasshopper", "Grasshopper", "{D8A60381-7F5F-483A-AF23-F77F76BC1419}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAMTopologicGeometryDynamo", "Dynamo\SAM_TopologyGeometryDynamo\SAMTopologicGeometryDynamo.csproj", "{31847A71-1B4C-4E40-A202-391922B39876}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAM.Geometry.Grasshopper.Topologic", "Grasshopper\SAM.Geometry.Grasshopper.Topologic\SAM.Geometry.Grasshopper.Topologic.csproj", "{B8F0EE34-A776-4518-ADA2-E047E468B47B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAM.Analytical.Grasshopper.Topologic", "Grasshopper\SAM.Analytical.Grasshopper.Topologic\SAM.Analytical.Grasshopper.Topologic.csproj", "{E31E5F4E-EAC1-4E48-A5F9-E4560896C2B3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAM.Analytical.Topologic", "SAM_Topologic\SAM.Analytical.Topologic\SAM.Analytical.Topologic.csproj", "{577724CA-7F73-473A-8C32-8EF0250F247E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SAM.Analytical.Topologic", "SAM_Topologic\SAM.Analytical.Topologic\SAM.Analytical.Topologic.csproj", "{577724CA-7F73-473A-8C32-8EF0250F247E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAMTopologicAnalyticalDynamo", "Dynamo\SAM_TopologyAnalyticalDynamo\SAMTopologicAnalyticalDynamo.csproj", "{6F33E132-C6AC-4953-95D6-AFDCA3254969}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAMTopologicCoreDynamo", "Dynamo\SAM_TopologyCoreDynamo\SAMTopologicCoreDynamo.csproj", "{4252DD99-857E-44EA-8975-7541FCC4E752}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAM.Core.Topologic", "SAM_Topologic\SAM.Core.Topologic\SAM.Core.Topologic.csproj", "{896014EB-082F-439D-BB2D-0617D73EC4A8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SAM.Core.Topologic", "SAM_Topologic\SAM.Core.Topologic\SAM.Core.Topologic.csproj", "{896014EB-082F-439D-BB2D-0617D73EC4A8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAM.Core.Grasshopper.Topologic", "Grasshopper\SAM.Core.Grasshopper.Topologic\SAM.Core.Grasshopper.Topologic.csproj", "{744F836B-9A4B-4070-888E-B0C68D152C24}"
 EndProject
@@ -37,10 +29,6 @@ Global
 		{F50BD61E-ABE4-4867-B815-E9F701968031}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F50BD61E-ABE4-4867-B815-E9F701968031}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F50BD61E-ABE4-4867-B815-E9F701968031}.Release|Any CPU.Build.0 = Release|Any CPU
-		{31847A71-1B4C-4E40-A202-391922B39876}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{31847A71-1B4C-4E40-A202-391922B39876}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{31847A71-1B4C-4E40-A202-391922B39876}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{31847A71-1B4C-4E40-A202-391922B39876}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B8F0EE34-A776-4518-ADA2-E047E468B47B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B8F0EE34-A776-4518-ADA2-E047E468B47B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B8F0EE34-A776-4518-ADA2-E047E468B47B}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -53,14 +41,6 @@ Global
 		{577724CA-7F73-473A-8C32-8EF0250F247E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{577724CA-7F73-473A-8C32-8EF0250F247E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{577724CA-7F73-473A-8C32-8EF0250F247E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6F33E132-C6AC-4953-95D6-AFDCA3254969}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6F33E132-C6AC-4953-95D6-AFDCA3254969}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6F33E132-C6AC-4953-95D6-AFDCA3254969}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6F33E132-C6AC-4953-95D6-AFDCA3254969}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4252DD99-857E-44EA-8975-7541FCC4E752}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4252DD99-857E-44EA-8975-7541FCC4E752}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4252DD99-857E-44EA-8975-7541FCC4E752}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4252DD99-857E-44EA-8975-7541FCC4E752}.Release|Any CPU.Build.0 = Release|Any CPU
 		{896014EB-082F-439D-BB2D-0617D73EC4A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{896014EB-082F-439D-BB2D-0617D73EC4A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{896014EB-082F-439D-BB2D-0617D73EC4A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -75,12 +55,9 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{F50BD61E-ABE4-4867-B815-E9F701968031} = {BADE2121-2C37-49A8-87AA-731543A8E39B}
-		{31847A71-1B4C-4E40-A202-391922B39876} = {6C323826-91AF-47F7-AE3D-051EECF342DE}
 		{B8F0EE34-A776-4518-ADA2-E047E468B47B} = {D8A60381-7F5F-483A-AF23-F77F76BC1419}
 		{E31E5F4E-EAC1-4E48-A5F9-E4560896C2B3} = {D8A60381-7F5F-483A-AF23-F77F76BC1419}
 		{577724CA-7F73-473A-8C32-8EF0250F247E} = {BADE2121-2C37-49A8-87AA-731543A8E39B}
-		{6F33E132-C6AC-4953-95D6-AFDCA3254969} = {6C323826-91AF-47F7-AE3D-051EECF342DE}
-		{4252DD99-857E-44EA-8975-7541FCC4E752} = {6C323826-91AF-47F7-AE3D-051EECF342DE}
 		{896014EB-082F-439D-BB2D-0617D73EC4A8} = {BADE2121-2C37-49A8-87AA-731543A8E39B}
 		{744F836B-9A4B-4070-888E-B0C68D152C24} = {D8A60381-7F5F-483A-AF23-F77F76BC1419}
 	EndGlobalSection
