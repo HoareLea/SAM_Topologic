@@ -26,12 +26,24 @@
     <OutputPath>..\build\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="Classes\" />
-    <Folder Include="Component\" />
-    <Folder Include="Convert\" />
-    <Folder Include="Create\" />
-    <Folder Include="Interfaces\" />
-    <Folder Include="Query\" />
+    <Compile Remove="Classes\**" />
+    <Compile Remove="Component\**" />
+    <Compile Remove="Convert\**" />
+    <Compile Remove="Create\**" />
+    <Compile Remove="Interfaces\**" />
+    <Compile Remove="Query\**" />
+    <EmbeddedResource Remove="Classes\**" />
+    <EmbeddedResource Remove="Component\**" />
+    <EmbeddedResource Remove="Convert\**" />
+    <EmbeddedResource Remove="Create\**" />
+    <EmbeddedResource Remove="Interfaces\**" />
+    <EmbeddedResource Remove="Query\**" />
+    <None Remove="Classes\**" />
+    <None Remove="Component\**" />
+    <None Remove="Convert\**" />
+    <None Remove="Create\**" />
+    <None Remove="Interfaces\**" />
+    <None Remove="Query\**" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Grasshopper">

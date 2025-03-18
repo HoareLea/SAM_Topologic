@@ -26,6 +26,11 @@
     <OutputPath>..\..\build\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Classes\**" />
+    <EmbeddedResource Remove="Classes\**" />
+    <None Remove="Classes\**" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="SAM.Analytical">
       <HintPath>..\..\..\SAM\build\SAM.Analytical.dll</HintPath>
     </Reference>
@@ -59,9 +64,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\SAM_Topologic\SAM.Analytical.Topologic\SAM.Analytical.Topologic.csproj" />
     <ProjectReference Include="..\..\SAM_Topologic\SAM.Geometry.Topologic\SAM.Geometry.Topologic.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Classes\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Grasshopper">
