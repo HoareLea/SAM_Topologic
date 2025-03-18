@@ -71,6 +71,10 @@ namespace SAM.Analytical.Grasshopper.Topologic
             foreach(GH_ObjectWrapper gH_ObjectWrapper in gH_ObjectWrappers)
             {
                 Cell cell = gH_ObjectWrapper.Value as Cell;
+                if(cell != null)
+                {
+                    cells.Add(cell);
+                }
             }
 
             
