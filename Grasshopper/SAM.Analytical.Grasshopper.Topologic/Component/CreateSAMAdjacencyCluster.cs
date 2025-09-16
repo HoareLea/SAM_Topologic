@@ -31,7 +31,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// </summary>
         public CreateSAMAdjacencyCluster()
           : base("Create.SAMAdjacencyCluster", "Create.SAMAdjacencyCluster",
-              "Create SAM Adjacency Cluster",
+              "Create SAM Adjacency Cluster \n* use node SAMAdjacencyCluster.UpdatePanelTypes after to fix PanelTypes",
               "SAM", "Topologic")
         {
         }
