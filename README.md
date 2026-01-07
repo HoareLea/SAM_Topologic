@@ -1,9 +1,11 @@
+[![Build (Windows)](https://github.com/SAM-BIM/SAM_Topologic/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/SAM-BIM/SAM_Topologic/actions/workflows/build.yml)
+[![Installer (latest)](https://img.shields.io/github/v/release/SAM-BIM/SAM_Deploy?label=installer)](https://github.com/SAM-BIM/SAM_Deploy/releases/latest)
+
+[![Build Status](https://hldigitalinnovation.visualstudio.com/HLApps/_apis/build/status/SAM/SAM-deploy-SAM_Topologic?branchName=master)](https://hldigitalinnovation.visualstudio.com/HLApps/_build/latest?definitionId=23&branchName=master)
 
 
 # SAM_Topologic
-[![Build Status](https://hldigitalinnovation.visualstudio.com/HLApps/_apis/build/status/SAM/SAM-deploy-SAM_Topologic?branchName=master)](https://hldigitalinnovation.visualstudio.com/HLApps/_build/latest?definitionId=23&branchName=master)
 
-To install SAM from .exe just download and run latest installer https://github.com/HoareLea/SAM_Deploy/releases
 
 Topologic
 

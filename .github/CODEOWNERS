@@ -15,6 +15,14 @@
 # So if a pull request only touches javascript files, only these owners
 # will be requested to review.
 
+/SAM @michaldengusiak @ZiolkowskiJakub
+/SAM_BHoM @michaldengusiak @ZiolkowskiJakub
+/SAM_Excel @michaldengusiak @ZiolkowskiJakub
+/SAM_LadybugTools @michaldengusiak @ZiolkowskiJakub
+/SAM_Revit @michaldengusiak @ZiolkowskiJakub
+/SAM_Tas @michaldengusiak @ZiolkowskiJakub
+/SAM_Topologic @michaldengusiak @ZiolkowskiJakub
+/SAM_UI @michaldengusiak @ZiolkowskiJakub
 
 
 # You can also use email addresses if you prefer.

@@ -1,0 +1,118 @@
+name: Build (Windows)
+
+on:
+  push:
+    branches: [ "master", "main" ]
+  pull_request:
+    branches: [ "master", "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    # Guard: if this workflow ever gets merged upstream (e.g. HoareLea),
+    # it will show as "skipped" there and won't break their CI.
+    if: github.repository_owner == 'SAM-BIM'
+    runs-on: windows-2022
+
+    env:
+      MSBUILDDISABLENODEREUSE: "1"
+      ORG_NAME: "SAM-BIM"
+      # >>> CHANGE THIS PER REPO <<<
+      # Examples: SAM, SAM_gbXML, SAM_GEM, SAM_Tas, ...
+      REPO_NAME: "SAM_Topologic"
+
+    steps:
+      - name: Checkout this repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          path: ${{ env.REPO_NAME }}
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.x"
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Clone dependency repos (siblings)
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+
+          $org  = '${{ env.ORG_NAME }}'
+          $repo = '${{ env.REPO_NAME }}'
+
+          # >>> ADJUST BUILD ORDER HERE IF NEEDED <<<
+          # Keep the current repo LAST.
+          $buildOrder = @(
+            'SAM'
+            'SAM_Topologic'
+            $repo
+          )
+
+          # Clone everything except the last one (already checked out by Actions)
+          $deps = $buildOrder[0..($buildOrder.Count-2)]
+          foreach ($r in $deps) {
+            if (Test-Path $r) { continue }
+            Write-Host "Cloning https://github.com/$org/$r.git"
+            git clone --depth 1 "https://github.com/$org/$r.git" $r
+          }
+
+          # Ensure ReferencePath exists even before SAM_Windows builds
+          New-Item -ItemType Directory -Force -Path "SAM_Windows\build" | Out-Null
+
+      - name: Restore + Rebuild in order (CI props like SAM_Deploy)
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+
+          $repo = '${{ env.REPO_NAME }}'
+          $windowsRef = (Resolve-Path 'SAM_Windows\build').Path
+
+          # IMPORTANT: keep these as an ARRAY of args (do NOT join into one string)
+          $common = @(
+            '/m:1'
+            '/nr:false'
+            '/v:m'
+            '/p:Configuration=Release'
+            '/p:UseSharedCompilation=false'
+            '/p:RunPostBuildEvent=OnOutputUpdated'
+            "/p:ReferencePath=$windowsRef"
+          )
+
+          # If you really want Platform, use QUOTED Any CPU:
+          # $common += '/p:Platform="Any CPU"'
+
+          # Same build order as above (keep repo LAST)
+          $buildOrder = @(
+            'SAM'
+            'SAM_Topologic'
+            $repo
+          )
+
+          # Convert build order -> solution paths (robust: first .sln in each folder)
+          $solutions = foreach ($r in $buildOrder) {
+            $sln = Get-ChildItem -Path $r -Filter *.sln -File | Select-Object -First 1
+            if (-not $sln) { throw "No .sln found under: $r" }
+            $sln.FullName
+          }
+
+          foreach ($sln in $solutions) {
+            Write-Host "==> Restore: $sln"
+            & msbuild $sln /t:Restore @common
+          }
+
+          foreach ($sln in $solutions) {
+            Write-Host "==> Rebuild: $sln"
+            & msbuild $sln /t:Rebuild @common
+          }
+
+      - name: Upload build folders (optional)
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.REPO_NAME }}-build-folders
+          path: |
+            **\build\*
+          if-no-files-found: warn
