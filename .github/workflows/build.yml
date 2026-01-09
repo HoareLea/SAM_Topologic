@@ -48,7 +48,6 @@ jobs:
           # Keep the current repo LAST.
           $buildOrder = @(
             'SAM'
-            'SAM_Topologic'
             $repo
           )
 
@@ -88,7 +87,6 @@ jobs:
           # Same build order as above (keep repo LAST)
           $buildOrder = @(
             'SAM'
-            'SAM_Topologic'
             $repo
           )
 
