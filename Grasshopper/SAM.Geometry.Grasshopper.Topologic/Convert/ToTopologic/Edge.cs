@@ -10,7 +10,9 @@ namespace SAM.Geometry.Grasshopper.Topologic
     {
         public static Edge ToTopologic(this global::Rhino.Geometry.Line line)
         {
-            if (line == null)
+            // Rhino.Geometry.Line is a struct and cannot be null.
+            // Instead, check if the line is valid.
+            if (!line.IsValid)
             {
                 return null;
             }

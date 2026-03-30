@@ -48,7 +48,7 @@ namespace SAM.Geometry.Topologic
                         {
                             cellComplex = CellComplex.ByCells(cells);
                         }
-                        catch (Exception exception)
+                        catch (Exception)
                         {
 
                         }
@@ -66,7 +66,7 @@ namespace SAM.Geometry.Topologic
                     }
 
                 }
-                catch (Exception exception)
+                catch (Exception)
                 {
                     cells = null;
                 }
@@ -80,7 +80,7 @@ namespace SAM.Geometry.Topologic
                     topologies.Add(cellComplex);
                     cells = cellComplex.Cells?.ToList();
                 }
-                catch (Exception exception)
+                catch (Exception)
                 {
                     cells = null;
                 }
@@ -119,7 +119,7 @@ namespace SAM.Geometry.Topologic
             {
                 cellComplex = CellComplex.ByCells(cells);
             }
-            catch (Exception exception)
+            catch (Exception)
             {
 
             }
