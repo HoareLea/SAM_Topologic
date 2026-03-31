@@ -1,4 +1,7 @@
-﻿using System.Reflection;
+﻿// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020–2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+
+using System.Reflection;
 
 namespace SAM.Core.Revit
 {
@@ -10,6 +13,8 @@ namespace SAM.Core.Revit
         }
 
         private static Setting setting = null;
+
+        private static readonly object settingLock = new object();
 
         private static Setting Load()
         {
@@ -26,9 +31,12 @@ namespace SAM.Core.Revit
         {
             get
             {
-                if(setting == null)
+                lock (settingLock)
                 {
-                    setting = Load();
+                    if (setting == null)
+                    {
+                        setting = Load();
+                    }
                 }
 
                 return setting;
