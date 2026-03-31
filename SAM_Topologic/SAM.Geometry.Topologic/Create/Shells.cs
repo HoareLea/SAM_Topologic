@@ -1,4 +1,7 @@
-﻿using SAM.Core;
+﻿// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020–2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+
+using SAM.Core;
 using SAM.Geometry.Object.Spatial;
 using SAM.Geometry.Spatial;
 using System;
@@ -47,7 +50,7 @@ namespace SAM.Geometry.Topologic
                         {
                             cellComplex = CellComplex.ByCells(cells);
                         }
-                        catch (Exception exception)
+                        catch (Exception)
                         {
                             cellComplex = null;
                         }
@@ -65,7 +68,7 @@ namespace SAM.Geometry.Topologic
                     }
 
                 }
-                catch (Exception exception)
+                catch (Exception)
                 {
                     cells = null;
                 }
@@ -79,7 +82,7 @@ namespace SAM.Geometry.Topologic
                     topologies.Add(cellComplex);
                     cells = cellComplex.Cells?.ToList();
                 }
-                catch (Exception exception)
+                catch (Exception)
                 {
                     cells = null;
                 }

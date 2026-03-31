@@ -1,4 +1,7 @@
-﻿using Rhino.Geometry;
+﻿// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020–2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+
+using Rhino.Geometry;
 using Rhino.Geometry.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +13,9 @@ namespace SAM.Geometry.Grasshopper.Topologic
     {
         public static Edge ToTopologic(this global::Rhino.Geometry.Line line)
         {
-            if (line == null)
+            // Rhino.Geometry.Line is a struct and cannot be null.
+            // Instead, check if the line is valid.
+            if (!line.IsValid)
             {
                 return null;
             }
