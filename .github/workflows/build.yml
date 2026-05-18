@@ -2,9 +2,9 @@ name: Build (Windows)
 
 on:
   push:
-    branches: [ "master", "main" ]
+    branches: [ "master", "main", "sow/2026-Q2" ]
   pull_request:
-    branches: [ "master", "main" ]
+    branches: [ "master", "main", "sow/2026-Q2" ]
   workflow_dispatch:
 
 jobs:
@@ -55,9 +55,26 @@ jobs:
           $deps = $buildOrder[0..($buildOrder.Count-2)]
           foreach ($r in $deps) {
             if (Test-Path $r) { continue }
-            Write-Host "Cloning https://github.com/$org/$r.git"
-            git clone --depth 1 "https://github.com/$org/$r.git" $r
+            $headRef = '${{ github.head_ref }}'
+            $candidates = @()
+            if ($headRef) { $candidates += $headRef }
+            $candidates += 'sow/2026-Q2'
+            $cloned = $false
+            foreach ($cand in $candidates) {
+              $has = (git ls-remote --heads "https://github.com/$org/$r.git" $cand 2>$null | Out-String).Trim()
+              if ($has) {
+                Write-Host "Cloning $org/$r @ $cand"
+                git clone --depth 1 --branch $cand "https://github.com/$org/$r.git" $r
+                $cloned = $true
+                break
+              }
+            }
+            if (-not $cloned) {
+              Write-Host "Cloning $org/$r @ default branch"
+              git clone --depth 1 "https://github.com/$org/$r.git" $r
+            }
           }
+
 
           # Ensure ReferencePath exists even before SAM_Windows builds
           New-Item -ItemType Directory -Force -Path "SAM_Windows\build" | Out-Null
