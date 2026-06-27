@@ -2,7 +2,6 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <OutputType>Library</OutputType>
-    <Deterministic>False</Deterministic>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 	  <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 	  <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
@@ -49,7 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="System.Text.Json" Version="8.0.5" />
   </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>Copy /Y "$(SolutionDir)references\TopologicCore.dll" "$(SolutionDir)build\TopologicCore.dll"
@@ -57,7 +56,5 @@ Copy /Y "$(SolutionDir)references\TK*.dll" "$(SolutionDir)build\TK*.dll"</PostBu
     <AssemblyTitle>SAM_Topologic</AssemblyTitle>
     <Product>SAM_Topologic</Product>
     <Copyright>Copyright ©  2019</Copyright>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.0.0.0</FileVersion>
   </PropertyGroup>
 </Project>

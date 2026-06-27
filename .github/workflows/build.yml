@@ -2,9 +2,9 @@ name: Build (Windows)
 
 on:
   push:
-    branches: [ "master", "main" ]
+    branches: [ "master", "main", "sow/**" ]
   pull_request:
-    branches: [ "master", "main" ]
+    branches: [ "master", "main", "sow/**" ]
   workflow_dispatch:
 
 jobs:
@@ -35,6 +35,36 @@ jobs:
 
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
+      - name: Compute SAMVersion
+        id: ver
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          # Prefer head_ref when its a sow branch (release-promotion PRs from sow/* to main),
+          # else use base_ref on PR events / ref_name on push events.
+          $headRef = '${{ github.head_ref }}'
+          $baseRef = '${{ github.base_ref }}'
+          $refName = '${{ github.ref_name }}'
+          if ($headRef -match '^sow/\d{4}-Q\d$') {
+            $ref = $headRef
+          } elseif ('${{ github.event_name }}' -eq 'pull_request') {
+            $ref = $baseRef
+          } else {
+            $ref = $refName
+          }
+          # .NET AssemblyVersion components are UInt16 (max 65535). Cap to 60000 for headroom.
+          $run = ${{ github.run_number }} % 60000
+          if ($ref -match 'sow/(\d{4})-Q(\d)') {
+            $v = "$($Matches[1]).$($Matches[2]).$run.0"
+            $src = "branch '$ref'"
+          } else {
+            $now = (Get-Date).ToUniversalTime()
+            $quarter = [int][Math]::Ceiling($now.Month / 3.0)
+            $v = "$($now.Year).$quarter.$run.0"
+            $src = "date $($now.ToString('yyyy-MM-dd')) (ref '$ref' not sow/yyyy-Qx)"
+          }
+          Write-Host "SAMVersion = $v (from $src)"
+          "samversion=$v" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
 
       - name: Clone dependency repos (siblings)
         shell: pwsh
@@ -55,9 +85,31 @@ jobs:
           $deps = $buildOrder[0..($buildOrder.Count-2)]
           foreach ($r in $deps) {
             if (Test-Path $r) { continue }
-            Write-Host "Cloning https://github.com/$org/$r.git"
-            git clone --depth 1 "https://github.com/$org/$r.git" $r
+            $headRef = '${{ github.head_ref }}'
+            $baseRef = '${{ github.base_ref }}'
+            $refName = '${{ github.ref_name }}'
+            $candidates = @()
+            if ($headRef) { $candidates += $headRef }
+            # Current sow branch: base_ref on PR events, ref_name on push events.
+            $sowRef = if ($baseRef -match '^sow/') { $baseRef } elseif ($refName -match '^sow/') { $refName } else { '' }
+            if ($sowRef -and $sowRef -ne $headRef) { $candidates += $sowRef }
+            $candidates += 'sow/2026-Q2'
+            $cloned = $false
+            foreach ($cand in $candidates) {
+              $has = (git ls-remote --heads "https://github.com/$org/$r.git" $cand 2>$null | Out-String).Trim()
+              if ($has) {
+                Write-Host "Cloning $org/$r @ $cand"
+                git clone --depth 1 --branch $cand "https://github.com/$org/$r.git" $r
+                $cloned = $true
+                break
+              }
+            }
+            if (-not $cloned) {
+              Write-Host "Cloning $org/$r @ default branch"
+              git clone --depth 1 "https://github.com/$org/$r.git" $r
+            }
           }
+
 
           # Ensure ReferencePath exists even before SAM_Windows builds
           New-Item -ItemType Directory -Force -Path "SAM_Windows\build" | Out-Null
@@ -77,6 +129,7 @@ jobs:
             '/v:m'
             '/p:Configuration=Release'
             '/p:UseSharedCompilation=false'
+            '/p:SAMVersion=${{ steps.ver.outputs.samversion }}'
             '/p:RunPostBuildEvent=OnOutputUpdated'
             "/p:ReferencePath=$windowsRef"
           )

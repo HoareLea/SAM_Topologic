@@ -2,7 +2,6 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <OutputType>Library</OutputType>
-    <Deterministic>False</Deterministic>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 	  <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 	  <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
@@ -28,15 +27,13 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="System.Text.Json" Version="8.0.5" />
   </ItemGroup>
   <PropertyGroup>
-    <PostBuildEvent>Copy /Y "$(SolutionDir)references\TopologicCore.dll" "$(SolutionDir)build\TopologicCore.dll"
-Copy /Y "$(SolutionDir)references\TK*.dll" "$(SolutionDir)build\TK*.dll"</PostBuildEvent>
+    <PostBuildEvent>robocopy "$(SolutionDir)references" "$(SolutionDir)build" TopologicCore.dll /R:5 /W:2 &amp; IF %ERRORLEVEL% LEQ 7 SET ERRORLEVEL=0
+robocopy "$(SolutionDir)references" "$(SolutionDir)build" TK*.dll /R:5 /W:2 &amp; IF %ERRORLEVEL% LEQ 7 SET ERRORLEVEL=0</PostBuildEvent>
     <AssemblyTitle>SAM_Topologic</AssemblyTitle>
     <Product>SAM_Topologic</Product>
-    <Copyright>Copyright ©  2020</Copyright>
-    <AssemblyVersion>1.0.%2a</AssemblyVersion>
-    <FileVersion>1.0.%2a</FileVersion>
+    <Copyright>Copyright (c) 2020-2026 Michal Dengusiak &amp; Jakub Ziolkowski and contributors</Copyright>
   </PropertyGroup>
 </Project>
