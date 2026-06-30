@@ -35,9 +35,9 @@
     <PackageReference Include="System.Text.Json" Version="8.0.5" />
   </ItemGroup>
   <PropertyGroup>
-    <PostBuildEvent>Copy /Y "$(SolutionDir)references\TopologicCore.dll" "$(SolutionDir)build\TopologicCore.dll"
-Copy /Y "$(SolutionDir)references\TK*.dll" "$(SolutionDir)build\TK*.dll"
-Copy /Y "$(SolutionDir)references\tbb*.dll" "$(SolutionDir)build\tbb*.dll"</PostBuildEvent>
+    <PostBuildEvent>robocopy "$(SolutionDir)references" "$(SolutionDir)build" TopologicCore.dll /R:5 /W:2 &amp; IF %ERRORLEVEL% LEQ 7 SET ERRORLEVEL=0
+robocopy "$(SolutionDir)references" "$(SolutionDir)build" TK*.dll /R:5 /W:2 &amp; IF %ERRORLEVEL% LEQ 7 SET ERRORLEVEL=0
+robocopy "$(SolutionDir)references" "$(SolutionDir)build" tbb*.dll /R:5 /W:2 &amp; IF %ERRORLEVEL% LEQ 7 SET ERRORLEVEL=0</PostBuildEvent>
     <AssemblyTitle>SAM_Topologic</AssemblyTitle>
     <Product>SAM_Topologic</Product>
     <Copyright>Copyright (c) 2020-2026 Michal Dengusiak &amp; Jakub Ziolkowski and contributors</Copyright>
