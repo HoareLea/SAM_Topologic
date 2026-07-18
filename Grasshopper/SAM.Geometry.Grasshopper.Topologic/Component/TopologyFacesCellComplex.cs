@@ -1,4 +1,7 @@
-﻿using Grasshopper.Kernel;
+// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020–2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+
+using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using SAM.Geometry.Grasshopper.Topologic.Properties;
 using SAM.Core.Grasshopper;
@@ -8,7 +11,7 @@ using Topologic;
 
 namespace SAM.Geometry.Grasshopper.Topologic
 {
-    public class TopologyFacesCellComplex : GH_SAMComponent
+    public class TopologyFacesCellComplex : GH_SAMVariableOutputParameterComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -18,7 +21,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.2";
+        public override string LatestComponentVersion => "1.0.3";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -38,18 +41,32 @@ namespace SAM.Geometry.Grasshopper.Topologic
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
-        protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
+        protected override GH_SAMParam[] Inputs
         {
-            inputParamManager.AddGenericParameter("_faces", "_faces", "Topology Faces", GH_ParamAccess.list);
-            inputParamManager.AddNumberParameter("_tolerance_", "_tolerance_", "Topology CellComplex Telerance default = 0.001", GH_ParamAccess.item, Core.Tolerance.MacroDistance);
+            get
+            {
+                List<GH_SAMParam> result = new List<GH_SAMParam>();
+                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "_faces", NickName = "_faces", Description = "Topology Faces", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+
+                global::Grasshopper.Kernel.Parameters.Param_Number param_Number = new global::Grasshopper.Kernel.Parameters.Param_Number() { Name = "_tolerance_", NickName = "_tolerance_", Description = "Topology CellComplex Telerance default = 0.001", Access = GH_ParamAccess.item };
+                param_Number.SetPersistentData(Core.Tolerance.MacroDistance);
+                result.Add(new GH_SAMParam(param_Number, ParamVisibility.Binding));
+
+                return result.ToArray();
+            }
         }
 
         /// <summary>
         /// Registers all the output parameters for this component.
         /// </summary>
-        protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
+        protected override GH_SAMParam[] Outputs
         {
-            outputParamManager.AddGenericParameter("CellComplex", "CellComplex", "Topology CellComplex", GH_ParamAccess.item);
+            get
+            {
+                List<GH_SAMParam> result = new List<GH_SAMParam>();
+                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "CellComplex", NickName = "CellComplex", Description = "Topology CellComplex", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         /// <summary>
@@ -61,7 +78,8 @@ namespace SAM.Geometry.Grasshopper.Topologic
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
             List<GH_ObjectWrapper> objectWrapperList = new List<GH_ObjectWrapper>();
-            if (!dataAccess.GetDataList(0, objectWrapperList) || objectWrapperList == null)
+            int index = Params.IndexOfInputParam("_faces");
+            if (index == -1 || !dataAccess.GetDataList(index, objectWrapperList) || objectWrapperList == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
@@ -69,7 +87,8 @@ namespace SAM.Geometry.Grasshopper.Topologic
 
             GH_ObjectWrapper objectWrapper = null;
 
-            if (!dataAccess.GetData(1, ref objectWrapper) || objectWrapper.Value == null)
+            index = Params.IndexOfInputParam("_tolerance_");
+            if (index == -1 || !dataAccess.GetData(index, ref objectWrapper) || objectWrapper.Value == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
@@ -84,7 +103,11 @@ namespace SAM.Geometry.Grasshopper.Topologic
 
             CellComplex cellComplex = CellComplex.ByFaces(objectWrapperList.ConvertAll(x => x.Value as global::Topologic.Face), gHNumber.Value);
 
-            dataAccess.SetData(0, cellComplex);
+            index = Params.IndexOfOutputParam("CellComplex");
+            if (index != -1)
+            {
+                dataAccess.SetData(index, cellComplex);
+            }
         }
     }
 }

@@ -1,4 +1,7 @@
-﻿using Grasshopper.Kernel;
+// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020–2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+
+using Grasshopper.Kernel;
 using SAM.Core.Grasshopper;
 using SAM.Geometry.Grasshopper.Topologic.Properties;
 using System;
@@ -7,7 +10,7 @@ using Topologic;
 
 namespace SAM.Geometry.Grasshopper.Topologic
 {
-    public class TopologyCreateCluster : GH_SAMComponent
+    public class TopologyCreateCluster : GH_SAMVariableOutputParameterComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -17,7 +20,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.0";
+        public override string LatestComponentVersion => "1.0.1";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -37,17 +40,27 @@ namespace SAM.Geometry.Grasshopper.Topologic
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
-        protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
+        protected override GH_SAMParam[] Inputs
         {
-            inputParamManager.AddGenericParameter("_topologies", "_topologies", "Topologic Geometries", GH_ParamAccess.list);
+            get
+            {
+                List<GH_SAMParam> result = new List<GH_SAMParam>();
+                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "_topologies", NickName = "_topologies", Description = "Topologic Geometries", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         /// <summary>
         /// Registers all the output parameters for this component.
         /// </summary>
-        protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
+        protected override GH_SAMParam[] Outputs
         {
-            outputParamManager.AddGenericParameter("Cluster", "Cluster", "Topologic Cluster", GH_ParamAccess.item);
+            get
+            {
+                List<GH_SAMParam> result = new List<GH_SAMParam>();
+                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "Cluster", NickName = "Cluster", Description = "Topologic Cluster", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         /// <summary>
@@ -59,7 +72,8 @@ namespace SAM.Geometry.Grasshopper.Topologic
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
             List<Topology> topologies = new List<Topology>();
-            if (!dataAccess.GetDataList(0, topologies) || topologies == null)
+            int index = Params.IndexOfInputParam("_topologies");
+            if (index == -1 || !dataAccess.GetDataList(index, topologies) || topologies == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
@@ -67,7 +81,11 @@ namespace SAM.Geometry.Grasshopper.Topologic
 
             Cluster cluster = Cluster.ByTopologies(topologies);
 
-            dataAccess.SetData(0, cluster);
+            index = Params.IndexOfOutputParam("Cluster");
+            if (index != -1)
+            {
+                dataAccess.SetData(index, cluster);
+            }
         }
     }
 }

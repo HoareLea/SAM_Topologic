@@ -1,4 +1,7 @@
-﻿using Grasshopper.Kernel;
+// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020–2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+
+using Grasshopper.Kernel;
 using SAM.Analytical.Grasshopper.Topologic.Properties;
 using SAM.Core;
 using SAM.Core.Grasshopper;
@@ -8,7 +11,7 @@ using System.Linq;
 
 namespace SAM.Analytical.Grasshopper.Topologic
 {
-    public class TopologyAdjacencies : GH_SAMComponent
+    public class TopologyAdjacencies : GH_SAMVariableOutputParameterComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -18,7 +21,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.1";
+        public override string LatestComponentVersion => "1.0.2";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -38,18 +41,28 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
-        protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
+        protected override GH_SAMParam[] Inputs
         {
-            inputParamManager.AddParameter(new GooAdjacencyClusterParam(), "_adjacencyCluster", "_adjacencyCluster", "SAM AdjacencyCluster", GH_ParamAccess.item);
-            inputParamManager.AddParameter(new GooJSAMObjectParam<SAMObject>(), "_SAMAnalytical", "_SAMAnalytical", "SAM Analytical Object", GH_ParamAccess.item);
+            get
+            {
+                List<GH_SAMParam> result = new List<GH_SAMParam>();
+                result.Add(new GH_SAMParam(new GooAdjacencyClusterParam() { Name = "_adjacencyCluster", NickName = "_adjacencyCluster", Description = "SAM AdjacencyCluster", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                result.Add(new GH_SAMParam(new GooJSAMObjectParam<SAMObject>() { Name = "_SAMAnalytical", NickName = "_SAMAnalytical", Description = "SAM Analytical Object", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         /// <summary>
         /// Registers all the output parameters for this component.
         /// </summary>
-        protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
+        protected override GH_SAMParam[] Outputs
         {
-            outputParamManager.AddParameter(new GooJSAMObjectParam<SAMObject>(), "AdjacenciesList", "AdjacenciesList", "AdjacenciesList", GH_ParamAccess.list);
+            get
+            {
+                List<GH_SAMParam> result = new List<GH_SAMParam>();
+                result.Add(new GH_SAMParam(new GooJSAMObjectParam<SAMObject>() { Name = "AdjacenciesList", NickName = "AdjacenciesList", Description = "AdjacenciesList", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         /// <summary>
@@ -62,14 +75,16 @@ namespace SAM.Analytical.Grasshopper.Topologic
         {
             AdjacencyCluster adjacencyCluster = null;
 
-            if (!dataAccess.GetData(0, ref adjacencyCluster))
+            int index = Params.IndexOfInputParam("_adjacencyCluster");
+            if (index == -1 || !dataAccess.GetData(index, ref adjacencyCluster))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
             SAMObject sAMObject = null;
-            if (!dataAccess.GetData(1, ref sAMObject))
+            index = Params.IndexOfInputParam("_SAMAnalytical");
+            if (index == -1 || !dataAccess.GetData(index, ref sAMObject))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
@@ -81,19 +96,30 @@ namespace SAM.Analytical.Grasshopper.Topologic
             else if (sAMObject is Panel)
                 result = adjacencyCluster.GetSpaces((Panel)sAMObject);
 
+            index = Params.IndexOfOutputParam("AdjacenciesList");
+
             if (result == null)
             {
-                dataAccess.SetDataList(0, null);
+                if (index != -1)
+                {
+                    dataAccess.SetDataList(index, null);
+                }
                 return;
             }
 
             if (result.Count() == 0)
             {
-                dataAccess.SetDataList(0, result);
+                if (index != -1)
+                {
+                    dataAccess.SetDataList(index, result);
+                }
                 return;
             }
 
-            dataAccess.SetDataList(0, result.ToList().ConvertAll(x => new GooJSAMObject<SAMObject>(x)));
+            if (index != -1)
+            {
+                dataAccess.SetDataList(index, result.ToList().ConvertAll(x => new GooJSAMObject<SAMObject>(x)));
+            }
         }
     }
 }

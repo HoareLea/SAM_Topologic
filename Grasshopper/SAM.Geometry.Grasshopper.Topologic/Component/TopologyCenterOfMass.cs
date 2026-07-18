@@ -1,12 +1,15 @@
-﻿using Grasshopper.Kernel;
+// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020–2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+
+using Grasshopper.Kernel;
 using SAM.Core.Grasshopper;
-using SAM.Geometry.Grasshopper.Topologic.Properties;
 using System;
+using System.Collections.Generic;
 using Topologic;
 
 namespace SAM.Geometry.Grasshopper.Topologic
 {
-    public class TopologyCenterOfMass : GH_SAMComponent
+    public class TopologyCenterOfMass : GH_SAMVariableOutputParameterComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -16,12 +19,12 @@ namespace SAM.Geometry.Grasshopper.Topologic
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.0";
+        public override string LatestComponentVersion => "1.0.1";
 
         /// <summary>
         /// Provides an Icon for the component.
         /// </summary>
-        protected override System.Drawing.Bitmap Icon => Resources.SAM_Topologic3a;
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.SAM_Topologic3a;
 
         public TopologyCenterOfMass()
           : base("Topology.CenterOfMass", "Topology.CenterOfMass", "Center Of Mass for Topology", "SAM", "Topologic")
@@ -31,17 +34,27 @@ namespace SAM.Geometry.Grasshopper.Topologic
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
-        protected override void RegisterInputParams(GH_InputParamManager manager)
+        protected override GH_SAMParam[] Inputs
         {
-            manager.AddGenericParameter("_topology", "_topology", "Topology Geometry", GH_ParamAccess.item);
+            get
+            {
+                List<GH_SAMParam> result = new List<GH_SAMParam>();
+                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "_topology", NickName = "_topology", Description = "Topology Geometry", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         /// <summary>
         /// Registers all the output parameters for this component.
         /// </summary>
-        protected override void RegisterOutputParams(GH_OutputParamManager pManager)
+        protected override GH_SAMParam[] Outputs
         {
-            pManager.AddGenericParameter("CenterOfMass", "CenterOfMass", "CenterOfMass", GH_ParamAccess.item);
+            get
+            {
+                List<GH_SAMParam> result = new List<GH_SAMParam>();
+                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "CenterOfMass", NickName = "CenterOfMass", Description = "CenterOfMass", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         /// <summary>
@@ -52,10 +65,15 @@ namespace SAM.Geometry.Grasshopper.Topologic
         {
             Topology topology = null;
 
-            if (!DA.GetData(0, ref topology))
+            int index = Params.IndexOfInputParam("_topology");
+            if (index == -1 || !DA.GetData(index, ref topology))
                 return;
 
-            DA.SetData(0, topology?.CenterOfMass);
+            index = Params.IndexOfOutputParam("CenterOfMass");
+            if (index != -1)
+            {
+                DA.SetData(index, topology?.CenterOfMass);
+            }
         }
     }
 }

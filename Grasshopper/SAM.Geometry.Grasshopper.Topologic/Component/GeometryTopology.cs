@@ -1,12 +1,16 @@
-﻿using Grasshopper.Kernel;
+// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020–2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+
+using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using SAM.Core.Grasshopper;
 using SAM.Geometry.Grasshopper.Topologic.Properties;
 using System;
+using System.Collections.Generic;
 
 namespace SAM.Geometry.Grasshopper.Topologic
 {
-    public class GeometryTopology : GH_SAMComponent
+    public class GeometryTopology : GH_SAMVariableOutputParameterComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -16,7 +20,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.0";
+        public override string LatestComponentVersion => "1.0.1";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -36,18 +40,32 @@ namespace SAM.Geometry.Grasshopper.Topologic
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
-        protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
+        protected override GH_SAMParam[] Inputs
         {
-            inputParamManager.AddGeometryParameter("_geometry", "_geometry", "Rhino Geometry", GH_ParamAccess.item);
-            inputParamManager.AddNumberParameter("_tolerance_", "_tolerance_", "Tolerance", GH_ParamAccess.item, Core.Tolerance.MacroDistance);
+            get
+            {
+                List<GH_SAMParam> result = new List<GH_SAMParam>();
+                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_Geometry() { Name = "_geometry", NickName = "_geometry", Description = "Rhino Geometry", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+
+                global::Grasshopper.Kernel.Parameters.Param_Number param_Number = new global::Grasshopper.Kernel.Parameters.Param_Number() { Name = "_tolerance_", NickName = "_tolerance_", Description = "Tolerance", Access = GH_ParamAccess.item };
+                param_Number.SetPersistentData(Core.Tolerance.MacroDistance);
+                result.Add(new GH_SAMParam(param_Number, ParamVisibility.Binding));
+
+                return result.ToArray();
+            }
         }
 
         /// <summary>
         /// Registers all the output parameters for this component.
         /// </summary>
-        protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
+        protected override GH_SAMParam[] Outputs
         {
-            outputParamManager.AddGenericParameter("Topology", "Topology", "Topology Geometry", GH_ParamAccess.item);
+            get
+            {
+                List<GH_SAMParam> result = new List<GH_SAMParam>();
+                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "Topology", NickName = "Topology", Description = "Topology Geometry", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         /// <summary>
@@ -60,29 +78,34 @@ namespace SAM.Geometry.Grasshopper.Topologic
         {
             object @object = null;
             double tolerance = 0.0001;
-            if (!dataAccess.GetData(0, ref @object)) 
-            { 
-                return; 
+
+            int index = Params.IndexOfInputParam("_geometry");
+            if (index == -1 || !dataAccess.GetData(index, ref @object))
+            {
+                return;
             }
 
-            if (!dataAccess.GetData(1, ref tolerance)) 
-            { 
-                return; 
+            index = Params.IndexOfInputParam("_tolerance_");
+            if (index == -1 || !dataAccess.GetData(index, ref tolerance))
+            {
+                return;
             }
 
-            if (@object == null) 
-            { 
-                return; 
+            if (@object == null)
+            {
+                return;
             }
-            
+
             Type type = @object.GetType();
+
+            int outputIndex = Params.IndexOfOutputParam("Topology");
 
             global::Topologic.Topology topology = null;
             GH_Point ghPoint = @object as GH_Point;
             if (ghPoint != null)
             {
                 topology = ghPoint.Value.ToTopologic();
-                dataAccess.SetData(0, topology);
+                if (outputIndex != -1) dataAccess.SetData(outputIndex, topology);
                 return;
             }
 
@@ -90,7 +113,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
             if (ghLine != null)
             {
                 topology = ghLine.Value.ToTopologic();
-                dataAccess.SetData(0, topology);
+                if (outputIndex != -1) dataAccess.SetData(outputIndex, topology);
                 return;
             }
 
@@ -98,7 +121,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
             if (ghCurve != null)
             {
                 topology = ghCurve.Value.ToTopologic();
-                dataAccess.SetData(0, topology);
+                if (outputIndex != -1) dataAccess.SetData(outputIndex, topology);
                 return;
             }
 
@@ -106,7 +129,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
             if (ghSurface != null)
             {
                 topology = ghSurface.Value.ToTopologic(tolerance);
-                dataAccess.SetData(0, topology);
+                if (outputIndex != -1) dataAccess.SetData(outputIndex, topology);
                 return;
             }
 
@@ -114,7 +137,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
             if (ghBrep != null)
             {
                 topology = ghBrep.Value.ToTopologic(tolerance);
-                dataAccess.SetData(0, topology);
+                if (outputIndex != -1) dataAccess.SetData(outputIndex, topology);
                 return;
             }
 
@@ -122,7 +145,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
             if (ghBox != null)
             {
                 topology = ghBox.Value.ToTopologic();
-                dataAccess.SetData(0, topology);
+                if (outputIndex != -1) dataAccess.SetData(outputIndex, topology);
                 return;
             }
 
@@ -130,7 +153,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
             if (ghMesh != null)
             {
                 topology = ghMesh.Value.ToTopologic();
-                dataAccess.SetData(0, topology);
+                if (outputIndex != -1) dataAccess.SetData(outputIndex, topology);
                 return;
             }
 
