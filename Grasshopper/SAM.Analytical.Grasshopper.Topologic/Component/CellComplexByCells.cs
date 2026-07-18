@@ -1,4 +1,7 @@
-﻿using Grasshopper.Kernel;
+// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020–2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+
+using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using SAM.Analytical.Grasshopper.Topologic.Properties;
 using SAM.Core.Grasshopper;
@@ -8,7 +11,7 @@ using Topologic;
 
 namespace SAM.Analytical.Grasshopper.Topologic
 {
-    public class CellComplexByCells: GH_SAMComponent
+    public class CellComplexByCells: GH_SAMVariableOutputParameterComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -18,7 +21,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.0";
+        public override string LatestComponentVersion => "1.0.1";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -38,17 +41,27 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
-        protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
+        protected override GH_SAMParam[] Inputs
         {
-            inputParamManager.AddGenericParameter("_cells", "_cells", "Topology Cells", GH_ParamAccess.list);
+            get
+            {
+                List<GH_SAMParam> result = new List<GH_SAMParam>();
+                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "_cells", NickName = "_cells", Description = "Topology Cells", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         /// <summary>
         /// Registers all the output parameters for this component.
         /// </summary>
-        protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
+        protected override GH_SAMParam[] Outputs
         {
-            outputParamManager.AddGenericParameter("CellComplex", "CellComplex", "Topology CellComplex", GH_ParamAccess.item);
+            get
+            {
+                List<GH_SAMParam> result = new List<GH_SAMParam>();
+                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "CellComplex", NickName = "CellComplex", Description = "Topology CellComplex", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         /// <summary>
@@ -61,7 +74,8 @@ namespace SAM.Analytical.Grasshopper.Topologic
         {
             List<GH_ObjectWrapper> gH_ObjectWrappers = new List<GH_ObjectWrapper>();
 
-            if (!dataAccess.GetDataList(0, gH_ObjectWrappers) || gH_ObjectWrappers.Count == 0)
+            int index = Params.IndexOfInputParam("_cells");
+            if (index == -1 || !dataAccess.GetDataList(index, gH_ObjectWrappers) || gH_ObjectWrappers.Count == 0)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
@@ -77,7 +91,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
                 }
             }
 
-            
+
             if (cells == null || cells.Count == 0)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
@@ -86,7 +100,11 @@ namespace SAM.Analytical.Grasshopper.Topologic
 
             CellComplex cellComplex = CellComplex.ByCells(cells);
 
-            dataAccess.SetData(0, cellComplex);
+            index = Params.IndexOfOutputParam("CellComplex");
+            if (index != -1)
+            {
+                dataAccess.SetData(index, cellComplex);
+            }
         }
     }
 }

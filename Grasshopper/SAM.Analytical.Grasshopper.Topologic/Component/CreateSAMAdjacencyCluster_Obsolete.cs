@@ -1,4 +1,7 @@
-﻿using Grasshopper.Kernel;
+// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020–2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+
+using Grasshopper.Kernel;
 using SAM.Analytical.Grasshopper.Topologic.Properties;
 using SAM.Core;
 using SAM.Core.Grasshopper;
@@ -11,7 +14,7 @@ namespace SAM.Analytical.Grasshopper.Topologic.Obsolete
 {
     [Obsolete("Obsolete since 2020-08-31")]
 
-    public class CreateSAMAdjacencyCluster : GH_SAMComponent
+    public class CreateSAMAdjacencyCluster : GH_SAMVariableOutputParameterComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -21,7 +24,7 @@ namespace SAM.Analytical.Grasshopper.Topologic.Obsolete
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.0";
+        public override string LatestComponentVersion => "1.0.1";
 
         public override GH_Exposure Exposure => GH_Exposure.tertiary | GH_Exposure.hidden;
 
@@ -43,41 +46,62 @@ namespace SAM.Analytical.Grasshopper.Topologic.Obsolete
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
-        protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
+        protected override GH_SAMParam[] Inputs
         {
-            int index;
+            get
+            {
+                List<GH_SAMParam> result = new List<GH_SAMParam>();
 
-            index = inputParamManager.AddParameter(new GooPanelParam(), "_panels", "_panels", "SAM Analytical Panels", GH_ParamAccess.list);
-            inputParamManager[index].DataMapping = GH_DataMapping.Flatten;
+                result.Add(new GH_SAMParam(new GooPanelParam() { Name = "_panels", NickName = "_panels", Description = "SAM Analytical Panels", Access = GH_ParamAccess.list, DataMapping = GH_DataMapping.Flatten }, ParamVisibility.Binding));
+                result.Add(new GH_SAMParam(new GooSpaceParam() { Name = "spaces_", NickName = "spaces_", Description = "SAM Analytical Spaces", Access = GH_ParamAccess.list, Optional = true, DataMapping = GH_DataMapping.Flatten }, ParamVisibility.Binding));
 
-            GooSpaceParam gooSpaceParam = new GooSpaceParam();
-            gooSpaceParam.Optional = true;
-            index = inputParamManager.AddParameter(gooSpaceParam, "spaces_", "spaces_", "SAM Analytical Spaces", GH_ParamAccess.list);
-            inputParamManager[index].DataMapping = GH_DataMapping.Flatten;
+                global::Grasshopper.Kernel.Parameters.Param_Number param_tolerance = new global::Grasshopper.Kernel.Parameters.Param_Number() { Name = "tolerance_", NickName = "tolerance_", Description = string.Format("Topologic CellComplex default {0}", 0.0001), Access = GH_ParamAccess.item };
+                param_tolerance.SetPersistentData(0.0001);
+                result.Add(new GH_SAMParam(param_tolerance, ParamVisibility.Binding));
 
-            inputParamManager.AddNumberParameter("tolerance_", "tolerance_", string.Format("Topologic CellComplex default {0}", 0.0001), GH_ParamAccess.item, 0.0001);
-            //inputParamManager.AddBooleanParameter("_run", "_run", "Run", GH_ParamAccess.item, false);
-            inputParamManager.AddBooleanParameter("tryCellComplexByCells_", "tryCellComplexByCells_", "Try to Create Cell Complex By Cells", GH_ParamAccess.item, false);
-            inputParamManager.AddTextParameter("reportPath_", "reportPath_", "Report Path to write each step in text file", GH_ParamAccess.item, string.Empty);
-            inputParamManager.AddNumberParameter("minArea_", "minArea_", "Minimal Acceptable area of Aperture", GH_ParamAccess.item, Tolerance.MacroDistance);
-            inputParamManager.AddNumberParameter("silverSpacing_", "silverSpacing_", string.Format("Silver spacing for point in Space calculation {0}", Tolerance.MacroDistance), GH_ParamAccess.item, Tolerance.MacroDistance);
-            inputParamManager.AddBooleanParameter("_run", "_run", "Run", GH_ParamAccess.item, false);
+                global::Grasshopper.Kernel.Parameters.Param_Boolean param_tryCellComplexByCells = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "tryCellComplexByCells_", NickName = "tryCellComplexByCells_", Description = "Try to Create Cell Complex By Cells", Access = GH_ParamAccess.item };
+                param_tryCellComplexByCells.SetPersistentData(false);
+                result.Add(new GH_SAMParam(param_tryCellComplexByCells, ParamVisibility.Binding));
+
+                global::Grasshopper.Kernel.Parameters.Param_String param_reportPath = new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "reportPath_", NickName = "reportPath_", Description = "Report Path to write each step in text file", Access = GH_ParamAccess.item };
+                param_reportPath.SetPersistentData(string.Empty);
+                result.Add(new GH_SAMParam(param_reportPath, ParamVisibility.Binding));
+
+                global::Grasshopper.Kernel.Parameters.Param_Number param_minArea = new global::Grasshopper.Kernel.Parameters.Param_Number() { Name = "minArea_", NickName = "minArea_", Description = "Minimal Acceptable area of Aperture", Access = GH_ParamAccess.item };
+                param_minArea.SetPersistentData(Tolerance.MacroDistance);
+                result.Add(new GH_SAMParam(param_minArea, ParamVisibility.Binding));
+
+                global::Grasshopper.Kernel.Parameters.Param_Number param_silverSpacing = new global::Grasshopper.Kernel.Parameters.Param_Number() { Name = "silverSpacing_", NickName = "silverSpacing_", Description = string.Format("Silver spacing for point in Space calculation {0}", Tolerance.MacroDistance), Access = GH_ParamAccess.item };
+                param_silverSpacing.SetPersistentData(Tolerance.MacroDistance);
+                result.Add(new GH_SAMParam(param_silverSpacing, ParamVisibility.Binding));
+
+                global::Grasshopper.Kernel.Parameters.Param_Boolean param_run = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_run", NickName = "_run", Description = "Run", Access = GH_ParamAccess.item };
+                param_run.SetPersistentData(false);
+                result.Add(new GH_SAMParam(param_run, ParamVisibility.Binding));
+
+                return result.ToArray();
+            }
         }
 
         /// <summary>
         /// Registers all the output parameters for this component.
         /// </summary>
-        protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
+        protected override GH_SAMParam[] Outputs
         {
-            outputParamManager.AddParameter(new GooAdjacencyClusterParam(), "AdjacencyCluster", "AdjacencyCluster", "SAM AdjacencyCluster", GH_ParamAccess.item);
-            outputParamManager.AddGenericParameter("Topologies", "Topologies", "Topologies", GH_ParamAccess.list);
-            outputParamManager.AddParameter(new GooPanelParam(), "Panels", "Panels", "SAM Analytical Panels", GH_ParamAccess.list);
-            outputParamManager.AddParameter(new GooSpaceParam(), "Spaces", "Spaces", "SAM Analytical Spaces", GH_ParamAccess.list);
-            outputParamManager.AddParameter(new GooPanelParam(), "InternalPanels", "InternalPanels", "SAM Analytical Internal Panels", GH_ParamAccess.list);
-            outputParamManager.AddParameter(new GooPanelParam(), "ExternalPanels", "ExternalPanels", "SAM Analytical External Panels", GH_ParamAccess.list);
-            outputParamManager.AddParameter(new GooPanelParam(), "ShadingPanels", "ShadingPanels", "SAM Analytical Shading Panels", GH_ParamAccess.list);
-            outputParamManager.AddParameter(new GooPanelParam(), "RedundantPanels", "RedundantPanels", "SAM Analytical Redundant Panels", GH_ParamAccess.list);
-            outputParamManager.AddBooleanParameter("Sucessfull", "Sucessfull", "Run successfully?", GH_ParamAccess.item);
+            get
+            {
+                List<GH_SAMParam> result = new List<GH_SAMParam>();
+                result.Add(new GH_SAMParam(new GooAdjacencyClusterParam() { Name = "AdjacencyCluster", NickName = "AdjacencyCluster", Description = "SAM AdjacencyCluster", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "Topologies", NickName = "Topologies", Description = "Topologies", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                result.Add(new GH_SAMParam(new GooPanelParam() { Name = "Panels", NickName = "Panels", Description = "SAM Analytical Panels", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                result.Add(new GH_SAMParam(new GooSpaceParam() { Name = "Spaces", NickName = "Spaces", Description = "SAM Analytical Spaces", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                result.Add(new GH_SAMParam(new GooPanelParam() { Name = "InternalPanels", NickName = "InternalPanels", Description = "SAM Analytical Internal Panels", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                result.Add(new GH_SAMParam(new GooPanelParam() { Name = "ExternalPanels", NickName = "ExternalPanels", Description = "SAM Analytical External Panels", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                result.Add(new GH_SAMParam(new GooPanelParam() { Name = "ShadingPanels", NickName = "ShadingPanels", Description = "SAM Analytical Shading Panels", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                result.Add(new GH_SAMParam(new GooPanelParam() { Name = "RedundantPanels", NickName = "RedundantPanels", Description = "SAM Analytical Redundant Panels", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "Sucessfull", NickName = "Sucessfull", Description = "Run successfully?", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         /// <summary>
@@ -88,55 +112,78 @@ namespace SAM.Analytical.Grasshopper.Topologic.Obsolete
         /// </param>
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
+            // NOTE: preserved from the legacy component exactly: the early-error paths below reset
+            // output[2] ("Panels") to `false` via a hardcoded positional dataAccess.SetData(2, false)
+            // call, almost certainly meant to reset "Sucessfull" (index 8) but never fixed. Not
+            // corrected here per migration scope; flagged as a pre-existing issue in the PR.
+            int panelsIndex = Params.IndexOfOutputParam("Panels");
+
             bool run = false;
-            if (!dataAccess.GetData(7, ref run))
+            int index = Params.IndexOfInputParam("_run");
+            if (index == -1 || !dataAccess.GetData(index, ref run))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
-                dataAccess.SetData(2, false);
+                if (panelsIndex != -1) dataAccess.SetData(panelsIndex, false);
                 return;
             }
             if (!run)
                 return;
 
             List<Panel> panels = new List<Panel>();
-            if (!dataAccess.GetDataList(0, panels) || panels == null)
+            index = Params.IndexOfInputParam("_panels");
+            if (index == -1 || !dataAccess.GetDataList(index, panels) || panels == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
-                dataAccess.SetData(2, false);
+                if (panelsIndex != -1) dataAccess.SetData(panelsIndex, false);
                 return;
             }
 
             List<Space> spaces = new List<Space>();
-            dataAccess.GetDataList(1, spaces);
+            index = Params.IndexOfInputParam("spaces_");
+            if (index != -1)
+            {
+                dataAccess.GetDataList(index, spaces);
+            }
 
             double tolerance = double.NaN;
-            if (!dataAccess.GetData(2, ref tolerance) || double.IsNaN(tolerance))
+            index = Params.IndexOfInputParam("tolerance_");
+            if (index == -1 || !dataAccess.GetData(index, ref tolerance) || double.IsNaN(tolerance))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
-                dataAccess.SetData(2, false);
+                if (panelsIndex != -1) dataAccess.SetData(panelsIndex, false);
                 return;
             }
 
             bool tryCellComplexByCells = false;
-            if (!dataAccess.GetData(3, ref tryCellComplexByCells))
+            index = Params.IndexOfInputParam("tryCellComplexByCells_");
+            if (index == -1 || !dataAccess.GetData(index, ref tryCellComplexByCells))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
-                dataAccess.SetData(2, false);
+                if (panelsIndex != -1) dataAccess.SetData(panelsIndex, false);
                 return;
             }
 
             string reportPath = null;
-            if (dataAccess.GetData(4, ref reportPath))
+            index = Params.IndexOfInputParam("reportPath_");
+            if (index != -1 && dataAccess.GetData(index, ref reportPath))
             {
                 if (System.IO.File.Exists(reportPath))
                     System.IO.File.Delete(reportPath);
             }
 
             double minArea = Tolerance.MacroDistance;
-            dataAccess.GetData(5, ref minArea);
+            index = Params.IndexOfInputParam("minArea_");
+            if (index != -1)
+            {
+                dataAccess.GetData(index, ref minArea);
+            }
 
             double silverSpacing = Tolerance.MacroDistance;
-            dataAccess.GetData(6, ref silverSpacing);
+            index = Params.IndexOfInputParam("silverSpacing_");
+            if (index != -1)
+            {
+                dataAccess.GetData(index, ref silverSpacing);
+            }
 
             List<Topology> topologies = null;
             Log log = null;
@@ -208,21 +255,43 @@ namespace SAM.Analytical.Grasshopper.Topologic.Obsolete
 
                 }
 
-                dataAccess.SetData(0, new GooAdjacencyCluster(adjacencyCluster));
+                index = Params.IndexOfOutputParam("AdjacencyCluster");
+                if (index != -1)
+                {
+                    dataAccess.SetData(index, new GooAdjacencyCluster(adjacencyCluster));
+                }
             }
             else
             {
-                dataAccess.SetData(0, null);
+                index = Params.IndexOfOutputParam("AdjacencyCluster");
+                if (index != -1)
+                {
+                    dataAccess.SetData(index, null);
+                }
             }
 
-            dataAccess.SetDataList(1, topologies);
-            dataAccess.SetDataList(2, adjacencyCluster?.GetPanels());
-            dataAccess.SetDataList(3, adjacencyCluster?.GetSpaces());
-            dataAccess.SetDataList(4, adjacencyCluster?.GetInternalPanels());
-            dataAccess.SetDataList(5, adjacencyCluster?.GetExternalPanels());
-            dataAccess.SetDataList(6, adjacencyCluster?.GetShadingPanels());
-            dataAccess.SetDataList(7, panels_Redundant);
-            dataAccess.SetData(8, adjacencyCluster != null);
+            index = Params.IndexOfOutputParam("Topologies");
+            if (index != -1) dataAccess.SetDataList(index, topologies);
+
+            if (panelsIndex != -1) dataAccess.SetDataList(panelsIndex, adjacencyCluster?.GetPanels());
+
+            index = Params.IndexOfOutputParam("Spaces");
+            if (index != -1) dataAccess.SetDataList(index, adjacencyCluster?.GetSpaces());
+
+            index = Params.IndexOfOutputParam("InternalPanels");
+            if (index != -1) dataAccess.SetDataList(index, adjacencyCluster?.GetInternalPanels());
+
+            index = Params.IndexOfOutputParam("ExternalPanels");
+            if (index != -1) dataAccess.SetDataList(index, adjacencyCluster?.GetExternalPanels());
+
+            index = Params.IndexOfOutputParam("ShadingPanels");
+            if (index != -1) dataAccess.SetDataList(index, adjacencyCluster?.GetShadingPanels());
+
+            index = Params.IndexOfOutputParam("RedundantPanels");
+            if (index != -1) dataAccess.SetDataList(index, panels_Redundant);
+
+            index = Params.IndexOfOutputParam("Sucessfull");
+            if (index != -1) dataAccess.SetData(index, adjacencyCluster != null);
         }
     }
 }

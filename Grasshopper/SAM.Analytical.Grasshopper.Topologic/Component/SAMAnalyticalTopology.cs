@@ -1,4 +1,7 @@
-﻿using Grasshopper.Kernel;
+// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020–2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+
+using Grasshopper.Kernel;
 using SAM.Analytical.Grasshopper.Topologic.Properties;
 using SAM.Core;
 using SAM.Core.Grasshopper;
@@ -7,7 +10,7 @@ using System.Collections.Generic;
 
 namespace SAM.Analytical.Grasshopper.Topologic
 {
-    public class SAMAnalyticalTopology : GH_SAMComponent
+    public class SAMAnalyticalTopology : GH_SAMVariableOutputParameterComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -17,7 +20,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.2";
+        public override string LatestComponentVersion => "1.0.3";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -37,17 +40,27 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
-        protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
+        protected override GH_SAMParam[] Inputs
         {
-            inputParamManager.AddParameter(new GooJSAMObjectParam<SAMObject>(), "_SAMAnalytical", "_SAMAnalytical", "SAM Analytical Object", GH_ParamAccess.item);
+            get
+            {
+                List<GH_SAMParam> result = new List<GH_SAMParam>();
+                result.Add(new GH_SAMParam(new GooJSAMObjectParam<SAMObject>() { Name = "_SAMAnalytical", NickName = "_SAMAnalytical", Description = "SAM Analytical Object", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         /// <summary>
         /// Registers all the output parameters for this component.
         /// </summary>
-        protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
+        protected override GH_SAMParam[] Outputs
         {
-            outputParamManager.AddGenericParameter("Topology", "Topology", "Topologic Geometry", GH_ParamAccess.list);
+            get
+            {
+                List<GH_SAMParam> result = new List<GH_SAMParam>();
+                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "Topology", NickName = "Topology", Description = "Topologic Geometry", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         /// <summary>
@@ -59,39 +72,51 @@ namespace SAM.Analytical.Grasshopper.Topologic
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
             SAMObject sAMObject = null;
-            if (!dataAccess.GetData(0, ref sAMObject))
+            int index = Params.IndexOfInputParam("_SAMAnalytical");
+            if (index == -1 || !dataAccess.GetData(index, ref sAMObject))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
+            int outputIndex = Params.IndexOfOutputParam("Topology");
+
             if (sAMObject is Panel)
             {
-                dataAccess.SetDataList(0, new List<global::Topologic.Face> { Analytical.Topologic.Convert.ToTopologic((Panel)sAMObject) });
+                if (outputIndex != -1)
+                {
+                    dataAccess.SetDataList(outputIndex, new List<global::Topologic.Face> { Analytical.Topologic.Convert.ToTopologic((Panel)sAMObject) });
+                }
                 return;
             }
             else if(sAMObject is AdjacencyCluster)
             {
-                dataAccess.SetDataList(0, null);
+                if (outputIndex != -1)
+                {
+                    dataAccess.SetDataList(outputIndex, null);
+                }
 
                 AdjacencyCluster adjacencyCluster = sAMObject as AdjacencyCluster;
                 List<Geometry.Spatial.Shell> shells = adjacencyCluster.GetShells();
-                if(shells != null)
+                if(shells != null && outputIndex != -1)
                 {
-                    dataAccess.SetDataList(0, shells.ConvertAll(x => Geometry.Topologic.Convert.ToTopologic_Cell(x)));
+                    dataAccess.SetDataList(outputIndex, shells.ConvertAll(x => Geometry.Topologic.Convert.ToTopologic_Cell(x)));
                 }
 
                 return;
             }
             else if (sAMObject is AnalyticalModel)
             {
-                dataAccess.SetDataList(0, null);
+                if (outputIndex != -1)
+                {
+                    dataAccess.SetDataList(outputIndex, null);
+                }
 
                 AdjacencyCluster adjacencyCluster = (sAMObject as AnalyticalModel).AdjacencyCluster;
                 List<Geometry.Spatial.Shell> shells = adjacencyCluster.GetShells();
-                if (shells != null)
+                if (shells != null && outputIndex != -1)
                 {
-                    dataAccess.SetDataList(0, shells.ConvertAll(x => Geometry.Topologic.Convert.ToTopologic_Cell(x)));
+                    dataAccess.SetDataList(outputIndex, shells.ConvertAll(x => Geometry.Topologic.Convert.ToTopologic_Cell(x)));
                 }
 
                 return;

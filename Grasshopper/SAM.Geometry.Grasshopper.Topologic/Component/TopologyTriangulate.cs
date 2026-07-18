@@ -1,4 +1,7 @@
-﻿using Grasshopper.Kernel;
+// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020–2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+
+using Grasshopper.Kernel;
 using SAM.Core.Grasshopper;
 using SAM.Geometry.Grasshopper.Topologic.Properties;
 using System;
@@ -7,7 +10,7 @@ using Topologic;
 
 namespace SAM.Geometry.Grasshopper.Topologic
 {
-    public class TopologyTriangulate : GH_SAMComponent
+    public class TopologyTriangulate : GH_SAMVariableOutputParameterComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -17,7 +20,7 @@ namespace SAM.Geometry.Grasshopper.Topologic
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.0";
+        public override string LatestComponentVersion => "1.0.1";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -32,18 +35,32 @@ namespace SAM.Geometry.Grasshopper.Topologic
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
-        protected override void RegisterInputParams(GH_InputParamManager manager)
+        protected override GH_SAMParam[] Inputs
         {
-            manager.AddGenericParameter("_topology", "_topology", "Topology to be triangulated \nCurrently works on Faces", GH_ParamAccess.item);
-            manager.AddNumberParameter("_tolerance_", "_tolerance_", "Tolerance", GH_ParamAccess.item, Core.Tolerance.MacroDistance);
+            get
+            {
+                List<GH_SAMParam> result = new List<GH_SAMParam>();
+                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "_topology", NickName = "_topology", Description = "Topology to be triangulated \nCurrently works on Faces", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+
+                global::Grasshopper.Kernel.Parameters.Param_Number param_Number = new global::Grasshopper.Kernel.Parameters.Param_Number() { Name = "_tolerance_", NickName = "_tolerance_", Description = "Tolerance", Access = GH_ParamAccess.item };
+                param_Number.SetPersistentData(Core.Tolerance.MacroDistance);
+                result.Add(new GH_SAMParam(param_Number, ParamVisibility.Binding));
+
+                return result.ToArray();
+            }
         }
 
         /// <summary>
         /// Registers all the output parameters for this component.
         /// </summary>
-        protected override void RegisterOutputParams(GH_OutputParamManager manager)
+        protected override GH_SAMParam[] Outputs
         {
-            manager.AddGenericParameter("topologies", "topologies", "Topologies", GH_ParamAccess.list);
+            get
+            {
+                List<GH_SAMParam> result = new List<GH_SAMParam>();
+                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "topologies", NickName = "topologies", Description = "Topologies", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         /// <summary>
@@ -54,9 +71,10 @@ namespace SAM.Geometry.Grasshopper.Topologic
         {
             Topology topology = null;
 
-            if (!DA.GetData(0, ref topology))
-            { 
-                return; 
+            int index = Params.IndexOfInputParam("_topology");
+            if (index == -1 || !DA.GetData(index, ref topology))
+            {
+                return;
             }
 
             if(!(topology is global::Topologic.Face))
@@ -65,14 +83,19 @@ namespace SAM.Geometry.Grasshopper.Topologic
             }
 
             double tolerance = Core.Tolerance.MacroDistance;
-            if (!DA.GetData(1, ref tolerance))
+            index = Params.IndexOfInputParam("_tolerance_");
+            if (index == -1 || !DA.GetData(index, ref tolerance))
             {
                 return;
             }
 
             IEnumerable<global::Topologic.Face> faces = global::Topologic.Utilities.FaceUtility.Triangulate((global::Topologic.Face)topology, tolerance);
 
-            DA.SetDataList(0, faces);
+            index = Params.IndexOfOutputParam("topologies");
+            if (index != -1)
+            {
+                DA.SetDataList(index, faces);
+            }
         }
     }
 }

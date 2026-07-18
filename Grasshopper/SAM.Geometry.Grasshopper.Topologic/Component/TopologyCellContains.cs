@@ -1,12 +1,15 @@
-﻿using Grasshopper.Kernel;
+// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020–2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+
+using Grasshopper.Kernel;
 using SAM.Core.Grasshopper;
-using SAM.Geometry.Grasshopper.Topologic.Properties;
 using System;
+using System.Collections.Generic;
 using Topologic;
 
 namespace SAM.Geometry.Grasshopper.Topologic
 {
-    public class TopologyCellContains : GH_SAMComponent
+    public class TopologyCellContains : GH_SAMVariableOutputParameterComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -16,12 +19,12 @@ namespace SAM.Geometry.Grasshopper.Topologic
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.0";
+        public override string LatestComponentVersion => "1.0.1";
 
         /// <summary>
         /// Provides an Icon for the component.
         /// </summary>
-        protected override System.Drawing.Bitmap Icon => Resources.SAM_Topologic3a;
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.SAM_Topologic3a;
 
         public TopologyCellContains()
           : base("Topology.CellContains", "Topology.CellContains", "Check if a Vertex is contained in a Cell or not", "SAM", "Topologic")
@@ -31,26 +34,34 @@ namespace SAM.Geometry.Grasshopper.Topologic
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
-        protected override void RegisterInputParams(GH_InputParamManager manager)
+        protected override GH_SAMParam[] Inputs
         {
-            int index = -1;
+            get
+            {
+                List<GH_SAMParam> result = new List<GH_SAMParam>();
+                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "_cell", NickName = "_cell", Description = "Cell", Access = GH_ParamAccess.item, DataMapping = GH_DataMapping.Flatten }, ParamVisibility.Binding));
+                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "_vertex", NickName = "_vertex", Description = "Vertex", Access = GH_ParamAccess.item, DataMapping = GH_DataMapping.Graft }, ParamVisibility.Binding));
+                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_allowOnBoundary", NickName = "_allowOnBoundary", Description = "Allow On Boundary", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
 
-            index = manager.AddGenericParameter("_cell", "_cell", "Cell", GH_ParamAccess.item);
-            manager[index].DataMapping = GH_DataMapping.Flatten;
+                global::Grasshopper.Kernel.Parameters.Param_Number param_Number = new global::Grasshopper.Kernel.Parameters.Param_Number() { Name = "_tolerance_", NickName = "_tolerance_", Description = "Tolerance", Access = GH_ParamAccess.item };
+                param_Number.SetPersistentData(SAM.Core.Tolerance.MacroDistance);
+                result.Add(new GH_SAMParam(param_Number, ParamVisibility.Binding));
 
-            index = manager.AddGenericParameter("_vertex", "_vertex", "Vertex", GH_ParamAccess.item);
-            manager[index].DataMapping = GH_DataMapping.Graft;
-
-            manager.AddBooleanParameter("_allowOnBoundary", "_allowOnBoundary", "Allow On Boundary", GH_ParamAccess.item);
-            manager.AddNumberParameter("_tolerance_", "_tolerance_", "Tolerance", GH_ParamAccess.item, SAM.Core.Tolerance.MacroDistance);
+                return result.ToArray();
+            }
         }
 
         /// <summary>
         /// Registers all the output parameters for this component.
         /// </summary>
-        protected override void RegisterOutputParams(GH_OutputParamManager manager)
+        protected override GH_SAMParam[] Outputs
         {
-            manager.AddBooleanParameter("Contains", "Contains", "Contains", GH_ParamAccess.item);
+            get
+            {
+                List<GH_SAMParam> result = new List<GH_SAMParam>();
+                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "Contains", NickName = "Contains", Description = "Contains", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         /// <summary>
@@ -65,38 +76,47 @@ namespace SAM.Geometry.Grasshopper.Topologic
             bool allowOnBoundary = false;
             double tolerance = Core.Tolerance.MacroDistance;
 
-            if (!DA.GetData(0, ref cell)) 
-            { 
-                return; 
+            int index = Params.IndexOfInputParam("_cell");
+            if (index == -1 || !DA.GetData(index, ref cell))
+            {
+                return;
             }
 
-            if (!DA.GetData(1, ref vertex)) 
-            { return; 
+            index = Params.IndexOfInputParam("_vertex");
+            if (index == -1 || !DA.GetData(index, ref vertex))
+            {
+                return;
             }
 
-            if (!DA.GetData(2, ref allowOnBoundary)) 
-            { 
-                return; 
+            index = Params.IndexOfInputParam("_allowOnBoundary");
+            if (index == -1 || !DA.GetData(index, ref allowOnBoundary))
+            {
+                return;
             }
 
-            if (!DA.GetData(3, ref tolerance)) 
-            { 
-                return; 
+            index = Params.IndexOfInputParam("_tolerance_");
+            if (index == -1 || !DA.GetData(index, ref tolerance))
+            {
+                return;
             }
 
-            if (cell == null) 
-            { 
-                return; 
+            if (cell == null)
+            {
+                return;
             }
 
-            if (vertex == null) 
-            { 
-                return; 
+            if (vertex == null)
+            {
+                return;
             }
 
             bool isContained = global::Topologic.Utilities.CellUtility.Contains(cell, vertex, allowOnBoundary, tolerance);
 
-            DA.SetData(0, isContained);
+            index = Params.IndexOfOutputParam("Contains");
+            if (index != -1)
+            {
+                DA.SetData(index, isContained);
+            }
         }
     }
 }
